@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col lg:flex-col-reverse w-full !h-screen bg-base-100 bg-gradient-to-b from-[#E9F3F6] to-[#F1F6F7] p-2 gap-2 text-base-content font-iranyekan relative"
+    class="flex flex-col lg:flex-col-reverse w-full !h-[93vh] bg-base-100 bg-gradient-to-b from-[#E9F3F6] to-[#F1F6F7] p-2 gap-2 text-base-content font-iranyekan relative"
     dir="rtl">
     <div class="h-full rounded-md shadow-lg bg-white overflow-y-auto">
       <NuxtPage />
