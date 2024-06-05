@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col" :class="isOpen ? 'gap-2' : '!gap-0'">
+  <div class="flex flex-col" :class="isOpen ? '' : '!gap-0'">
     <button
-      class="flex flex-row items-center justify-between w-full py-2 group" :class="labelClass"
+      class="flex flex-row items-center justify-between w-full p-2 group bg-secondary rounded-t-lg" :class="labelClass + isOpen ? 'rounded-t-lg' : 'rounded-lg'"
       @click="toggle"
     >
       <div class="group-hover:text-primary">
@@ -26,7 +26,7 @@
     </button>
     <div
       class="overflow-hidden transition-all text-sm duration-100 px-3 flex flex-col gap-2"
-      :class="!isOpen ? 'h-0' : 'h-fit'"
+      :class="!isOpen ? 'h-0' : 'h-fit pt-2 border-secondary border-r border-b border-l rounded-b-lg'"
     >
       <slot></slot>
     </div>
