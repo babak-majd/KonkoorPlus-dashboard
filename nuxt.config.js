@@ -70,4 +70,8 @@ export default defineNuxtConfig({
       API_URL: process.env.API_URL,
     },
   },
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000 // Make sure this port is open
+  }
 });
