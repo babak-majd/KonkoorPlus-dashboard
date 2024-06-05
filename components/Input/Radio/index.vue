@@ -1,8 +1,5 @@
 <script setup>
-import Config from "~~/composables/Config";
-
-const cn = new Config();
-const dir = cn.by_route("config/dir");
+const dir = "rtl";
 const props = defineProps({
   modelValue: {},
   name: { type: String },
