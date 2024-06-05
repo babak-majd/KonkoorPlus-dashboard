@@ -6,7 +6,7 @@
             <ToolsLoading class="w-32 h-32" />
         </div>
 
-        <div v-if="data.length > 0" class="grid gap-2 lg:grid-cols-5">
+        <div v-if="data?.length ?? 0 > 0" class="grid gap-2 lg:grid-cols-5">
             <Accordion v-for="(item, index) in data">
                 <template v-slot:label>
                     {{ item.title }}
