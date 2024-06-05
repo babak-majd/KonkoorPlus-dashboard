@@ -4,7 +4,7 @@
     <ToolsLoading class="w-32 h-32" />
   </div>
 
-  <div class="flex w-full items-center">
+  <div class="flex w-[80vw] lg:w-full items-center">
     <div class="mx-auto">
       <form @keydown="validateForm()" @submit.prevent="requestToRegister()" class="flex flex-col gap-8 w-full items-center">
         <div dir="rtl" class="custom_input_box text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
@@ -44,7 +44,7 @@
               گذرواژه
             </label>
           </InputTextMarked>
-          <InputTextMarked dir="ltr" v-model="form.confirm_password" type="password" required
+          <InputTextMarked dir="ltr" v-model="confirm_password" type="password" required
             id="input_confirm_password">
             <label class="cursor-text" for="input_confirm_password" dir="rtl">
               تایید گذرواژه
@@ -64,16 +64,16 @@
                 grade.name }}</InputRadio>
             </template>
           </Dropdown>
-          <Dropdown v-if="current_grade.value > 9 && feilds.length > 0" class="z-index-[1100] h-10">
+          <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
             <template v-slot:title>
               <span>
-                {{ current_feild.text ?? "رشته تحصیلی" }}
+                {{ current_field.text ?? "رشته تحصیلی" }}
               </span>
             </template>
             <template v-slot:option>
-              <InputRadio v-for="(feild, index) in feilds" :value="feild.uuid" :key="index" v-model="form.feild"
-                @click="form.feild = feild.uuid; current_feild = feild; validateForm()" :id="`feild_${feild.uuid}`" name="feild">{{
-                feild.text }}</InputRadio>
+              <InputRadio v-for="(field, index) in fields" :value="field.uuid" :key="index" v-model="form.field"
+                @click="form.field = field.uuid; current_field = field; validateForm()" :id="`field_${field.uuid}`" name="field">{{
+                field.text }}</InputRadio>
             </template>
           </Dropdown>
         </div>
@@ -85,8 +85,8 @@
               </span>
             </template>
             <template v-slot:option>
-              <InputRadio v-for="(state, index) in states" :value="state.uuid" :key="index" v-model="form.state"
-                @click.prevent="form.state = state.uuid; current_state = state; get_cities(state.uuid); validateForm()" :id="`state_${state.uuid}`" name="state">
+              <InputRadio v-for="(state, index) in states" :value="state.uuid" :key="index"
+                @click.prevent="current_state = state; get_cities(state.uuid); validateForm()" :id="`state_${state.uuid}`" name="state">
                 {{ state.text }}
               </InputRadio>
             </template>
@@ -131,13 +131,14 @@ definePageMeta({
 const request = Request.noauth();
 const error_happened = ref(false);
 const states = ref([])
-const feilds = ref([])
+const fields = ref([])
 const cities = ref([])
 const current_grade = ref({})
 const current_gender = ref({})
-const current_feild = ref({})
+const current_field = ref({})
 const current_state = ref({})
 const current_city = ref({})
+const confirm_password = ref("")
 const IsFormValid = ref(false)
 const genders = [
   {
@@ -182,20 +183,16 @@ const grades = [
 const form = ref({
   phone_number: "",
   password: "",
-  confirm_password: "",
   first_name: "",
   last_name: "",
-  state: "",
   city: "",
-  feild: "",
+  field: "",
   gender: "",
   grade: 0,
 });
 
 async function requestToRegister() {
   await request.post("students/auth/register", form.value).then((response) => {
-    console.log(form.value);
-    return;
     let phone_box = document.getElementById("input_phone");
     let password_box = document.getElementById("input_password");
     if (response.ok) {
@@ -211,7 +208,7 @@ async function requestToRegister() {
       error_happened.value = true;
     }
   }).catch((response) => {
-    console.log(response);
+    console.log(response.text);
   });
   return;
 }
@@ -230,18 +227,18 @@ async function validateForm() {
   IsFormValid.value = false;
   if(form.value.firstname == "") return;
   if(form.value.lastname == "") return;
-  if(form.value.password == "" || form.value.password !== form.value.confirm_password) return;
+  if(form.value.password == "" || form.value.password !== confirm_password.value) return;
   if(form.value.grade < 7 || form.value.grade > 13) return;
-  if(form.value.grade > 9 && form.value.feild == "") return;
+  if(form.value.grade > 9 && form.value.field == "") return;
   if(form.value.city == "") return;
   if(form.value.gender == "") return;
   IsFormValid.value = true
 }
 
 onBeforeMount(async () => {
-  await request.get("feilds").then((response) => {
+  await request.get("fields").then((response) => {
     if (response.ok) {
-      feilds.value = response.data;
+      fields.value = response.data;
     }
   }).catch((response) => {
     console.log(response);
