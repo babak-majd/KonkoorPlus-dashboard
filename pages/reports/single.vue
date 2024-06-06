@@ -35,8 +35,8 @@
 
 <script setup>
 import Request from "~~/Api/Request";
-import jalaliMoment from "jalali-moment";
 
+const route = useRoute();
 const request = new Request;
 const data = ref({});
 
@@ -45,14 +45,17 @@ onMounted(() => {
 });
 
 async function collect_report_items() {
-    await request
-        .get("reports/items")
-        .then((response) => {
-            data.value = response.data;
-            console.log(data.value);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    if (!route.query.ruid) {
+        navigateTo("/reports");
+    } else {
+        await request
+            .get(`reports/items/${route.query.ruid}`)
+            .then((response) => {
+                data.value = response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 }
 </script>

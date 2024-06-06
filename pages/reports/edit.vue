@@ -67,7 +67,6 @@
 
 <script setup>
 import Request from "~~/Api/Request";
-import jalaliMoment from "jalali-moment";
 
 const route = useRoute();
 const request = new Request;
@@ -90,7 +89,7 @@ async function collect_report_items() {
     } else {
         form.value.report = route.query.ruid
         await request
-            .get("reports/items")
+            .get(`reports/items/${route.query.ruid}`)
             .then((response) => {
                 data.value = response.data;
             })
