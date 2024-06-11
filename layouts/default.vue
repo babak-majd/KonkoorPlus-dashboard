@@ -6,7 +6,7 @@
       <NuxtPage />
     </div>
     <div class="h-16 rounded-md shadow-md bg-white flex flex-row items-center px-2">
-      <NuxtLink to="/profile" class="w-1/5 flex justify-around items-center" :class="active_section === 'profile' ? 'text-primary' : ''">پروفایل</NuxtLink>
+      <NuxtLink to="/tools" class="w-1/5 flex justify-around items-center" :class="active_section === 'tools' ? 'text-primary' : ''">ابزارها</NuxtLink>
       <NuxtLink to="/reports" class="w-1/5 flex justify-around items-center" :class="active_section === 'reports' ? 'text-primary' : ''">گزارش‌ها</NuxtLink>
       <div class="btn-square w-1/5 rounded-full flex justify-around items-center">
         <NuxtLink to="/">
@@ -14,7 +14,7 @@
         </NuxtLink>
       </div>
       <NuxtLink to="/konkoleague" class="w-1/5 flex justify-around items-center" :class="active_section === 'konkoleague' ? 'text-primary' : ''">کنکولیگ</NuxtLink>
-      <NuxtLink to="/support" class="w-1/5 flex justify-around items-center" :class="active_section === 'support' ? 'text-primary' : ''">پشتیبانی</NuxtLink>
+      <NuxtLink to="/analytics" class="w-1/5 flex justify-around items-center" :class="active_section === 'analytics' ? 'text-primary' : ''">نمای‌کلی</NuxtLink>
     </div>
   </div>  
 </template>
