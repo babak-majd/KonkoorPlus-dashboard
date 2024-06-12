@@ -109,7 +109,7 @@
             عضویت
           </button>
           <label dir="rtl"
-            class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-base-content">
+            class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-primary">
             <NuxtLink to="/auth/login">
               حساب کاربری دارید؟
             </NuxtLink>
