@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col" :class="isOpen ? '' : '!gap-0'">
     <button
-      class="flex flex-row items-center justify-between w-full p-2 group bg-secondary rounded-t-lg" :class="labelClass + isOpen ? 'rounded-t-lg' : 'rounded-lg'"
+      class="flex flex-row items-center justify-between w-full p-2 group bg-secondary rounded-t-lg " :class="labelClass, isOpen ? 'rounded-t-lg' : 'rounded-lg'"
       @click="toggle"
     >
       <div class="group-hover:text-primary">
