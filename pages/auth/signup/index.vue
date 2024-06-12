@@ -60,7 +60,7 @@
             </template>
             <template v-slot:option>
               <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index" v-model="form.grade"
-                @click="form.grade = grade.value; current_grade = grade; validateForm()" :id="`grade_${grade.value}`" name="grade">{{
+                @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()" :id="`grade_${grade.value}`" name="grade">{{
                 grade.name }}</InputRadio>
             </template>
           </Dropdown>
@@ -85,8 +85,8 @@
               </span>
             </template>
             <template v-slot:option>
-              <InputRadio v-for="(state, index) in states" :value="state.uuid" :key="index"
-                @click.prevent="current_state = state; get_cities(state.uuid); validateForm()" :id="`state_${state.uuid}`" name="state">
+              <InputRadio v-for="(state, index) in states" v-model="current_state.uuid" :value="state.uuid" :key="index"
+                @click.prevent="form.city, current_city = ''; current_state = state; get_cities(state.uuid); validateForm()" :id="`state_${state.uuid}`" name="state">
                 {{ state.text }}
               </InputRadio>
             </template>
@@ -136,7 +136,10 @@ const cities = ref([])
 const current_grade = ref({})
 const current_gender = ref({})
 const current_field = ref({})
-const current_state = ref({})
+const current_state = ref({
+  name: "",
+  uuid: ""
+})
 const current_city = ref({})
 const confirm_password = ref("")
 const IsFormValid = ref(false)
@@ -225,14 +228,20 @@ async function get_cities(state_uuid) {
 
 async function validateForm() {
   IsFormValid.value = false;
-  if(form.value.firstname == "") return;
-  if(form.value.lastname == "") return;
+  if(form.value.first_name == "") return;
+  if(form.value.last_name == "") return;
   if(form.value.password == "" || form.value.password !== confirm_password.value) return;
   if(form.value.grade < 7 || form.value.grade > 13) return;
   if(form.value.grade > 9 && form.value.field == "") return;
   if(form.value.city == "") return;
   if(form.value.gender == "") return;
   IsFormValid.value = true
+}
+
+async function gradeOnClick() {
+  if(form.value.grade < 10) {
+    form.value.field = fields.value[3].uuid;
+  }
 }
 
 onBeforeMount(async () => {
