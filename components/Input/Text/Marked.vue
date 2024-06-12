@@ -8,13 +8,13 @@
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="is_focused = true"
         @blur="is_focused = false"
-        type="text"
         :placeholder="is_focused ? placeholder : ''"
         :id="id"
+        :type="type"
         :dir="dir"
-        class="h-10"
-        :class="input_class"
-        :style="input_style"
+        inputClass="h-10"
+        :inputClass="input_class"
+        :inputStyle="input_style"
       />
       <label
         :for="id"
@@ -36,7 +36,8 @@ defineProps({
   input_class: { type: String, default: "" },
   input_style: { type: String, default: "" },
   autocomplete: { type: String, default: null},
-  title: { type: String, default: null}
+  title: { type: String, default: null},
+  type: { type: String, default: "text"}
 });
 const is_focused = ref(false);
 </script>
