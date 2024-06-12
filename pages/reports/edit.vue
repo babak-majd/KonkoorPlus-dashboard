@@ -7,9 +7,9 @@
         </div>
 
         <div class="grid gap-2 lg:grid-cols-5">
-            <Accordion>
+            <Accordion labelClass="!bg-green-200">
                 <template v-slot:label>
-                    افزودن
+                    <span class="hover:!text-white">افزودن</span>
                 </template>
                 <div class="flex flex-col pb-2 gap-6">
                     <div class="custom_input_box text-base-content w-full lg:w-full pt-4">
@@ -54,6 +54,26 @@
                     </button>
                 </div>
             </Accordion>
+            <Accordion labelClass="!bg-yellow-200" v-if="data?.length ?? 0 > 0">
+                <template v-slot:label>
+                    گزارش کلی
+                </template>
+                <div class="relative gap-2 flex flex-col">
+                    <div class="flex flex-row flex-wrap gap-1">
+                        <div class="font-bold">مطالعه امروز:</div>
+                        <div class="font-bold">
+                            {{ Object.values(overview).reduce((acc, curr) => acc + curr, 0) }} دقیقه
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="flex flex-col">
+                        <div v-for="item in Object.keys(overview)" class="flex flex-row gap-2 pb-2">
+                            <div class="font-bold">{{ item }}:</div>
+                            <div>{{ overview[item] }} دقیقه</div>
+                        </div>
+                    </div>
+                </div>
+            </Accordion>
             <Accordion v-if="data?.length ?? 0 > 0" v-for="(item, index) in data">
                 <template v-slot:label>
                     {{ item.title }}
@@ -86,7 +106,8 @@ import Request from "~~/Api/Request";
 
 const route = useRoute();
 const request = new Request;
-const data = ref({});
+const data = ref([]);
+const overview = ref({});
 const lessons = ref({});
 const current_lesson = ref({})
 const form = ref({
@@ -110,7 +131,8 @@ async function collect_report_items() {
         await request
             .get(`reports/items/${route.query.ruid}`)
             .then((response) => {
-                data.value = response.data;
+                data.value = response.data.items;
+                overview.value = response.data.overview;
             })
             .catch((err) => {
                 console.log(err);
@@ -127,7 +149,6 @@ async function collect_lessons() {
             .get(`fields/lessons`)
             .then((response) => {
                 lessons.value = response.data;
-                console.log(lessons.value);
             })
             .catch((err) => {
                 console.log(err);
