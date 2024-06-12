@@ -22,7 +22,6 @@
 <script setup>
 import ConfigStore from "../store/ConfigStore";
 
-const isPopupVisible = ref(false);
 const active_section = ref("");
 const route = useRoute();
 
