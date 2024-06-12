@@ -26,6 +26,22 @@
                             </label>
                         </InputTextMarked>
                     </div>
+                    <div class="text-base-content w-full lg:w-full">
+                        <Dropdown v-if="lessons.length > 0" class="z-index-[1100] h-10">
+                            <template v-slot:title>
+                                <span>
+                                    {{ current_lesson.text ?? "درس" }}
+                                </span>
+                            </template>
+                            <template v-slot:option>
+                                <InputRadio v-for="(lesson, index) in lessons" :value="lesson.uuid" :key="index"
+                                    v-model="form.lesson"
+                                    @click="form.lesson = lesson.uuid; current_lesson = lesson; validateForm()"
+                                    :id="`lesson_${lesson.uuid}`" name="lesson">{{
+                                        lesson.text }}</InputRadio>
+                            </template>
+                        </Dropdown>
+                    </div>
                     <div class="custom_input_box text-base-content w-full lg:w-full">
                         <InputTextMarked dir="ltr" v-model="form.description" required id="input_description">
                             <label class="cursor-text" for="input_description" dir="rtl">
@@ -51,7 +67,7 @@
                         <div class="font-bold">مدت‌زمان:</div>
                         <div>{{ item.duration }} دقیقه</div>
                     </div>
-                    <div class="flex flex-row gap-2 pb-2">
+                    <div v-if="item.description" class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">توضیحات:</div>
                         <div>{{ item.description }}</div>
                     </div>
@@ -71,9 +87,11 @@ import Request from "~~/Api/Request";
 const route = useRoute();
 const request = new Request;
 const data = ref({});
+const lessons = ref({});
+const current_lesson = ref({})
 const form = ref({
     report: "",
-    lesson: "83f5a8f5-2c50-4b16-ac2c-b794bef7c5ba",
+    lesson: "",
     title: "",
     description: "",
     duration: "",
@@ -81,6 +99,7 @@ const form = ref({
 
 onMounted(() => {
     collect_report_items();
+    collect_lessons();
 });
 
 async function collect_report_items() {
@@ -92,6 +111,23 @@ async function collect_report_items() {
             .get(`reports/items/${route.query.ruid}`)
             .then((response) => {
                 data.value = response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+}
+
+async function collect_lessons() {
+    if (!route.query.ruid) {
+        navigateTo("/reports");
+    } else {
+        form.value.report = route.query.ruid
+        await request
+            .get(`fields/lessons`)
+            .then((response) => {
+                lessons.value = response.data;
+                console.log(lessons.value);
             })
             .catch((err) => {
                 console.log(err);
@@ -119,6 +155,7 @@ async function add_report_item() {
             if (response.ok) {
                 collect_report_items()
                 form.value.title = ""
+                form.value.lesson = ""
                 form.value.description = ""
                 form.value.duration = ""
             }

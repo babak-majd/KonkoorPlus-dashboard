@@ -20,7 +20,7 @@
                         <div class="font-bold">مدت‌زمان:</div>
                         <div>{{ item.duration }} دقیقه</div>
                     </div>
-                    <div class="flex flex-row gap-2 pb-2">
+                    <div v-if="item.description" class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">توضیحات:</div>
                         <div>{{ item.description }}</div>
                     </div>
