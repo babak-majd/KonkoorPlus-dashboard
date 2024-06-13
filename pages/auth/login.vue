@@ -9,18 +9,14 @@
       <form @submit.prevent="requestToLogin()" class="flex flex-col gap-8 w-full items-center">
         <div class="custom_input_box text-base-content w-full lg:w-[22.625rem]">
           <InputTextMarked dir="ltr" v-model="form.phone_number" type="text" required id="input_phone">
-            <label class="cursor-text" for="input_phone" dir="rtl">
               شماره همراه
               <span class="text-error text-xs" v-show="error_happened">و گذرواژه همخوانی ندارند.</span>
-            </label>
           </InputTextMarked>
         </div>
         <div class="custom_input_box text-base-content w-full lg:w-[22.625rem]">
           <InputTextMarked dir="ltr" v-model="form.password" type="password" required id="input_password">
-            <label class="cursor-text" for="input_password" dir="rtl">
               گذرواژه
               <span class="text-error text-xs" v-show="error_happened">و شماره همراه همخوانی ندارند.</span>
-            </label>
           </InputTextMarked>
         </div>
         <div class="flex justify-between w-64 lg:w-full items-center flex-col lg:flex-row gap-4">
@@ -29,9 +25,9 @@
           </button>
           <label dir="rtl"
             class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-primary">
-            <NuxtLink to="/auth/forget">
+            <!-- <NuxtLink to="/auth/forget">
               گذرواژه خود را فراموش کرده‌اید؟
-            </NuxtLink>
+            </NuxtLink> -->
             <NuxtLink to="/auth/signup">
               حساب کاربری ندارید؟
             </NuxtLink>

@@ -9,7 +9,7 @@
         @focus="is_focused = true"
         @blur="is_focused = false"
         :placeholder="is_focused ? placeholder : ''"
-        :id="id"
+        :inputId="id"
         :type="type"
         :dir="dir"
         inputClass="h-10"
@@ -18,7 +18,7 @@
       />
       <label
         :for="id"
-        class="right-0 absolute text-xs px-2 transition-all duration-300"
+        class="right-0 absolute text-xs px-2 transition-all duration-300 cursor-pointer"
         :class="is_focused || modelValue !== '' ? '-top-5' : 'top-2.5'"
       >
         <slot></slot>
