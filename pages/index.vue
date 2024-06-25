@@ -22,9 +22,15 @@
             <div class="font-bold">شماره تلفن:</div>
             <div>{{ data.phone_number }}</div>
           </div>
-          <div class="flex flex-row justify-start gap-2">
-            <div class="font-bold">جنسیت:</div>
-            <div>{{ data.gender === "M" ? "آقا" : "خانم" }}</div>
+          <div class="flex flex-row justify-start gap-6">
+            <div class="flex flex-row justify-start gap-2">
+              <div class="font-bold">جنسیت:</div>
+              <div>{{ data.gender === "M" ? "آقا" : "خانم" }}</div>
+            </div>
+            <div class="flex flex-row justify-start gap-2">
+              <div class="font-bold">مشاور:</div>
+              <div>{{ data.has_advisor ? "دارد" : "ندارد" }}</div>
+            </div>
           </div>
           <div class="flex flex-row justify-start gap-6">
             <div class="flex flex-row justify-start gap-2">
