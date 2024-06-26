@@ -36,6 +36,10 @@ export default class Request {
     return await this.send_request("PUT", path, body, null);
   };
 
+  public patch = async (path: string, body: Record<string, any> | null = null) => {
+    return await this.send_request("PATCH", path, body, null);
+  };
+
   protected send_request = async (
     method: string,
     path: string,
