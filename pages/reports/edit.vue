@@ -19,10 +19,17 @@
                             </label>
                         </InputTextMarked>
                     </div>
-                    <div class="custom_input_box text-base-content w-full lg:w-full">
-                        <InputTextMarked dir="ltr" v-model="form.duration" required id="input_duration" type="number">
-                            <label class="cursor-text" for="input_duration" dir="rtl">
-                                مدت زمان (به دقیقه)
+                    <div class="custom_input_box text-base-content w-full lg:w-full grid grid-cols-2 gap-px">
+                        <InputTextMarked @change="durationCalculator()" dir="ltr" v-model="duration.mins" required
+                            id="input_duration_mins" type="number">
+                            <label class="cursor-text" for="input_duration_mins" dir="rtl">
+                                دقیقه
+                            </label>
+                        </InputTextMarked>
+                        <InputTextMarked @change="durationCalculator()" dir="ltr" v-model="duration.hours" required
+                            id="input_duration_hours" type="number">
+                            <label class="cursor-text" for="input_duration_hours" dir="rtl">
+                                ساعت
                             </label>
                         </InputTextMarked>
                     </div>
@@ -62,14 +69,14 @@
                     <div class="flex flex-row flex-wrap gap-1">
                         <div class="font-bold">مطالعه امروز:</div>
                         <div class="font-bold">
-                            {{ Object.values(overview).reduce((acc, curr) => acc + curr, 0) }} دقیقه
+                            {{ showDuration(Object.values(overview).reduce((acc, curr) => acc + curr, 0)) }}
                         </div>
                     </div>
                     <hr />
                     <div class="flex flex-col">
                         <div v-for="item in Object.keys(overview)" class="flex flex-row gap-2 pb-2">
                             <div class="font-bold">{{ item }}:</div>
-                            <div>{{ overview[item] }} دقیقه</div>
+                            <div>{{ showDuration(overview[item]) }}</div>
                         </div>
                     </div>
                 </div>
@@ -85,7 +92,7 @@
                     </div>
                     <div class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">مدت‌زمان:</div>
-                        <div>{{ item.duration }} دقیقه</div>
+                        <div>{{ showDuration(item.duration) }}</div>
                     </div>
                     <div v-if="item.description" class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">توضیحات:</div>
@@ -110,6 +117,10 @@ const data = ref([]);
 const overview = ref({});
 const lessons = ref({});
 const current_lesson = ref({})
+const duration = ref({
+    mins: 0,
+    hours: 0
+})
 const form = ref({
     report: "",
     lesson: "",
@@ -184,5 +195,28 @@ async function add_report_item() {
         .catch((err) => {
             console.log(err);
         });
+}
+function durationCalculator() {
+    duration.value.hours = Number(duration.value.hours)
+    duration.value.mins = Number(duration.value.mins)
+    let mins = (duration.value.hours * 60) + duration.value.mins;
+    if (mins <= 0) {
+        duration.value.hours = 0
+        duration.value.mins = 0
+    } else {
+        form.value.duration = mins;
+        duration.value.hours = Math.floor(mins / 60)
+        duration.value.mins = mins - (duration.value.hours * 60)
+    }
+}
+function showDuration(duration) {
+    let hours = Math.floor(duration / 60)
+    let mins = duration - (hours * 60)
+    let duration_text = ''
+    if(hours > 0){
+        duration_text = `${hours} ساعت و `
+    }
+    duration_text += `${mins} دقیقه`
+    return duration_text
 }
 </script>
