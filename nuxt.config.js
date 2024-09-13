@@ -1,9 +1,11 @@
 export default defineNuxtConfig({
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+
   typescript: {
     strict: true,
   },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "konkourplus-dashboard",
@@ -37,6 +39,7 @@ export default defineNuxtConfig({
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
+
   pinia: {
     storesDirs: ["./store/**"],
     autoImports: [
@@ -61,6 +64,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   runtimeConfig: {
     public: {
       APP_NAME: process.env.APP_NAME,
@@ -70,8 +74,5 @@ export default defineNuxtConfig({
       API_URL: process.env.API_URL,
     },
   },
-  devServer: {
-    host: '0.0.0.0',
-    port: 3000 // Make sure this port is open
-  }
+  compatibilityDate: "2024-09-13"
 });
