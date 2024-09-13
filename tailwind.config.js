@@ -58,7 +58,7 @@ module.exports = {
           text: "#488CDA"
         },
         main: {
-          default: "#E52421",
+          DEFAULT: "#E52421",
           50: "#fff1f1",
           100: "#ffe1e1",
           200: "#ffc9c8",
@@ -71,7 +71,7 @@ module.exports = {
           900: "#841a18",
           950: "#480807",
         },
-        disabled: "#7D7D7D"
+        disabled: "#78716C"
       },
     },
   },
