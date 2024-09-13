@@ -13,6 +13,18 @@ module.exports = {
       fontFamily: {
         iranyekan: ["iranyekan"],
       },
+      fontSize: {
+        xs: ['12px', { lineHeight: "15px", fontWeight: "400" }],
+        sm: ['14px', { lineHeight: "17.5px", fontWeight: "400" }],
+        base: ['16px', { lineHeight: "24px", fontWeight: "400" }],
+        lg: ['18px', { lineHeight: "27px", fontWeight: "400" }],
+        xl: ['20px', { lineHeight: "30px", fontWeight: "400" }],
+        "2xl": ['24px', { lineHeight: "36px", fontWeight: "400" }],
+        "3xl": ['30px', { lineHeight: "37.5px", fontWeight: "400" }],
+        "4xl": ['36px', { lineHeight: "45px", fontWeight: "400" }],
+        "5xl": ['48px', { lineHeight: "48px", fontWeight: "400" }],
+        "6xl": ['60px', { lineHeight: "60px", fontWeight: "400" }],
+      },
       colors: {
         base: {
           100: "#FFFFFF",
