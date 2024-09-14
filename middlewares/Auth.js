@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const { $token } = useNuxtApp()
 
     if (!$token.tokenIsSet()) {
-        return navigateTo('auth/login')
+        return navigateTo('/auth/login')
     }
     return true
 });
