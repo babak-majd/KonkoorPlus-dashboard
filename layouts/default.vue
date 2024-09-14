@@ -28,12 +28,12 @@
     </div>
 
     <!-- mobile footer links -->
-    <div class="flex flex-col gap-4 items-center absolute right-5 bottom-8">
+    <div class="flex flex-col gap-4 items-center absolute right-5 bottom-8 z-50">
       <input type="checkbox" id="opnLinkCheckBox" hidden />
       <!-- links -->
       <div id="link-list"
         class="flex flex-col justify-between h-0 p-0 overflow-hidden rounded-full bg-main-100 transition-all duration-300">
-        <NuxtLink>
+        <NuxtLink to="/">
           <SvgHome :active="check_page_is_active('')" />
         </NuxtLink>
         <NuxtLink>
