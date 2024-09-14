@@ -1,6 +1,5 @@
 <template>
-  <div v-if="loading"
-    class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+  <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
     <ToolsLoading class="w-32 h-32" />
   </div>
 

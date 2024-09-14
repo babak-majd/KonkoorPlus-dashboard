@@ -29,7 +29,7 @@
         </div>
         <!-- links -->
         <div class="flex flex-col gap-4 m-4">
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
+          <NuxtLink to="/" class="rounded-lg py-2 px-4 flex items-center gap-2"
             :class="check_page_is_active('') ? 'text-main bg-main-100' : ''">
             <SvgHome :active="check_page_is_active('')" />
             <span>خانه</span>
