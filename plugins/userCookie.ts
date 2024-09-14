@@ -19,10 +19,14 @@ export default defineNuxtPlugin((nuxtApp) => {
         return userData.value !== null
     }
 
-    nuxtApp.provide('userData', {
-        setUserData,
-        getUserData,
-        logout,
-        isLogin
-    })
+    return {
+        provide: {
+            userData: {
+                setUserData,
+                getUserData,
+                logout,
+                isLogin,
+            }
+        }
+    }
 })
