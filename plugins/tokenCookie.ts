@@ -1,5 +1,5 @@
 export default defineNuxtPlugin((nuxtApp) => {
-    const token = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
+    const token = useCookie('token', { maxAge: 60 * 60 * 24 * 7 , secure: true})
 
     function getToken() {
         return token.value

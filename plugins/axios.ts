@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         let bearerToken = null
 
         if (token.tokenIsSet()) {
-            bearerToken = `Bearer ${token.getToken()}`
+            bearerToken = `Token ${token.getToken()}`
         }
 
         const instance = axios.create({

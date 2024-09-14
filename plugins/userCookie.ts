@@ -1,9 +1,13 @@
 import type User from "~/interfaces/User"
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const userData = useCookie('user-data', { maxAge: 60 * 60 * 24 * 7 }) // This cookie is available for almost One week
+    const userData = useCookie('user_data', { maxAge: 60 * 60 * 24 * 7 }) // This cookie is available for almost One week
 
     function setUserData(data: any): void {
+        console.log(data)
+        if (typeof data !== "string") {
+            data = JSON.stringify(data)
+        }
         userData.value = data
     }
 
@@ -16,7 +20,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
 
     function isLogin() {
-        return userData.value !== null
+        return !!userData.value
+    }
+
+    function fullname() {
+        if (isLogin()) {
+            return `${getUserData().first_name} ${getUserData().last_name}`
+        }
+        return null
     }
 
     return {
@@ -26,6 +37,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 getUserData,
                 logout,
                 isLogin,
+                fullname,
             }
         }
     }
