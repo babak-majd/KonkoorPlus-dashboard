@@ -53,9 +53,9 @@
             <SvgProfileUser :active="check_page_is_active('profile')" />
             <span>کنکولیگ</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('diagram') ? 'text-main bg-main-100' : ''">
-            <SvgDiagram :active="check_page_is_active('diagram')" />
+          <NuxtLink to="/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('overview') ? 'text-main bg-main-100' : ''">
+            <SvgDiagram :active="check_page_is_active('overview')" />
             <span>نمای کلی</span>
           </NuxtLink>
         </div>
@@ -106,8 +106,8 @@
         <NuxtLink>
           <SvgProfileUser :active="check_page_is_active('profile')" />
         </NuxtLink>
-        <NuxtLink>
-          <SvgDiagram :active="check_page_is_active('diagram')" />
+        <NuxtLink to="/overview">
+          <SvgDiagram :active="check_page_is_active('overview')" />
         </NuxtLink>
       </div>
       <div class="w-10 h-10 p-2 bg-main-100 rounded-full">
