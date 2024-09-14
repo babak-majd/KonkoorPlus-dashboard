@@ -29,3 +29,13 @@
         </div>
     </div>
 </template>
+
+<script setup>
+useHead({
+    title: 'نمای کلی',
+    meta: [
+        { name: "og:title", content: "نمای کلی" },
+        { name: "og:description", content: "تقویم تحصیلی خود را مشاهده کرده و گزارش آن را دریافت کنید" }
+    ]
+})
+</script>
