@@ -1,5 +1,6 @@
 export default interface User {
-  name: string;
+  first_name: string;
+  last_name: string,
   img: string;
   email: {
     value: string;
