@@ -1,49 +1,107 @@
 <template>
-  <div
-    class="flex flex-col lg:flex-col-reverse w-full !h-[93vh] lg:!h-screen bg-base-100 bg-gradient-to-b from-[#E9F3F6] to-[#F1F6F7] p-2 gap-2 text-base-content font-iranyekan relative"
-    dir="rtl">
-    <div class="h-full rounded-md shadow-lg bg-white overflow-y-auto">
+  <div class="relative flex flex-col w-full h-svh" dir="rtl">
+    <!-- loading -->
+    <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+      <ToolsLoading class="w-32 h-32" />
+    </div>
+    <!-- mobile header -->
+    <div class="flex items-center justify-between p-5 border-b">
+      <!-- profile -->
+      <div class="flex items-center gap-3">
+        <img :src="profileSrc" id="profile-image" class="w-12 h-12 rounded-full bg-gray-300"
+          @error="failedToLoadImage()" alt="profile-image" />
+        <span class="font-semibold">
+          {{ name }}
+        </span>
+      </div>
+
+      <!-- notification -->
+      <div class="relative">
+        <SvgNotificaiton class="w-8" />
+        <div class="absolute bg-main-500 w-3 h-3 rounded-full -top-1.5 -right-1.5"></div>
+      </div>
+    </div>
+
+    <!-- page content -->
+    <div class="w-full h-full">
       <NuxtPage />
     </div>
-    <div class="h-16 rounded-md shadow-md bg-white flex flex-row items-center px-2">
-      <NuxtLink to="/tools" class="w-1/5 flex justify-around items-center" :class="active_section === 'tools' ? 'text-primary' : ''">ابزارها</NuxtLink>
-      <NuxtLink to="/reports" class="w-1/5 flex justify-around items-center" :class="active_section === 'reports' ? 'text-primary' : ''">گزارش‌ها</NuxtLink>
-      <div class="btn-square w-1/5 rounded-full flex justify-around items-center">
-        <NuxtLink to="/">
-          <SvgKonkourplus :width="40" />
+
+    <!-- mobile footer links -->
+    <div class="flex flex-col gap-4 items-center absolute right-5 bottom-8">
+      <input type="checkbox" id="opnLinkCheckBox" hidden />
+      <!-- links -->
+      <div id="link-list"
+        class="flex flex-col justify-between h-0 p-0 overflow-hidden rounded-full bg-main-100 transition-all duration-300">
+        <NuxtLink>
+          <SvgHome :active="check_page_is_active('')" />
+        </NuxtLink>
+        <NuxtLink>
+          <SvgSetting :active="check_page_is_active('setting')" />
+        </NuxtLink>
+        <NuxtLink>
+          <SvgNote :active="check_page_is_active('note')" />
+        </NuxtLink>
+        <NuxtLink>
+          <SvgProfileUser :active="check_page_is_active('profile')" />
+        </NuxtLink>
+        <NuxtLink>
+          <SvgDiagram :active="check_page_is_active('diagram')" />
         </NuxtLink>
       </div>
-      <NuxtLink to="/konkoleague" class="w-1/5 flex justify-around items-center" :class="active_section === 'konkoleague' ? 'text-primary' : ''">کنکولیگ</NuxtLink>
-      <NuxtLink to="/analytics" class="w-1/5 flex justify-around items-center" :class="active_section === 'analytics' ? 'text-primary' : ''">نمای‌کلی</NuxtLink>
+      <div class="w-10 h-10 p-2 bg-main-100 rounded-full">
+        <label for="opnLinkCheckBox">
+          <SvgDashboard class="w-6" :active="true" />
+        </label>
+      </div>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script setup>
-import ConfigStore from "../store/ConfigStore";
-
-const active_section = ref("");
-const route = useRoute();
-
-const reload_store = () => {
-  ConfigStore.reload()
-    .then(() => { })
-    .catch((error) => {
-      console.error("Error reloading store:", error);
-    });
-};
-
-onBeforeMount(() => {
-  active_section.value = route.path.split("/")[1].toLowerCase();
-  reload_store();
-});
-
-function change_active_section(section) {
-  active_section.value = section;
+const current_page = () => {
+  const path = useRoute().fullPath.split('/')
+  return path[1]
 }
+const check_page_is_active = (page) => {
+  return current_page() === page
+}
+const { $axios, $userData } = useNuxtApp()
+const loading = ref(false)
+const name = ref('')
+const profileSrc = ref('/images/default-profile.png')
+onMounted(() => {
+  getUserData()
+})
 
-watch(() => route.path, () => {
-  change_active_section(route.path.split("/")[1]);
-});
-
+async function getUserData() {
+  if (!$userData.isLogin()) {
+    loading.value = true
+    try {
+      let response = await $axios.get("students/profile")
+      if (response.data.ok) {
+        $userData.setUserData(response.data.data)
+        name.value = response.data.data.name
+      }
+    } catch (execption) {
+      console.log(execption)
+    } finally {
+      loading.value = false
+    }
+  }
+  else {
+    name.value = $userData.fullname()
+  }
+}
+function failedToLoadImage() {
+  const el = document.getElementById('profile-image')
+  el.src = '/images/default-profile.png'
+}
 </script>
+
+<style scoped>
+#opnLinkCheckBox:checked~#link-list {
+  height: 10.2rem;
+  padding: 0.5rem;
+}
+</style>
