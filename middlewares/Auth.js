@@ -1,19 +1,12 @@
-// middleware/auth.js
-import StoreConfig from "../store/ConfigStore";
-
 export default defineNuxtRouteMiddleware((to, from) => {
     // Exclude routes under /auth/*
     if (to.path.startsWith('/auth')) {
         return true;
     }
+    const { $token } = useNuxtApp()
 
-    const token = StoreConfig.token();
-
-    // Check if the token is available and valid
-    if (!token || token.length <= 20) {
-        StoreConfig.logout();
-        return navigateTo('/auth/login');
+    if (!$token.tokenIsSet()) {
+        return navigateTo('/auth/login')
     }
-
-    return true;
+    return true
 });

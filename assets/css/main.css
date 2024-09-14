@@ -9,6 +9,10 @@
   outline: none;
 }
 
+html {
+  @apply scroll-smooth font-iranyekan
+}
+
 @layer components {
   ul {
     @apply flex flex-col gap-3;

@@ -13,6 +13,18 @@ module.exports = {
       fontFamily: {
         iranyekan: ["iranyekan"],
       },
+      fontSize: {
+        xs: ['12px', { lineHeight: "15px", fontWeight: "400" }],
+        sm: ['14px', { lineHeight: "17.5px", fontWeight: "400" }],
+        base: ['16px', { lineHeight: "24px", fontWeight: "400" }],
+        lg: ['18px', { lineHeight: "27px", fontWeight: "400" }],
+        xl: ['20px', { lineHeight: "30px", fontWeight: "400" }],
+        "2xl": ['24px', { lineHeight: "36px", fontWeight: "400" }],
+        "3xl": ['30px', { lineHeight: "37.5px", fontWeight: "400" }],
+        "4xl": ['36px', { lineHeight: "45px", fontWeight: "400" }],
+        "5xl": ['48px', { lineHeight: "48px", fontWeight: "400" }],
+        "6xl": ['60px', { lineHeight: "60px", fontWeight: "400" }],
+      },
       colors: {
         base: {
           100: "#FFFFFF",
@@ -45,7 +57,21 @@ module.exports = {
           disabled: "#D9D9D9",
           text: "#488CDA"
         },
-        disabled: "#7D7D7D"
+        main: {
+          DEFAULT: "#E52421",
+          50: "#fff1f1",
+          100: "#ffe1e1",
+          200: "#ffc9c8",
+          300: "#ffa2a1",
+          400: "#fe6d6b",
+          500: "#f73f3c",
+          600: "#e52421",
+          700: "#c01815",
+          800: "#9f1715",
+          900: "#841a18",
+          950: "#480807",
+        },
+        disabled: "#78716C"
       },
     },
   },

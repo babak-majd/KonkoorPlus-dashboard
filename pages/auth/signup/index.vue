@@ -1,6 +1,5 @@
 <template>
-  <div v-if="request.pending.value"
-    class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+  <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
     <ToolsLoading class="w-32 h-32" />
   </div>
 
@@ -132,7 +131,6 @@
 
 <script setup>
 import Request from "~~/Api/Request";
-import ConfigStore from "~~/store/ConfigStore";
 
 definePageMeta({
   layout: "auth",
@@ -204,37 +202,46 @@ const form = ref({
   grade: 0,
   has_advisor: false
 });
-
+const { $axios, $token } = useNuxtApp()
+const loading = ref(false)
 async function requestToRegister() {
-  await request.post("students/auth/register", form.value).then((response) => {
-    let phone_box = document.getElementById("input_phone");
-    let password_box = document.getElementById("input_password");
-    if (response.ok) {
-      console.log(
-        ConfigStore.init(response.data)
-      );
-      navigateTo("/");
-    } else {
+  loading.value = true
+  try {
+    let response = await $axios.post("students/auth/register", form.value)
+    console.log(response)
+    if (response.data.ok) {
+      $token.setToken(response.data.data.token)
+      console.log('token set', response.data.ok, response.data.data.token)
+      return navigateTo("/")
+    }
+  } catch (exception) {
+    if (exception.response.status === 422) {
+      let phone_box = document.getElementById("input_phone");
+      let password_box = document.getElementById("input_password");
       phone_box.classList.add("border-b-2");
       phone_box.classList.add("border-b-error");
       password_box.classList.add("border-b-2");
       password_box.classList.add("border-b-error");
       error_happened.value = true;
     }
-  }).catch((response) => {
-    console.log(response.text);
-  });
-  return;
+    console.log(exception)
+  } finally {
+    loading.value = false
+  }
 }
 
 async function get_cities(state_uuid) {
-  await request.get("states/cities", { "uuid": state_uuid }).then((response) => {
-    if (response.ok) {
-      cities.value = response.data;
+  loading.value = true
+  try {
+    let response = await $axios.get("states/cities", { params: { uuid: state_uuid } })
+    if (response.data.ok) {
+      cities.value = response.data.data
     }
-  }).catch((response) => {
-    console.log(response);
-  });
+  } catch (exception) {
+    console.log(exception)
+  } finally {
+    loading.value = false
+  }
 }
 
 async function validateForm() {
@@ -256,20 +263,27 @@ async function gradeOnClick() {
 }
 
 onBeforeMount(async () => {
-  await request.get("fields").then((response) => {
-    if (response.ok) {
-      fields.value = response.data;
+  loading.value = true
+  try {
+    let response = await $axios.get("fields")
+    if (response.data.ok) {
+      fields.value = response.data.data
     }
-  }).catch((response) => {
-    console.log(response);
-  });
-
-  await request.get("states").then((response) => {
-    if (response.ok) {
-      states.value = response.data;
+  } catch (exception) {
+    console.log(exception)
+  } finally {
+    loading.value = false
+  }
+  loading.value = true
+  try {
+    let response = await $axios.get("states")
+    if (response.data.ok) {
+      states.value = response.data.data
     }
-  }).catch((response) => {
-    console.log(response);
-  });
+  } catch (exception) {
+    console.log(exception)
+  } finally {
+    loading.value = false
+  }
 })
 </script>
