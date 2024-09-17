@@ -1,5 +1,5 @@
 <template>
-  <VueApexCharts :options="chartOptions" :series="series"></VueApexCharts>
+  <VueApexCharts class="" :options="chartOptions" :series="series" height="291"></VueApexCharts>
 </template>
 
 <script setup>
@@ -11,7 +11,6 @@ const props = defineProps({
 
 const chartOptions = ref({
   chart: {
-    height: 350,
     type: 'area',
     toolbar: {
       show: false
@@ -53,15 +52,21 @@ const chartOptions = ref({
       style: {
         fontSize: '12px',
         cssClass: 'apexcharts-yaxis-label',
-      }
+      },
+      offsetX: -30,
     },
     axisBorder: {
-      show: true,
-      offsetX: 3,
+      show: false,
     },
   },
   grid: {
     show: true,
+    padding: {
+      top: 0,
+      right: -10,
+      bottom: 0,
+      left: -15
+    },
   },
   dataLabels: {
     enabled: false,
