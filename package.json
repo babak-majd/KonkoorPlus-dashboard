@@ -24,7 +24,7 @@
     "@mdi/font": "^7.2.96",
     "@pinia/nuxt": "^0.5.1",
     "@vue/typescript": "^1.8.20",
-    "apexcharts": "^3.41.0",
+    "apexcharts": "^3.53.0",
     "axios": "^1.4.0",
     "jalali-moment": "^3.3.11",
     "pinia": "^2.1.7",
