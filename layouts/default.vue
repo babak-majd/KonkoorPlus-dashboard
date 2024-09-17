@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col lg:flex-row gap-8 lg:gap-0 w-full h-svh bg-stone-100" dir="rtl">
+  <div class="relative flex flex-col lg:flex-row gap-8 lg:gap-0 w-full min-h-svh bg-stone-100" dir="rtl">
     <!-- loading -->
     <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
       <ToolsLoading class="w-32 h-32" />
