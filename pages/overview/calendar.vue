@@ -1,5 +1,9 @@
 <template>
   <div class="flex flex-col w-full h-full p-4 gap-3">
+    <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+      <ToolsLoading class="w-32 h-32" />
+    </div>
+
     <!-- breadcrumbs -->
     <div class="flex items-center">
       <ToolsBreadcrumb class="text-xs" :items="[{ text: 'نمای کلی', url: '/overview' }, 'تقویم درسی']" />
@@ -56,7 +60,7 @@
           <tr v-for="(lesson, index) in lessons" :key="index">
             <td class="text-center py-2 font-semibold px-2">{{ (index + 1) }}</td>
             <td class="text-center py-2">{{ lesson.name }}</td>
-            <td class="text-center py-2">{{ lesson.hour }}</td>
+            <td class="text-center py-2">{{ convertMinute(lesson.duration) }}</td>
             <td class="text-center py-2">{{ lesson.test }}</td>
             <td class="hidden lg:block w-12"></td>
           </tr>
@@ -71,13 +75,34 @@ useHead({
   title: 'تقویم درسی'
 })
 const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
-const lessons = [
-  { name: 'شیمی', hour: 560, test: 230 },
-  { name: 'فیزیک', hour: 420, test: 280 },
-  { name: 'ریاضی', hour: 320, test: 250 },
-  { name: 'ادبیات', hour: 120, test: 230 },
-  { name: 'دینی', hour: 110, test: 220 },
-]
+const lessons = ref([])
+const loading = ref(false)
+const { $axios } = useNuxtApp()
+const convertMinute = (minute) => {
+  let holder = minute % 60
+  let hour = (minute - holder) / 60
+
+  return `${hour}:${holder}`
+}
+
+onMounted(() => {
+  getData()
+})
+
+async function getData() {
+  loading.value = true
+  try {
+    let response = await $axios.get('statistics/lesson-calendar', { params: { from: '2024-03-06', to: Date.now() } })
+    if (response.data.ok) {
+      lessons.value = response.data.data
+    }
+  } catch (exception) {
+    console.log(exception)
+  } finally {
+    loading.value = false
+  }
+}
+
 </script>
 
 <style>
