@@ -68,6 +68,10 @@ definePageMeta({
 	middleware: [Auth],
 });
 
+useHead({
+	title: "صفحه اصلی"
+})
+
 const grades = {
 	7: "هفتم",
 	8: "هشتم",
