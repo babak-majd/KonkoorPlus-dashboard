@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full h-full">
         <div class="flex flex-col p-4 gap-10 md:grid md:grid-cols-2 md:gap-9 md:p-6">
-            <WidgetOverviewCard title="تقویم درسی" link="/overview/calender">
+            <WidgetOverviewCard title="تقویم درسی" link="/overview/calendar">
                 <template v-slot:svg-file>
                     <SvgCalender class="w-16" />
                 </template>
