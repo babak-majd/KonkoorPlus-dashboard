@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col lg:flex-row gap-8 lg:gap-0 w-full min-h-svh bg-stone-100" dir="rtl">>
+  <div class="relative flex flex-col lg:flex-row gap-8 lg:gap-0 w-full min-h-svh bg-stone-100" dir="rtl">
     <!-- mobile header -->
     <div class="print:hidden lg:hidden flex items-center bg-base-100 justify-between p-5 border-b">
       <!-- links -->
@@ -146,7 +146,6 @@ const profileSrc = ref('/images/default-profile.png')
 
 onMounted(() => {
   name.value = $userData.fullname()
-  console.log(($userData.getUserData()))
   profileSrc.value = defaultProfileImageByGender($userData.getUserData().gender)
 })
 
