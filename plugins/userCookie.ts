@@ -12,6 +12,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
 
     function getUserData(): User {
+        if (typeof userData.value === "string")
+            return JSON.parse(userData.value)
         return userData.value
     }
 
