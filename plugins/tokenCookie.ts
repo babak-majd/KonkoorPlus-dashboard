@@ -14,7 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
 
     function tokenIsSet() {
-        return token.value !== null
+        return !! token.value
     }
 
     return {
