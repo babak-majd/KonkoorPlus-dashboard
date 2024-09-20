@@ -1,5 +1,7 @@
 <template>
-  <VueApexCharts class="" :options="chartOptions" :series="series" height="291"></VueApexCharts>
+  <VueApexCharts class="flex items-center justify-center" style="width: 100%;" :options="chartOptions" :series="series"
+    height="320">
+  </VueApexCharts>
 </template>
 
 <script setup>
@@ -14,7 +16,8 @@ const chartOptions = ref({
     type: 'area',
     toolbar: {
       show: false
-    }
+    },
+    width: '100%'
   },
   stroke: {
     curve: 'smooth',
@@ -63,9 +66,9 @@ const chartOptions = ref({
     show: true,
     padding: {
       top: 0,
-      right: -10,
+      right: 0,
       bottom: 0,
-      left: -15
+      left: 0
     },
   },
   dataLabels: {
