@@ -49,7 +49,7 @@ const form = ref({
 });
 
 const loading = ref(false)
-const { $axios, $token } = useNuxtApp()
+const { $axios, $token, $userData } = useNuxtApp()
 
 async function requestToLogin() {
   loading.value = true
@@ -59,6 +59,11 @@ async function requestToLogin() {
     let response = await $axios.post("students/auth/login", form.value)
     if (response.data.ok) {
       $token.setToken(response.data.data.token)
+      response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
+      if (response.data.ok) {
+        console.log(response.data)
+        $userData.setUserData(response.data.data.reports)
+      }
       return navigateTo('/')
     }
     else {
