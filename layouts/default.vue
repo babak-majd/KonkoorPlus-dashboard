@@ -30,9 +30,9 @@
             <SvgHome :active="check_page_is_active('')" />
             <span>خانه</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('setting') ? 'text-main bg-main-100' : ''">
-            <SvgSetting :active="check_page_is_active('setting')" />
+          <NuxtLink to="/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
+            <SvgSetting :active="check_page_is_active('tools')" />
             <span>ابزارها</span>
           </NuxtLink>
           <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
@@ -99,9 +99,9 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('setting') ? 'text-main bg-main-100' : ''">
-              <SvgSetting :active="check_page_is_active('setting')" />
+            <NuxtLink to="/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
+              <SvgSetting :active="check_page_is_active('tools')" />
               <span>ابزارها</span>
             </NuxtLink>
           </li>
