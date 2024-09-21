@@ -40,9 +40,9 @@
             <SvgNote :active="check_page_is_active('reports')" />
             <span>گزارش ها</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('profile') ? 'text-main bg-main-100' : ''">
-            <SvgProfileUser :active="check_page_is_active('profile')" />
+          <NuxtLink to="/konkoleague" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('konkoleague') ? 'text-main bg-main-100' : ''">
+            <SvgProfileUser :active="check_page_is_active('konkoleague')" />
             <span>کنکولیگ</span>
           </NuxtLink>
           <NuxtLink to="/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
@@ -113,9 +113,9 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('profile') ? 'text-main bg-main-100' : ''">
-              <SvgProfileUser :active="check_page_is_active('profile')" />
+            <NuxtLink to="/konkoleague" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('konkoleague') ? 'text-main bg-main-100' : ''">
+              <SvgProfileUser :active="check_page_is_active('konkoleague')" />
               <span>کنکولیگ</span>
             </NuxtLink>
           </li>
