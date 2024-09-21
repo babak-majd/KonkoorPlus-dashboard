@@ -35,9 +35,9 @@
             <SvgSetting :active="check_page_is_active('tools')" />
             <span>ابزارها</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('note') ? 'text-main bg-main-100' : ''">
-            <SvgNote :active="check_page_is_active('note')" />
+          <NuxtLink to="/reports" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('reports') ? 'text-main bg-main-100' : ''">
+            <SvgNote :active="check_page_is_active('reports')" />
             <span>گزارش ها</span>
           </NuxtLink>
           <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
@@ -106,9 +106,9 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('note') ? 'text-main bg-main-100' : ''">
-              <SvgNote :active="check_page_is_active('note')" />
+            <NuxtLink to="/reports" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('reports') ? 'text-main bg-main-100' : ''">
+              <SvgNote :active="check_page_is_active('reports')" />
               <span>گزارش ها</span>
             </NuxtLink>
           </li>
