@@ -184,8 +184,9 @@ async function getLesson() {
 <style scoped>
 @media print {
   @page {
-    size: B4 landscape;
-    margin: none;
+    size: 9.8in 13.9in landscape !important;
+    margin: none !important;
+    padding: none !important;
     print-color-adjust: exact !important;
   }
 
