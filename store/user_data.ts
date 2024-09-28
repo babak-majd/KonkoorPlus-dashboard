@@ -14,10 +14,11 @@ export const useUserData = defineStore({
       this.userData = data
     },
     getUserData(): User {
-      if (typeof this.userData === "string") {
-        return JSON.parse(this.userData)
+      let result = this.userData
+      if (result === "string") {
+        result = JSON.parse(result)
       }
-      return this.userData
+      return result
     },
     logout() {
       this.userData = null
@@ -27,8 +28,7 @@ export const useUserData = defineStore({
     isLogin: (state) => { return !!state.userData },
     fullname: (state) => {
       if (!!state.userData) {
-        let obj = JSON.parse(state.userData)
-        return `${obj.first_name} ${obj.last_name}`
+        return `${state.userData.first_name} ${state.userData.last_name}`
       }
       return null
     }

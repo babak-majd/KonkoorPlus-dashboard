@@ -133,6 +133,8 @@
 </template>
 
 <script setup>
+import { useUserData } from '~/store/user_data';
+
 const current_page = () => {
   const path = useRoute().fullPath.split('/')
   return path[1]
@@ -140,21 +142,21 @@ const current_page = () => {
 const check_page_is_active = (page) => {
   return current_page() === page
 }
-const { $userData } = useNuxtApp()
+const userData = useUserData()
 const name = ref('')
 const profileSrc = ref('/images/default-profile.png')
 
 onMounted(() => {
-  name.value = $userData.fullname()
-  profileSrc.value = defaultProfileImageByGender($userData.getUserData().gender)
+  name.value = userData.fullname
+  profileSrc.value = defaultProfileImageByGender(userData.getUserData().gender)
 })
 
 function failedToLoadImage() {
-  profileSrc.value = defaultProfileImageByGender($userData.getUserData().gender)
+  profileSrc.value = defaultProfileImageByGender(userData.getUserData().gender)
 }
 
 function logout() {
-  $userData.logout()
+  userData.logout()
   return navigateTo('/auth/login')
 }
 
