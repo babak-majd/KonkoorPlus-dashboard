@@ -4,7 +4,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     const userData = useCookie('user_data', { maxAge: 60 * 60 * 24 * 7 }) // This cookie is available for almost One week
 
     function setUserData(data: any): void {
-        console.log(data)
         if (typeof data !== "string") {
             data = JSON.stringify(data)
         }
