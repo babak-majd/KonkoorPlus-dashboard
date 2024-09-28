@@ -38,6 +38,8 @@
 </template>
 
 <script setup>
+import { useStartDate } from '~/store/start_date';
+
 definePageMeta({
   layout: "auth",
 });
@@ -50,6 +52,7 @@ const form = ref({
 
 const loading = ref(false)
 const { $axios, $token, $userData } = useNuxtApp()
+const startDate = useStartDate()
 
 async function requestToLogin() {
   loading.value = true
@@ -61,8 +64,8 @@ async function requestToLogin() {
       $token.setToken(response.data.data.token)
       response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
       if (response.data.ok) {
-        console.log(response.data)
-        $userData.setUserData(response.data.data.reports)
+        $userData.setUserData(response.data.data)
+        startDate.setStartDate(response.data.start_date)
       }
       return navigateTo('/')
     }
