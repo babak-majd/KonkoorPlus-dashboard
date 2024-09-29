@@ -56,13 +56,20 @@
             <th class="hidden lg:block w-12"></th>
           </tr>
         </thead>
-        <tbody class="border-x border-b rounded-b-xl">
+        <tbody class="border-x border-b rounded-b-xl" v-if="lessons.length > 0">
           <tr v-for="(lesson, index) in lessons" :key="index">
             <td class="text-center py-2 font-semibold px-2">{{ (index + 1) }}</td>
-            <td class="text-center py-2">{{ lesson.name }}</td>
+            <td class="text-center py-2">{{ lesson.title }}</td>
             <td class="text-center py-2">{{ convertMinute(lesson.duration) }}</td>
             <td class="text-center py-2">{{ lesson.test }}</td>
             <td class="hidden lg:block w-12"></td>
+          </tr>
+        </tbody>
+        <tbody class="border-x border-b rounded-b-xl" v-else>
+          <tr>
+            <td colspan="5" class="text-center py-2 font-semibold px-2">
+              اطلاعات یافت نشد
+            </td>
           </tr>
         </tbody>
       </table>
@@ -71,6 +78,8 @@
 </template>
 
 <script setup>
+import { useStartDate } from '~/store/start_date';
+
 useHead({
   title: 'تقویم درسی'
 })
@@ -78,6 +87,7 @@ const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', '�
 const lessons = ref([])
 const loading = ref(false)
 const { $axios } = useNuxtApp()
+const startDate = useStartDate()
 const convertMinute = (minute) => {
   let holder = minute % 60
   let hour = (minute - holder) / 60
@@ -91,8 +101,12 @@ onMounted(() => {
 
 async function getData() {
   loading.value = true
+  let now = new Date(Date.now())
+  let month = now.getMonth().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })
+  let day = now.getDay().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })
+  let to = `${now.getFullYear()}-${month}-${day}`
   try {
-    let response = await $axios.get('statistics/lesson-calendar', { params: { from: '2024-03-06', to: Date.now() } })
+    let response = await $axios.get('statistics/lesson-calendar', { params: { 'start-date': startDate.getStartDate(), 'end-date': to } })
     if (response.data.ok) {
       lessons.value = response.data.data
     }
