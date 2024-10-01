@@ -70,7 +70,7 @@ async function requestToLogin() {
         userData.setUserData(response.data.data)
         startDate.setStartDate(response.data.start_date)
       }
-      return navigateTo('/')
+      return await navigateTo('/', { open: { target: "_self" } })
     }
     else {
       phone_box.classList.add("border-b-2");
