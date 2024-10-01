@@ -1,11 +1,7 @@
 <template>
   <div class="relative flex flex-col lg:flex-row gap-8 lg:gap-0 w-full min-h-svh bg-stone-100" dir="rtl">
-    <!-- loading -->
-    <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
-      <ToolsLoading class="w-32 h-32" />
-    </div>
     <!-- mobile header -->
-    <div class="lg:hidden flex items-center bg-base-100 justify-between p-5 border-b">
+    <div class="print:hidden lg:hidden flex items-center bg-base-100 justify-between p-5 border-b">
       <!-- links -->
       <div class="flex items-center gap-3">
         <label for="mobile-menu">
@@ -18,7 +14,7 @@
         alt="profile-image" />
     </div>
 
-    <div class="hidden lg:flex flex-col justify-between min-w-64 bg-white border-l border-l-stone-300">
+    <div class="print:hidden hidden lg:flex flex-col justify-between min-w-64 bg-white border-l border-l-stone-300">
       <!-- header and links -->
       <div class="flex flex-col gap-9">
         <!-- header -->
@@ -34,19 +30,19 @@
             <SvgHome :active="check_page_is_active('')" />
             <span>خانه</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('setting') ? 'text-main bg-main-100' : ''">
-            <SvgSetting :active="check_page_is_active('setting')" />
+          <NuxtLink to="/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
+            <SvgSetting :active="check_page_is_active('tools')" />
             <span>ابزارها</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('note') ? 'text-main bg-main-100' : ''">
-            <SvgNote :active="check_page_is_active('note')" />
+          <NuxtLink to="/reports" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('reports') ? 'text-main bg-main-100' : ''">
+            <SvgNote :active="check_page_is_active('reports')" />
             <span>گزارش ها</span>
           </NuxtLink>
-          <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('profile') ? 'text-main bg-main-100' : ''">
-            <SvgProfileUser :active="check_page_is_active('profile')" />
+          <NuxtLink to="/konkoleague" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('konkoleague') ? 'text-main bg-main-100' : ''">
+            <SvgProfileUser :active="check_page_is_active('konkoleague')" />
             <span>کنکولیگ</span>
           </NuxtLink>
           <NuxtLink to="/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
@@ -103,23 +99,23 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('setting') ? 'text-main bg-main-100' : ''">
-              <SvgSetting :active="check_page_is_active('setting')" />
+            <NuxtLink to="/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
+              <SvgSetting :active="check_page_is_active('tools')" />
               <span>ابزارها</span>
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('note') ? 'text-main bg-main-100' : ''">
-              <SvgNote :active="check_page_is_active('note')" />
+            <NuxtLink to="/reports" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('reports') ? 'text-main bg-main-100' : ''">
+              <SvgNote :active="check_page_is_active('reports')" />
               <span>گزارش ها</span>
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('profile') ? 'text-main bg-main-100' : ''">
-              <SvgProfileUser :active="check_page_is_active('profile')" />
+            <NuxtLink to="/konkoleague" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('konkoleague') ? 'text-main bg-main-100' : ''">
+              <SvgProfileUser :active="check_page_is_active('konkoleague')" />
               <span>کنکولیگ</span>
             </NuxtLink>
           </li>
@@ -144,34 +140,14 @@ const current_page = () => {
 const check_page_is_active = (page) => {
   return current_page() === page
 }
-const { $axios, $userData } = useNuxtApp()
-const loading = ref(false)
+const { $userData } = useNuxtApp()
 const name = ref('')
 const profileSrc = ref('/images/default-profile.png')
-onMounted(() => {
-  getUserData()
-})
 
-async function getUserData() {
-  if (!$userData.isLogin()) {
-    loading.value = true
-    try {
-      let response = await $axios.get("students/profile")
-      if (response.data.ok) {
-        $userData.setUserData(response.data.data)
-        name.value = response.data.data.name
-      }
-    } catch (execption) {
-      console.log(execption)
-    } finally {
-      loading.value = false
-    }
-  }
-  else {
-    name.value = $userData.fullname()
-  }
+onMounted(() => {
+  name.value = $userData.fullname()
   profileSrc.value = defaultProfileImageByGender($userData.getUserData().gender)
-}
+})
 
 function failedToLoadImage() {
   profileSrc.value = defaultProfileImageByGender($userData.getUserData().gender)
@@ -181,6 +157,7 @@ function logout() {
   $userData.logout()
   return navigateTo('/auth/login')
 }
+
 function defaultProfileImageByGender(gender) {
   return gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'
 }

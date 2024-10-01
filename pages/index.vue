@@ -73,6 +73,7 @@ useHead({
 })
 
 const grades = {
+	0: 'هیچکدام',
 	7: "هفتم",
 	8: "هشتم",
 	9: "نهم",
@@ -81,13 +82,30 @@ const grades = {
 	12: "دوازدهم",
 	13: "فارغ التحصیل",
 }
-const data = ref({});
-const { $userData } = useNuxtApp()
-onBeforeMount(() => {
-	data.value = $userData.getUserData()
+const data = ref({
+	first_name: '',
+	last_name: '',
+	phone_number: '',
+	has_advisor: false,
+	state: { name: '' },
+	city: { name: '' },
+	grade: 0,
+	field: { name: '' },
+	gender: 'M'
+});
+const { $userData, $token } = useNuxtApp()
+onMounted(() => {
+	console.log($userData.getUserData())
+	if ($token.tokenIsSet()) {
+		data.value = $userData.getUserData()
+	}
+	else {
+		logout()
+	}
 })
 function logout() {
 	$userData.logout()
+	$token.logout()
 	return navigateTo('/auth/login')
 }
 </script>
