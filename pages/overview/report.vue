@@ -24,8 +24,10 @@
     </div>
     <!-- chart -->
     <div id="chartSection" class="relative flex w-full print:items-center print:justify-center">
-      <ToolsChartArea :categories="data.map((item) => item.title)"
-        :series="[{ data: data.map((item) => item.value) }]" />
+      <ClientOnly>
+        <ToolsChartArea :categories="data.map((item) => item.title)"
+          :series="[{ data: data.map((item) => item.value) }]" />
+      </ClientOnly>
       <div v-if="!(!!query.lesson)"
         class="absolute top-0 left-0 w-full h-full bg-gray-50 z-50 flex flex-col items-center justify-center text-2xl xl:text-4xl">
         لطفا درس را انتخاب کنید
@@ -82,17 +84,21 @@
                 <div class="flex items-center gap-2 text-base-500">
                   <span>{{ item.tests }} تست</span>
                   <span>|</span>
-                  <span>{{ item.hours }} ساعت</span>
+                  <!-- TODO: Need to change item.hours to item.minutes -->
+                  <span>{{ convertMinute(item.hours) }} ساعت</span>
                 </div>
               </div>
             </div>
           </div>
           <!-- pie chart -->
           <div class="flex items-center justify-center relative">
-            <ToolsChartPie :series="topThird.map((item) => item.hours)" />
+            <ClientOnly>
+              <ToolsChartPie :series="topThird.map((item) => item.hours)" />
+            </ClientOnly>
             <div class="absolute flex flex-col items-center gap-0 transform" style="">
               <span class="font-semibold text-lg">
-                {{ topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a, 0) }}
+                <!-- TODO : Need to change item.hours to item.minutes -->
+                {{ convertMinute(topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a, 0)) }}
               </span>
               <span class="text-base-500">ساعت</span>
             </div>
@@ -125,7 +131,12 @@ const startDate = useStartDate().getStartDate()
 const topThirdColor = (index) => {
   return index === 0 ? 'bg-main' : (index === 1 ? 'bg-main-400' : 'bg-main-200')
 }
+const convertMinute = (minute) => {
+  let holder = minute % 60
+  let hours = (minute - holder) / 60
 
+  return `${hours}:${holder}`
+}
 const passedDayOnAcademicYear = () => {
   if (remainDays.value === -1) {
     let startOfYear = new Date(`${new Date().getFullYear()}-01-01`)
@@ -182,9 +193,9 @@ async function getTopThird() {
       topThird.value = result
       if (topThird.value.length === 0) {
         topThird.value = [
-          { hours: 1, tests: 1, name: 'اطلاعات در دسترس نیست' },
-          { hours: 1, tests: 1, name: 'اطلاعات در دسترس نیست' },
-          { hours: 1, tests: 1, name: 'اطلاعات در دسترس نیست' },
+          { hours: 1, tests: 0, name: 'اطلاعات در دسترس نیست' },
+          { hours: 1, tests: 0, name: 'اطلاعات در دسترس نیست' },
+          { hours: 1, tests: 0, name: 'اطلاعات در دسترس نیست' },
         ]
       }
     }
@@ -216,11 +227,18 @@ async function getLesson() {
 
 <style scoped>
 @media print {
+
+  /** تنظیمات این بخش به مرورگر کاربر هم بستگی دارد اما معمولا سایز صفحه را به سایز مد نظر تغییر میدهد */
   @page {
-    size: 9.8in 13.9in landscape !important;
-    margin: none !important;
-    padding: none !important;
+    size: B4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     print-color-adjust: exact !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   #printable {
@@ -228,12 +246,6 @@ async function getLesson() {
     height: 100vh;
     display: flex;
     flex-direction: column;
-  }
-
-  #printable>* {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
   }
 }
 </style>

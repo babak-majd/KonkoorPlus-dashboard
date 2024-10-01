@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-start rounded-full min-h-4 bg-main-200 overflow-clip">
-    <div class="h-full bg-main rounded-full" :style="`width: ${width};`"></div>
+    <div class="h-full bg-main rounded-full text-transparent" :style="`width: ${width};`"> </div>
   </div>
 </template>
 
