@@ -19,31 +19,27 @@
         <!-- main filter -->
         <fieldset class="flex items-center gap-4">
           <div class="flex items-center">
-            <input class="radio-filter" type="radio" name="filter" id="radio-month" hidden checked />
+            <input class="radio-filter" type="radio" name="filter" id="radio-month" :value="0" v-model="type" hidden
+              checked />
             <label for="radio-month" class="flex items-center gap-3 cursor-pointer">
               <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
               ماه
             </label>
           </div>
           <div class="flex items-center">
-            <input class="radio-filter" type="radio" name="filter" id="radio-week" hidden />
+            <input class="radio-filter" type="radio" name="filter" id="radio-week" hidden :value="1" v-model="type" />
             <label for="radio-week" class="flex items-center gap-3 cursor-pointer">
               <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
               هفته
             </label>
           </div>
-          <div class="flex items-center">
-            <input class="radio-filter" type="radio" name="filter" id="radio-day" hidden />
-            <label for="radio-day" class="flex items-center gap-3 cursor-pointer">
-              <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
-              روز
-            </label>
-          </div>
         </fieldset>
 
-        <select
+        <select v-model="dateRange"
           class="bg-base-250 w-full md:max-w-64 p-2 rounded-lg focus-within:outline focus-within:outline-1 focus-within:border focus-within:outline-offset-4 focus-within:bg-white">
-          <option v-for="(month, index) in months" :key="index" :value="(index + 1)">{{ month }}</option>
+          <option v-for="(item, index) in selectBoxItems" :key="index" :value="item">
+            {{ item.title }}
+          </option>
         </select>
       </div>
       <!-- table -->
@@ -57,13 +53,20 @@
             <th class="hidden lg:block w-12"></th>
           </tr>
         </thead>
-        <tbody class="border-x border-b rounded-b-xl">
+        <tbody class="border-x border-b rounded-b-xl" v-if="lessons.length > 0">
           <tr v-for="(lesson, index) in lessons" :key="index">
             <td class="text-center py-2 font-semibold px-2">{{ (index + 1) }}</td>
-            <td class="text-center py-2">{{ lesson.name }}</td>
+            <td class="text-center py-2">{{ lesson.lesson_name }}</td>
             <td class="text-center py-2">{{ convertMinute(lesson.duration) }}</td>
             <td class="text-center py-2">{{ lesson.test }}</td>
             <td class="hidden lg:block w-12"></td>
+          </tr>
+        </tbody>
+        <tbody class="border-x border-b rounded-b-xl" v-else>
+          <tr>
+            <td colspan="5" class="text-center py-2 font-semibold px-2">
+              اطلاعات یافت نشد
+            </td>
           </tr>
         </tbody>
       </table>
@@ -72,14 +75,19 @@
 </template>
 
 <script setup>
+import moment, { min } from 'jalali-moment';
+import { useStartDate } from '~/store/start_date';
+
 useHead({
   title: 'تقویم درسی'
 })
-const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
-
+const selectBoxItems = ref([])
+const dateRange = ref(null)
 const lessons = ref([])
 const loading = ref(false)
 const { $axios } = useNuxtApp()
+const startDate = useStartDate()
+const type = ref(0)
 const convertMinute = (minute) => {
   let holder = minute % 60
   let hour = (minute - holder) / 60
@@ -88,13 +96,68 @@ const convertMinute = (minute) => {
 }
 
 onMounted(() => {
-  getData()
+  selectBoxItems.value = makeSelectBoxItemForMonth()
+  dateRange.value = selectBoxItems.value[0]
 })
 
-async function getData() {
+watch(dateRange, (newValue, oldValue) => {
+  if (!!newValue) {
+    getData(newValue.start, newValue.end)
+  }
+})
+watch(type, (newValue, oldValue) => {
+  if (newValue === 1) {
+    selectBoxItems.value = makeSelectBoxItemByWeek()
+  }
+  else {
+    selectBoxItems.value = makeSelectBoxItemForMonth()
+  }
+  dateRange.value = selectBoxItems.value[0]
+})
+function makeSelectBoxItemForMonth() {
+  const months = usePersianMonths()
+  let data = []
+  months.forEach(month => {
+    let start = moment(month.start, 'jYYYY/jMM/jDD').format('YYYY-MM-DD')
+    let end = moment(month.end, 'jYYYY/jMM/jDD').format('YYYY-MM-DD')
+    data.push({
+      title: month.title,
+      start: start,
+      end: end
+    })
+  })
+
+  return data
+}
+function makeSelectBoxItemByWeek() {
+  const start = new Date(startDate.getStartDate())
+  const now = new Date(Date.now())
+  const data = []
+  let end = start
+  let weekIndex = 1
+
+  do {
+    let startWeek = new Date(end);
+    end.setDate(end.getDate() + 7);
+    let hold = new Date(end);
+
+    let item = {
+      title: `هفته ${useConvertToOridinal(weekIndex)}`,
+      start: startWeek.toISOString().split('T')[0],
+      end: hold.toISOString().split('T')[0]
+    };
+
+    weekIndex++
+
+    data.push(item)
+  } while (end <= now)
+  return data
+}
+
+async function getData(from, end) {
   loading.value = true
   try {
-    let response = await $axios.get('statistics/lesson-calendar', { params: { from: '2024-03-06', to: Date.now() } })
+    let response = await $axios.get('statistics/lesson-calendar', { params: { 'start-date': from, 'end-date': end } })
     if (response.data.ok) {
       lessons.value = response.data.data
     }

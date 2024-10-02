@@ -38,6 +38,10 @@
 </template>
 
 <script setup>
+import { useStartDate } from '~/store/start_date';
+import { useToken } from '~/store/tokenStore';
+import { useUserData } from '~/store/user_data';
+
 definePageMeta({
   layout: "auth",
 });
@@ -49,8 +53,10 @@ const form = ref({
 });
 
 const loading = ref(false)
-const { $axios, $token, $userData } = useNuxtApp()
-
+const { $axios } = useNuxtApp()
+const startDate = useStartDate()
+const userData = useUserData()
+const token = useToken()
 async function requestToLogin() {
   loading.value = true
   let phone_box = document.getElementById("input_phone");
@@ -58,13 +64,13 @@ async function requestToLogin() {
   try {
     let response = await $axios.post("students/auth/login", form.value)
     if (response.data.ok) {
-      $token.setToken(response.data.data.token)
+      token.setToken(response.data.data.token)
       response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
       if (response.data.ok) {
-        console.log(response.data)
-        $userData.setUserData(response.data.data.reports)
+        userData.setUserData(response.data.data)
+        startDate.setStartDate(response.data.start_date)
       }
-      return navigateTo('/')
+      return await navigateTo('/', { open: { target: "_self" } })
     }
     else {
       phone_box.classList.add("border-b-2");

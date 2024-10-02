@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@persian-tools/persian-tools": "^3.5.2",
     "@pinia/nuxt": "^0.5.1",
     "@vue/typescript": "^1.8.20",
     "apexcharts": "^3.53.0",

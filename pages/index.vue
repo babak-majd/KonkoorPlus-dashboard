@@ -62,7 +62,9 @@
 </template>
 
 <script setup>
+import { useUserData } from "~/store/user_data";
 import Auth from "../middlewares/Auth";
+import { useToken } from "~/store/tokenStore";
 
 definePageMeta({
 	middleware: [Auth],
@@ -93,19 +95,20 @@ const data = ref({
 	field: { name: '' },
 	gender: 'M'
 });
-const { $userData, $token } = useNuxtApp()
+const userData = useUserData()
+const token = useToken()
+
 onMounted(() => {
-	console.log($userData.getUserData())
-	if ($token.tokenIsSet()) {
-		data.value = $userData.getUserData()
+	if (token.tokenIsSet) {
+		data.value = userData.getUserData()
 	}
 	else {
 		logout()
 	}
 })
 function logout() {
-	$userData.logout()
-	$token.logout()
+	userData.logout()
+	token.logout()
 	return navigateTo('/auth/login')
 }
 </script>

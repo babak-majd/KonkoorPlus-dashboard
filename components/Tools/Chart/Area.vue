@@ -1,11 +1,12 @@
 <template>
   <VueApexCharts class="flex items-center justify-center" style="width: 100%;" :options="chartOptions" :series="series"
-    height="320">
+    height="320" :key="JSON.stringify(series)">
   </VueApexCharts>
 </template>
 
 <script setup>
 import VueApexCharts from "vue3-apexcharts";
+
 const props = defineProps({
   categories: { type: Array, default: [] },
   series: { type: Array, default: [] }
@@ -76,17 +77,33 @@ const chartOptions = ref({
   },
 });
 
+watch(() => props.series, (newValue, oldValue) => {
+  getMinAndMax()
+})
+watch(() => props.categories, (newValue, oldValue) => {
+  chartOptions.value.xaxis.categories = newValue
+})
+
 onMounted(() => {
+  getMinAndMax()
+})
+
+function getMinAndMax() {
   let max = 0
   props.series.forEach((series) => {
-    series.data.forEach((item) => {
-      if (item > max) max = item
-    })
+    if (typeof series === "number") {
+      if (series > max) max = series
+    }
+    else if (!!series.data) {
+      series.data.forEach((item) => {
+        if (item > max) max = item
+      })
+    }
   })
   if (max % 10 != 0) {
     max += (10 - (max % 10))
   }
   chartOptions.value.yaxis.min = 0
   chartOptions.value.yaxis.max = max
-})
+}
 </script>
