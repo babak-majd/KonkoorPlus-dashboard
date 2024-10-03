@@ -81,22 +81,22 @@
     </div>
 
     <!-- mobile footer links -->
-    <ToolsDrawer id="mobile-menu" class="lg:hidden">
-      <div class="bg-base-200 text-base-content min-h-full w-60 p-4 flex flex-col gap-8">
+    <ToolsDrawer id="mobile-menu" class="lg:hidden z-50">
+      <div class="bg-base-200 text-base-content min-h-full w-60 p-4 flex flex-col justify-between gap-8">
         <!-- logo -->
         <div class="flex items-center pt-4 px-2">
-          <div class="w-20 p-3">
-            <SvgLogo />
+          <div class="w-full p-3">
+            <SvgLogoDesktop class="w-full" />
           </div>
         </div>
-        <ul class="flex flex-col gap-4">
+        <ul class="flex flex-col gap-4 -mt-28">
           <!-- Sidebar content here -->
           <li>
-            <NuxtLink to="/" class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('') ? 'text-main bg-main-100' : ''">
-              <SvgHome :active="check_page_is_active('')" />
-              <span>خانه</span>
-            </NuxtLink>
+              <NuxtLink to="/" class="rounded-lg py-2 px-4 flex items-center gap-2"
+                :class="check_page_is_active('') ? 'text-main bg-main-100' : ''">
+                <SvgHome :active="check_page_is_active('')" />
+                <span>خانه</span>
+              </NuxtLink>
           </li>
           <li>
             <NuxtLink to="/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
@@ -127,6 +127,13 @@
             </NuxtLink>
           </li>
         </ul>
+        <!-- logout -->
+        <div class="flex mb-8 mx-2">
+          <button @click="logout()" class="text-main w-full rounded-lg flex items-center gap-2 py-2 px-4">
+            <SvgLogout :active="true" />
+            <span>خروج</span>
+          </button>
+        </div>
       </div>
     </ToolsDrawer>
   </div>
