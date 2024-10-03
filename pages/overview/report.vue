@@ -25,7 +25,7 @@
     <!-- chart -->
     <div id="chartSection" class="relative flex w-full print:items-center print:justify-center">
       <ClientOnly>
-        <ToolsChartArea :categories="data.map((item) => item.title)"
+        <ToolsChartArea width="96%" :categories="data.map((item) => item.title)"
           :series="[{ data: data.map((item) => item.value) }]" />
       </ClientOnly>
       <div v-if="!(!!query.lesson)"
@@ -43,7 +43,7 @@
         </div>
 
         <!-- progress bar -->
-        <div class="flex flex-col gap-1 max-w-80 2xl:max-w-md">
+        <div class="flex flex-col gap-1 lg:max-w-80 2xl:max-w-md">
           <ToolsProgress :max="365" :value="passedDayOnAcademicYear()" />
           <div class="flex items-center justify-between text-sm p-2">
             <!-- progressed days -->
@@ -91,14 +91,20 @@
             </div>
           </div>
           <!-- pie chart -->
-          <div class="flex items-center justify-center relative lg:w-1/2">
+          <div class="flex items-center justify-center relative w-full lg:w-1/2">
             <ClientOnly>
-              <ToolsChartPie :series="topThird.map((item) => item.hours)" />
+              <div v-if="windowWith > 400" class="w-fit">
+                <ToolsChartPie :series="topThird.map((item) => item.hours)" />
+              </div>
+              <div v-else>
+                <ToolsChartPie width="86%" :series="topThird.map((item) => item.hours)" />
+              </div>
             </ClientOnly>
             <div class="absolute flex flex-col items-center gap-0 transform">
-              <span class="font-semibold text-xs text-wrap text-center w-24">
+              <span class="relative text-center text-2xl font-semibold w-24 after">
                 <!-- TODO : Need to change item.hours to item.minutes -->
-                {{ useConvertMinute(topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a, 0)) }}
+                {{ round_minute(topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a,
+                  0)).toLocaleString('fa-IR') }}
               </span>
             </div>
           </div>
@@ -122,6 +128,7 @@ const remainDays = ref(-1)
 const query = ref({
   lesson: null
 })
+const windowWith = ref(0)
 
 const userData = useUserData()
 const token = useToken()
@@ -130,11 +137,10 @@ const startDate = useStartDate().getStartDate()
 const topThirdColor = (index) => {
   return index === 0 ? 'bg-main' : (index === 1 ? 'bg-main-400' : 'bg-main-200')
 }
-const convertMinute = (minute) => {
+const round_minute = (minute) => {
   let holder = minute % 60
-  let hours = (minute - holder) / 60
-
-  return `${hours}:${holder}`
+  let hour = (minute - holder) / 60
+  return holder >= 30 ? hour + 1 : hour
 }
 const passedDayOnAcademicYear = () => {
   if (remainDays.value === -1) {
@@ -152,6 +158,7 @@ const passedDayOnAcademicYear = () => {
 onMounted(() => {
   getLesson()
   getTopThird()
+  windowWith.value = window.screen.width
 })
 
 function print() {
@@ -225,6 +232,17 @@ async function getLesson() {
 </script>
 
 <style scoped>
+.after::after {
+  content: 'ساعت';
+  color: #7D7D7D;
+  font-size: small;
+  position: absolute;
+  bottom: -1.25rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
 @media print {
 
   /** تنظیمات این بخش به مرورگر کاربر هم بستگی دارد اما معمولا سایز صفحه را به سایز مد نظر تغییر میدهد */
