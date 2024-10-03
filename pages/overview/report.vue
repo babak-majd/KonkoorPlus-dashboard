@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-5 md:flex-row">
+    <div class="flex flex-col gap-5 lg:gap-2 md:flex-row">
       <div class="flex flex-col md:w-1/2">
         <h4 class="text-lg font-semibold">سال تحصیلی</h4>
         <div class="flex items-center gap-1">
@@ -70,9 +70,9 @@
       <!-- activity -->
       <div class="flex flex-col md:w-1/2">
         <!-- courses -->
-        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-evenly">
+        <div class="flex flex-col gap-5 lg:gap-2 md:flex-row md:items-center md:justify-evenly">
           <!-- course -->
-          <div class="flex flex-col gap-6 md:gap-2 min-w-fit h-52">
+          <div class="flex flex-col gap-6 md:gap-2 lg:w-1/2 h-52">
             <h5 class="text-lg font-semibold">فعالیت این ماه</h5>
             <div class="flex items-center gap-3" v-for="(item, index) in topThird" :key="index">
               <!-- progress color -->
@@ -81,26 +81,25 @@
               </div>
               <div class="flex flex-col">
                 <h6>{{ item.name }}</h6>
-                <div class="flex items-center gap-2 text-base-500">
+                <div class="flex items-center gap-2 text-base-500 lg:text-xs">
                   <span>{{ item.tests }} تست</span>
                   <span>|</span>
                   <!-- TODO: Need to change item.hours to item.minutes -->
-                  <span>{{ convertMinute(item.hours) }} ساعت</span>
+                  <span>{{ useConvertMinute(item.hours) }}</span>
                 </div>
               </div>
             </div>
           </div>
           <!-- pie chart -->
-          <div class="flex items-center justify-center relative">
+          <div class="flex items-center justify-center relative lg:w-1/2">
             <ClientOnly>
               <ToolsChartPie :series="topThird.map((item) => item.hours)" />
             </ClientOnly>
-            <div class="absolute flex flex-col items-center gap-0 transform" style="">
-              <span class="font-semibold text-lg">
+            <div class="absolute flex flex-col items-center gap-0 transform">
+              <span class="font-semibold text-xs text-wrap text-center w-24">
                 <!-- TODO : Need to change item.hours to item.minutes -->
-                {{ convertMinute(topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a, 0)) }}
+                {{ useConvertMinute(topThird.map((item) => item.hours).reduce((partialSum, a) => partialSum + a, 0)) }}
               </span>
-              <span class="text-base-500">ساعت</span>
             </div>
           </div>
         </div>
