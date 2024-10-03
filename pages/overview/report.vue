@@ -43,7 +43,7 @@
         </div>
 
         <!-- progress bar -->
-        <div class="flex flex-col gap-1  2xl:max-w-md">
+        <div class="flex flex-col gap-1 lg:max-w-80 2xl:max-w-md">
           <ToolsProgress :max="365" :value="passedDayOnAcademicYear()" />
           <div class="flex items-center justify-between text-sm p-2">
             <!-- progressed days -->
@@ -93,7 +93,12 @@
           <!-- pie chart -->
           <div class="flex items-center justify-center relative w-full lg:w-1/2">
             <ClientOnly>
-              <ToolsChartPie width="89%" :series="topThird.map((item) => item.hours)" />
+              <div v-if="windowWith > 400" class="w-fit">
+                <ToolsChartPie :series="topThird.map((item) => item.hours)" />
+              </div>
+              <div v-else>
+                <ToolsChartPie width="86%" :series="topThird.map((item) => item.hours)" />
+              </div>
             </ClientOnly>
             <div class="absolute flex flex-col items-center gap-0 transform">
               <span class="relative text-center text-2xl font-semibold w-24 after">
@@ -123,6 +128,7 @@ const remainDays = ref(-1)
 const query = ref({
   lesson: null
 })
+const windowWith = ref(0)
 
 const userData = useUserData()
 const token = useToken()
@@ -152,6 +158,7 @@ const passedDayOnAcademicYear = () => {
 onMounted(() => {
   getLesson()
   getTopThird()
+  windowWith.value = window.screen.width
 })
 
 function print() {
