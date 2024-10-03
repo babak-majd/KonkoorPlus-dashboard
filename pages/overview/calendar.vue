@@ -57,7 +57,7 @@
           <tr v-for="(lesson, index) in lessons" :key="index">
             <td class="text-center py-2 font-semibold px-2">{{ (index + 1) }}</td>
             <td class="text-center py-2">{{ lesson.lesson_name }}</td>
-            <td class="text-center py-2">{{ convertMinute(lesson.duration) }}</td>
+            <td class="text-center py-2">{{ useConvertMinute(lesson.duration) }}</td>
             <td class="text-center py-2">{{ lesson.test }}</td>
             <td class="hidden lg:block w-12"></td>
           </tr>
@@ -88,12 +88,6 @@ const loading = ref(false)
 const { $axios } = useNuxtApp()
 const startDate = useStartDate()
 const type = ref(0)
-const convertMinute = (minute) => {
-  let holder = minute % 60
-  let hour = (minute - holder) / 60
-
-  return `${hour}:${holder}`
-}
 
 onMounted(() => {
   selectBoxItems.value = makeSelectBoxItemForMonth()
