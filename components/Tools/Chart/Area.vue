@@ -18,7 +18,10 @@ const chartOptions = ref({
     toolbar: {
       show: false
     },
-    width: '100%'
+    width: '100%',
+  },
+  tooltip: {
+    enabled: false,
   },
   stroke: {
     curve: 'smooth',

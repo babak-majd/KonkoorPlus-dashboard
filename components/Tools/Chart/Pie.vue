@@ -12,6 +12,9 @@ let chartOptions = {
       show: false
     },
   },
+  tooltip: {
+    enabled: false,
+  },
   colors: ['#E52421', '#fe6d6b', '#ffc9c8'],
   plotOptions: {
     pie: {
