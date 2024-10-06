@@ -1,6 +1,6 @@
 <template>
     <div class="flex w-full justify-center items-center p-2">
-        <div class="w-full lg:w-[24rem] lg:border-2 rounded-lg lg:p-2 !pt-6 gap-2 flex flex-col">
+        <div class="w-full lg:w-[24rem] lg:border-2 rounded-lg lg:p-2 !pt-6 gap-8 flex flex-col">
             <div class="custom_input_box text-base-content w-full lg:w-full">
                 <InputTextMarked @change="percentageCalculator()" dir="ltr" v-model="questions" required
                     id="input_questions" type="number">
@@ -23,6 +23,11 @@
                     </label>
                 </InputTextMarked>
             </div>
+            <div class="custom_input_box text-base-content w-full lg:w-full gap-px">
+                <button @click="percentageCalculator()" type="submit" class="btn-primary w-full lg:w-full">
+                    محاسبه درصد
+                </button>
+            </div>
             <div class="custom_input_box text-base-content w-full lg:w-full grid grid-cols-2 gap-px">
                 <div class="flex flex-row gap-2">
                     <span class="font-bold">تعداد نزده:</span>
@@ -30,7 +35,7 @@
                 </div>
                 <div class="flex flex-row gap-2">
                     <span class="font-bold">درصد شما:</span>
-                    <span>{{ percentage }}</span>
+                    <span class="ltr">{{ percentage }}</span>
                 </div>
             </div>
         </div>
@@ -50,6 +55,11 @@ function percentageCalculator() {
         questions.value = 0;
         corrects.value = 0;
         wrongs.value = 0;
+    } else if (corrects.value + wrongs.value + questions.value <= 0) {
+        questions.value = 0;
+        corrects.value = 0;
+        wrongs.value = 0;
+        percentage.value = 0;
     } else {
         percentage.value = (Math.floor(((corrects.value * 3) - wrongs.value) / (questions.value * 3) * 10000)) / 100;
     }
