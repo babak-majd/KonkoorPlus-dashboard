@@ -27,7 +27,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 const isVisible = ref(false);
-const baseClasses = 'resize-none bg-white w-full border border-b-[2px] border-base-400 focus:border-b-primary rounded-[3px] text-sm placeholder:text-sm p-2 h-10 text-base-content placeholder:text-base-400';
+const baseClasses = 'resize-none bg-white w-full border border-b-[2px] border-base-400 focus:border-b-main rounded-[3px] text-sm placeholder:text-sm p-2 h-10 text-base-content placeholder:text-base-400';
 
 const updateValue = (event) => {
   emit('update:modelValue', event.target.value);
