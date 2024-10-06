@@ -7,9 +7,9 @@
         </div>
 
         <div class="grid gap-2 lg:grid-cols-5">
-            <Accordion labelClass="!bg-green-200">
+            <Accordion labelClass="!bg-main" svgClass="!fill-white">
                 <template v-slot:label>
-                    <span class="hover:!text-white">افزودن</span>
+                    <span class="text-white">افزودن</span>
                 </template>
                 <div class="flex flex-col pb-2 gap-6">
                     <div class="custom_input_box text-base-content w-full lg:w-full pt-4">
@@ -33,6 +33,13 @@
                             </label>
                         </InputTextMarked>
                     </div>
+                    <div class="custom_input_box text-base-content w-full lg:w-full gap-px">
+                        <InputTextMarked dir="ltr" v-model="form.test" required id="input_test" type="number">
+                            <label class="cursor-text" for="input_test" dir="rtl">
+                                تعداد تست
+                            </label>
+                        </InputTextMarked>
+                    </div>
                     <div class="text-base-content w-full lg:w-full">
                         <Dropdown v-if="lessons.length > 0" class="z-index-[1100] h-10">
                             <template v-slot:title>
@@ -42,8 +49,7 @@
                             </template>
                             <template v-slot:option>
                                 <InputRadio v-for="(lesson, index) in lessons" :value="lesson.uuid" :key="index"
-                                    v-model="form.lesson"
-                                    @click="form.lesson = lesson.uuid; current_lesson = lesson; validateForm()"
+                                    v-model="form.lesson" @click="form.lesson = lesson.uuid; current_lesson = lesson"
                                     :id="`lesson_${lesson.uuid}`" name="lesson">{{
                                         lesson.text }}</InputRadio>
                             </template>
@@ -61,7 +67,7 @@
                     </button>
                 </div>
             </Accordion>
-            <Accordion labelClass="!bg-yellow-200" v-if="data?.length ?? 0 > 0">
+            <Accordion labelClass="!bg-main-100" v-if="data?.length ?? 0 > 0">
                 <template v-slot:label>
                     گزارش کلی
                 </template>
@@ -94,6 +100,10 @@
                         <div class="font-bold">مدت‌زمان:</div>
                         <div>{{ showDuration(item.duration) }}</div>
                     </div>
+                    <div class="flex flex-row gap-2 pb-2">
+                        <div class="font-bold">تعداد تست:</div>
+                        <div>{{ item.test }}</div>
+                    </div>
                     <div v-if="item.description" class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">توضیحات:</div>
                         <div>{{ item.description }}</div>
@@ -125,6 +135,7 @@ const form = ref({
     report: "",
     lesson: "",
     title: "",
+    test: 0,
     description: "",
     duration: "",
 });
@@ -213,7 +224,7 @@ function showDuration(duration) {
     let hours = Math.floor(duration / 60)
     let mins = duration - (hours * 60)
     let duration_text = ''
-    if(hours > 0){
+    if (hours > 0) {
         duration_text = `${hours} ساعت و `
     }
     duration_text += `${mins} دقیقه`

@@ -10,7 +10,7 @@
             <div @click="create_report()" v-if="data.today_uuid === null"
                 class="w-full h-16 rounded-[3px] group relative bg-secondary text-base-content hover:bg-none">
                 <div
-                    class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content group-hover:hidden">
+                    class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content hover:cursor-pointer hover:text-white hover:bg-slate-500">
                     ایجاد گزارش امروز
                 </div>
             </div>
