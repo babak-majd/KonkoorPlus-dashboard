@@ -28,6 +28,7 @@
     "apexcharts": "^3.53.0",
     "axios": "^1.4.0",
     "jalali-moment": "^3.3.11",
+    "no-package-lock": "^0.0.1",
     "pinia": "^2.1.7",
     "vue-json-pretty": "^2.2.4",
     "vue3-apexcharts": "^1.4.1",

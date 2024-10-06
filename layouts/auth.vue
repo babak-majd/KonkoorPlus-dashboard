@@ -2,12 +2,12 @@
   <div class="flex w-screen h-screen text-base-100 font-iranyekan bg-white">
     <div class="w-full h-full">
       <div
-        class="flex flex-col lg:flex-row h-full w-full justify-center lg:justify-center items-center gap-6 lg:gap-10">
+        class="flex flex-col lg:flex-row h-full w-full justify-center lg:justify-center items-center gap-12 lg:gap-10">
         <span v-if="isMobile">
-          <SvgKonkourplus :width="250" />
+          <SvgLogoDesktop class="w-56" />
         </span>
         <div v-else>
-          <SvgKonkourplus :width="210" />
+          <SvgLogo class="w-40" />
         </div>
         <span>
           <NuxtPage />
