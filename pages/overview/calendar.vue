@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-full h-full p-4 gap-3">
-  
+
     <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
       <ToolsLoading class="w-32 h-32" />
     </div>
@@ -59,6 +59,14 @@
             <td class="text-center py-2">{{ lesson.lesson_name }}</td>
             <td class="text-center py-2">{{ useConvertMinute(lesson.duration) }}</td>
             <td class="text-center py-2">{{ lesson.test }}</td>
+            <td class="hidden lg:block w-12"></td>
+          </tr>
+          <tr class="font-bold">
+            <td class="text-center py-2 font-semibold px-2"></td>
+            <td class="text-center py-2"> مجموع </td>
+            <td class="text-center py-2"> {{ useConvertMinute(lessons.reduce((sum, lesson) => sum + lesson.duration, 0))
+              }} </td>
+            <td class="text-center py-2"> {{ lessons.reduce((sum, lesson) => sum + lesson.test, 0) }} </td>
             <td class="hidden lg:block w-12"></td>
           </tr>
         </tbody>
