@@ -97,8 +97,8 @@ const data = ref({
 });
 const userData = useUserData()
 const token = useToken()
-
-onMounted(() => {
+const { $axios } = useNuxtApp()
+onMounted(async () => {
 	if (token.tokenIsSet) {
 		data.value = userData.getUserData()
 	}
