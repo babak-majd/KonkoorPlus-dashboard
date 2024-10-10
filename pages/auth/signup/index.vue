@@ -130,13 +130,10 @@
 </template>
 
 <script setup>
-import Request from "~~/Api/Request";
-
 definePageMeta({
   layout: "auth",
 });
 
-const request = Request.noauth();
 const error_happened = ref(false);
 const states = ref([])
 const fields = ref([])
@@ -202,17 +199,24 @@ const form = ref({
   grade: 0,
   has_advisor: false
 });
-const { $axios, $token } = useNuxtApp()
+const userData = useUserData()
+const token = useToken()
+const startDate = useStartDate()
+const { $axios } = useNuxtApp()
+
 const loading = ref(false)
 async function requestToRegister() {
   loading.value = true
   try {
     let response = await $axios.post("students/auth/register", form.value)
-    console.log(response)
     if (response.data.ok) {
-      $token.setToken(response.data.data.token)
-      console.log('token set', response.data.ok, response.data.data.token)
-      return navigateTo("/")
+      token.setToken(response.data.data.token)
+      response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
+      if (response.data.ok) {
+        userData.setUserData(response.data.data)
+        startDate.setStartDate(response.data.start_date)
+      }
+      return navigateTo("/", { open: { target: "_self" } })
     }
   } catch (exception) {
     if (exception.response.status === 422) {
@@ -224,7 +228,6 @@ async function requestToRegister() {
       password_box.classList.add("border-b-error");
       error_happened.value = true;
     }
-    console.log(exception)
   } finally {
     loading.value = false
   }
