@@ -6,7 +6,8 @@
       <div class="print:hidden">
         <ToolsBreadcrumb :items="[{ text: 'نمای کلی', url: '/overview' }, 'گزارش']" />
       </div>
-      <div class="hidden print:block">{{ userData.fullname }}</div>
+      <div class="hidden print:block">{{ userData.fullname }} - {{ grades[userData.grade] }} - {{ userData.field }}
+      </div>
       <h3 class="text-2xl font-semibold">گزارش کلی</h3>
     </div>
     <!-- filter and report -->
@@ -14,9 +15,10 @@
       <select @change="getCourseData()" v-model="query.lesson"
         class="bg-base-250 w-full md:max-w-64 p-2 rounded-lg focus-within:outline focus-within:outline-1 focus-within:border focus-within:outline-offset-4 focus-within:bg-white">
         <option :value="null">انتخاب کنید</option>
-        <option v-for="(lesson, index) in lessons" :key="index" :value="lesson.uuid">{{ lesson.text }}</option>
+        <option v-for="(lesson, index) in lessons" :key="index" :value="lesson.uuid">{{
+          lesson.text }}</option>
       </select>
-      <button onclick="print()" :class="query.lesson === null ? 'pointer-events-none opacity-35' : ''"
+      <button @click="print()" :class="query.lesson === null ? 'pointer-events-none opacity-35' : ''"
         class="flex items-center justify-center gap-2 border p-2 px-4 rounded-lg border-main text-main hover:bg-main-50 transition-all duration-200">
         <span>دریافت گزارش</span>
         <SvgDownload class="w-5" />
@@ -119,6 +121,17 @@ useHead({ title: 'گزارش کلی' })
 const loading = ref(false)
 const lessons = ref([])
 
+const grades = {
+  0: 'هیچکدام',
+  7: "هفتم",
+  8: "هشتم",
+  9: "نهم",
+  10: "دهم",
+  11: "یازدهم",
+  12: "دوازدهم",
+  13: "فارغ التحصیل",
+}
+
 const data = ref([
   { title: '', value: 0 }
 ])
@@ -142,6 +155,7 @@ const round_minute = (minute) => {
   let hour = (minute - holder) / 60
   return holder >= 30 ? hour + 1 : hour
 }
+
 const passedDayOnAcademicYear = () => {
   if (remainDays.value === -1) {
     let startOfYear = new Date(`${new Date().getFullYear()}-01-01`)
@@ -211,6 +225,7 @@ async function getTopThird() {
     loading.value = false
   }
 }
+
 async function getLesson() {
   try {
     let response = await $axios.get('fields/lessons')
