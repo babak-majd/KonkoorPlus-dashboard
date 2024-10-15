@@ -8,6 +8,7 @@
       </div>
       <div class="hidden print:block">{{ userData.fullname }}</div>
       <h3 class="text-2xl font-semibold">گزارش کلی</h3>
+      <span class="hidden print:block">{{ lessons.find((item) => item.uuid === query.lesson)?.text }}</span>
     </div>
     <!-- filter and report -->
     <div class="print:hidden flex flex-col gap-3 md:flex-row md:justify-between">
@@ -25,7 +26,9 @@
     <!-- chart -->
     <div id="chartSection" class="relative flex w-full print:items-center print:justify-center">
       <ClientOnly>
-        <ToolsChartArea width="96%" :categories="data.map((item) => item.title)"
+        <ToolsChartArea class="print:hidden" width="96%" :categories="data.map((item) => item.title)"
+          :series="[{ data: data.map((item) => item.value) }]" />
+        <ToolsChartArea class="hidden print:block" width="792px" :categories="data.map((item) => item.title)"
           :series="[{ data: data.map((item) => item.value) }]" />
       </ClientOnly>
       <div v-if="!(!!query.lesson)"
@@ -34,8 +37,9 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-5 lg:gap-2 md:flex-row">
-      <div class="flex flex-col md:w-1/2">
+    <div class="flex flex-col gap-5 lg:gap-2 md:flex-row print:flex-row w-full print:justify-between">
+      <!-- current year status -->
+      <div class="flex flex-col md:w-1/2 print:w-full">
         <h4 class="text-lg font-semibold">سال تحصیلی</h4>
         <div class="flex items-center gap-1">
           <span class="text-lg font-semibold">365</span>
@@ -45,30 +49,36 @@
         <!-- progress bar -->
         <div class="flex flex-col gap-1 lg:max-w-80 2xl:max-w-md">
           <ToolsProgress :max="365" :value="passedDayOnAcademicYear()" />
-          <div class="flex items-center justify-between text-sm p-2">
+          <div class="flex items-center justify-between text-sm p-2 print:gap-2">
             <!-- progressed days -->
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center gap-2">
+            <div class="flex flex-col gap-1 print:gap-0">
+              <div class="flex items-center gap-2 print:gap-0">
                 <span class="text-base-500">روز های طی شده</span>
-                <span class="h-1 w-8 bg-main rounded-full"></span>
+                <span class="h-1 w-8 bg-main rounded-full print:hidden"></span>
               </div>
-              <span class="font-semibold">{{ passedDayOnAcademicYear() }} روز</span>
+              <div class="flex items-center print:justify-between">
+                <span class="font-semibold">{{ passedDayOnAcademicYear() }} روز</span>
+                <span class="h-1 w-8 bg-main rounded-full hidden print:block"></span>
+              </div>
             </div>
 
             <!-- not progressed days -->
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center gap-2">
+            <div class="flex flex-col gap-1 print:gap-0">
+              <div class="flex items-center gap-2 print:gap-0">
                 <span class="text-base-500">روز های باقی مانده</span>
-                <span class="h-1 w-8 bg-main-200 rounded-full"></span>
+                <span class="h-1 w-8 bg-main-200 rounded-full print:hidden"></span>
               </div>
-              <span class="font-semibold">{{ 365 - passedDayOnAcademicYear() }} روز</span>
+              <div class="flex items-center print:justify-between">
+                <span class="font-semibold">{{ 365 - passedDayOnAcademicYear() }} روز</span>
+                <span class="h-1 w-8 bg-main-200 rounded-full hidden print:block"></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- activity -->
-      <div class="flex flex-col md:w-1/2">
+      <div class="flex flex-col md:w-1/2 print:w-full">
         <!-- courses -->
         <div class="flex flex-col gap-5 lg:gap-2 md:flex-row md:items-center md:justify-evenly">
           <!-- course -->
@@ -91,7 +101,7 @@
             </div>
           </div>
           <!-- pie chart -->
-          <div class="flex items-center justify-center relative w-full lg:w-1/2">
+          <div class="flex items-center justify-center relative w-full lg:w-1/2 print:-mr-56 print:mt-8">
             <ClientOnly>
               <div v-if="windowWith > 400" class="w-fit">
                 <ToolsChartPie :series="topThird.map((item) => item.hours)" />
@@ -247,7 +257,6 @@ async function getLesson() {
 
   /** تنظیمات این بخش به مرورگر کاربر هم بستگی دارد اما معمولا سایز صفحه را به سایز مد نظر تغییر میدهد */
   @page {
-    size: B4 !important;
     margin: 0 !important;
     padding: 0 !important;
     print-color-adjust: exact !important;
@@ -259,8 +268,8 @@ async function getLesson() {
   }
 
   #printable {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100svh;
     display: flex;
     flex-direction: column;
   }
