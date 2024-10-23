@@ -12,7 +12,25 @@
                     <span class="text-white">افزودن</span>
                 </template>
                 <div class="flex flex-col pb-2 gap-6">
-                    <div class="custom_input_box text-base-content w-full lg:w-full pt-4">
+                    <div class="text-base-content w-full lg:w-full">
+                        <Dropdown v-if="lessons.length > 0" class="z-index-[1100] h-10">
+                            <template v-slot:title>
+                                <span>
+                                    {{ current_lesson.text ?? "درس" }}
+                                </span>
+                            </template>
+                            <template v-slot:option>
+                                <div class="flex flex-col gap-2 ">
+                                    <InputRadio v-for="(lesson, index) in lessons" :value="lesson.uuid" :key="index"
+                                        v-model="form.lesson"
+                                        @click="form.lesson = lesson.uuid; current_lesson = lesson"
+                                        :id="`lesson_${lesson.uuid}`" name="lesson">{{
+                                            lesson.text }}</InputRadio>
+                                </div>
+                            </template>
+                        </Dropdown>
+                    </div>
+                    <div class="custom_input_box text-base-content w-full lg:w-full">
                         <InputTextMarked dir="ltr" v-model="form.title" required id="input_title">
                             <label class="cursor-text" for="input_title" dir="rtl">
                                 عنوان
@@ -36,24 +54,9 @@
                     <div class="custom_input_box text-base-content w-full lg:w-full gap-px">
                         <InputTextMarked dir="ltr" v-model="form.test" required id="input_test" type="number">
                             <label class="cursor-text" for="input_test" dir="rtl">
-                                تعداد تست
+                                تعداد تست / تمرین
                             </label>
                         </InputTextMarked>
-                    </div>
-                    <div class="text-base-content w-full lg:w-full">
-                        <Dropdown v-if="lessons.length > 0" class="z-index-[1100] h-10">
-                            <template v-slot:title>
-                                <span>
-                                    {{ current_lesson.text ?? "درس" }}
-                                </span>
-                            </template>
-                            <template v-slot:option>
-                                <InputRadio v-for="(lesson, index) in lessons" :value="lesson.uuid" :key="index"
-                                    v-model="form.lesson" @click="form.lesson = lesson.uuid; current_lesson = lesson"
-                                    :id="`lesson_${lesson.uuid}`" name="lesson">{{
-                                        lesson.text }}</InputRadio>
-                            </template>
-                        </Dropdown>
                     </div>
                     <div class="custom_input_box text-base-content w-full lg:w-full">
                         <InputTextMarked dir="ltr" v-model="form.description" required id="input_description">
@@ -101,7 +104,7 @@
                         <div>{{ showDuration(item.duration) }}</div>
                     </div>
                     <div class="flex flex-row gap-2 pb-2">
-                        <div class="font-bold">تعداد تست:</div>
+                        <div class="font-bold">تعداد تست / تمرین:</div>
                         <div>{{ item.test }}</div>
                     </div>
                     <div v-if="item.description" class="flex flex-row gap-2 pb-2">

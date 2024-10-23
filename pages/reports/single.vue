@@ -41,7 +41,7 @@
                         <div>{{ showDuration(item.duration) }}</div>
                     </div>
                     <div class="flex flex-row gap-2 pb-2">
-                        <div class="font-bold">تعداد تست:</div>
+                        <div class="font-bold">تعداد تست / تمرین:</div>
                         <div>{{ item.test }} </div>
                     </div>
                     <div v-if="item.description" class="flex flex-row gap-2 pb-2">
