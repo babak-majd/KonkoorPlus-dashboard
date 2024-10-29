@@ -142,9 +142,11 @@ function makeSelectBoxItemByWeek() {
     let startWeek = new Date(end);
     end.setDate(end.getDate() + 7);
     let hold = new Date(end);
+    let jstartWeek = startWeek.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" })
+    let jend = hold.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" })
 
     let item = {
-      title: `هفته ${useConvertToOridinal(weekIndex)}`,
+      title: `هفته ${useConvertToOridinal(weekIndex)} (${jstartWeek} تا ${jend})`,
       start: startWeek.toISOString().split('T')[0],
       end: hold.toISOString().split('T')[0]
     };
