@@ -6,41 +6,50 @@
     </div>
 
     <!-- breadcrumbs -->
-    <div class="flex items-center">
+    <div class="flex items-center print:hidden">
       <ToolsBreadcrumb class="text-xs" :items="[{ text: 'نمای کلی', url: '/overview' }, 'تقویم درسی']" />
     </div>
     <!-- title -->
-    <h2 class="text-xl font-semibold">تقویم درسی</h2>
+    <h2 class="text-xl font-semibold print:mx-auto">تقویم درسی</h2>
+    <span class="hidden text-md print:block mx-auto">{{ `${userData.getUserData().first_name} ${userData.getUserData().last_name}` }}</span>
 
     <!-- content -->
     <section class="flex flex-col gap-8">
       <!-- filter -->
-      <div class="flex flex-col gap-4 pt-10 md:flex-row">
-        <!-- main filter -->
-        <fieldset class="flex items-center gap-4">
-          <div class="flex items-center">
-            <input class="radio-filter" type="radio" name="filter" id="radio-month" :value="0" v-model="type" hidden
-              checked />
-            <label for="radio-month" class="flex items-center gap-3 cursor-pointer">
-              <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
-              ماه
-            </label>
-          </div>
-          <div class="flex items-center">
-            <input class="radio-filter" type="radio" name="filter" id="radio-week" hidden :value="1" v-model="type" />
-            <label for="radio-week" class="flex items-center gap-3 cursor-pointer">
-              <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
-              هفته
-            </label>
-          </div>
-        </fieldset>
+      <div class="flex flex-col gap-4 pt-10 md:flex-row md:justify-between">
+        <div class="flex flex-col gap-4 md:flex-row">
+          <!-- main filter -->
+          <fieldset class="flex items-center gap-4">
+            <div class="flex items-center">
+              <input class="radio-filter" type="radio" name="filter" id="radio-month" :value="0" v-model="type" hidden
+                checked />
+              <label for="radio-month" class="flex items-center gap-3 cursor-pointer">
+                <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
+                ماه
+              </label>
+            </div>
+            <div class="flex items-center">
+              <input class="radio-filter" type="radio" name="filter" id="radio-week" hidden :value="1" v-model="type" />
+              <label for="radio-week" class="flex items-center gap-3 cursor-pointer">
+                <div class="w-5 h-5 rounded-full outline outline-1 outline-base-300 outline-offset-2"></div>
+                هفته
+              </label>
+            </div>
+          </fieldset>
 
-        <select v-model="dateRange"
-          class="bg-base-250 w-full md:max-w-64 p-2 rounded-lg focus-within:outline focus-within:outline-1 focus-within:border focus-within:outline-offset-4 focus-within:bg-white">
-          <option v-for="(item, index) in selectBoxItems" :key="index" :value="item">
-            {{ item.title }}
-          </option>
-        </select>
+          <select v-model="dateRange"
+            class="bg-base-250 w-full md:w-64 p-2 rounded-lg focus-within:outline focus-within:outline-1 focus-within:border focus-within:outline-offset-4 focus-within:bg-white">
+            <option v-for="(item, index) in selectBoxItems" :key="index" :value="item">
+              {{ item.title }}
+            </option>
+          </select>
+        </div>
+
+        <button @click="print()" :class="null ? 'pointer-events-none opacity-35' : ''"
+          class="print:hidden flex items-center justify-center gap-2 border p-2 px-4 rounded-lg border-main text-main hover:bg-main-50 transition-all duration-200">
+          <span>دریافت گزارش</span>
+          <SvgDownload class="w-5" />
+        </button>
       </div>
       <!-- table -->
       <table>
@@ -96,6 +105,7 @@ const loading = ref(false)
 const { $axios } = useNuxtApp()
 const startDate = useStartDate()
 const type = ref(0)
+const userData = useUserData()
 
 onMounted(() => {
   selectBoxItems.value = makeSelectBoxItemForMonth()
@@ -172,6 +182,9 @@ async function getData(from, end) {
   }
 }
 
+function print() {
+  window.print()
+}
 </script>
 
 <style>
