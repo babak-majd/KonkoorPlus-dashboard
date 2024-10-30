@@ -1,13 +1,14 @@
 <template>
-    <div v-if="request.pending.value"
-        class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
-        <ToolsLoading class="w-32 h-32" />
-    </div>
+    <div class="flex flex-col w-full h-full p-4 gap-3">
+        <div v-if="loading"
+            class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+            <ToolsLoading class="w-32 h-32" />
+        </div>
 
-    <div class="flex w-full justify-center items-center p-2">
-        <div class="w-full lg:w-[24rem] lg:border-2 rounded-lg lg:p-2 !pt-6">
+        <!-- page content -->
+        <div class="flex flex-col gap-9 w-full h-full items-center justify-center px-2 py-8 md:p-16">
             <form @keydown="validateForm()" @submit.prevent="requestToEdit()"
-                class="flex flex-col gap-8 w-full items-center">
+                class="flex flex-col gap-8 w-full items-center max-w-lg">
                 <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
                     <InputTextMarked dir="rtl" v-model="form.first_name" type="text" required id="input_firstname">
                         <label class="cursor-text" for="input_firstname" dir="rtl">
@@ -102,8 +103,8 @@
                         مشاور دارم
                     </InputCheckbox>
                 </div>
-                <div class="flex justify-between w-full lg:w-full items-center flex-col lg:flex-row gap-4">
-                    <button type="submit" class="btn-primary w-full" :disabled="!IsFormValid">
+                <div class="flex justify-center w-full lg:w-full items-center flex-col lg:flex-row gap-4">
+                    <button type="submit" class="btn-primary w-full lg:w-[22.625rem]" :disabled="!IsFormValid">
                         ذخیره
                     </button>
                 </div>
@@ -113,10 +114,7 @@
 </template>
 
 <script setup>
-import Request from "~~/Api/Request";
-import ConfigStore from "~~/store/ConfigStore";
-
-const request = new Request;
+useHead({ title: "ویرایش پروفایل" })
 const error_happened = ref(false);
 const states = ref([])
 const fields = ref([])
@@ -128,8 +126,10 @@ const current_state = ref({
     name: "",
     uuid: ""
 })
+const loading = ref(false)
+const { $axios } = useNuxtApp()
+const userData = useUserData()
 const current_city = ref({})
-const confirm_password = ref("")
 const IsFormValid = ref(false)
 const genders = [
     {
@@ -184,9 +184,13 @@ const data = ref({});
 
 
 async function requestToEdit() {
-    await request.patch("students/profile/update", form.value).then((response) => {
-        if (response.ok) {
-            collect_profile();
+    loading.value = true
+
+    await $axios.patch("students/profile/update", form.value).then((response) => {
+        if (response.data.ok) {
+            userData.logout()
+            userData.setUserData(response.data.data)
+            navigateTo("/edit-profile", { open: { target: "_self" } })
         } else {
             phone_box.classList.add("border-b-2");
             phone_box.classList.add("border-b-error");
@@ -195,22 +199,22 @@ async function requestToEdit() {
             error_happened.value = true;
         }
     }).catch((response) => {
-        console.log(response.text);
-    });
-    return;
+        console.log(response);
+    }).finally(() => loading.value = false)
 }
 
 async function get_cities(state_uuid) {
-    await request.get("states/cities", { "uuid": state_uuid }).then((response) => {
-        if (response.ok) {
-            cities.value = response.data;
+    loading.value = true
+    await $axios.get("states/cities", { params: { uuid: state_uuid } }).then((response) => {
+        if (response.data.ok) {
+            cities.value = response.data.data;
         }
     }).catch((response) => {
         console.log(response);
-    });
+    }).finally(() => loading.value = false);
 }
 
-async function validateForm() {
+function validateForm() {
     IsFormValid.value = false;
     if (form.value.first_name == "") return;
     if (form.value.last_name == "") return;
@@ -221,13 +225,13 @@ async function validateForm() {
     IsFormValid.value = true
 }
 
-async function gradeOnClick() {
+function gradeOnClick() {
     if (form.value.grade < 10) {
         form.value.new_field = fields.value[3].uuid;
     }
 }
 
-async function stateOnClick(state) {
+function stateOnClick(state) {
     form.value.new_city = "";
     current_city.value.name = "شهر";
     current_state.value = state;
@@ -236,33 +240,38 @@ async function stateOnClick(state) {
 }
 
 async function collect_profile() {
-    await request
+    loading.value = true
+    await $axios
         .get("students/profile")
-        .then((response) => {
-            data.value = response.data;
-            form.value.first_name = data.value.first_name
-            form.value.last_name = data.value.last_name
-            form.value.new_city = data.value.city.uuid
-            current_city.value = data.value.city
-            current_state.value = data.value.state
-            form.value.new_field = data.value.field.uuid
-            current_field.value = data.value.field
-            form.value.gender = data.value.gender
-            genders.forEach(gender => {
-                if (gender.value === data.value.gender)
-                    current_gender.value = gender
-            });
-            form.value.grade = data.value.grade
-            grades.forEach(grade => {
-                if (grade.value === data.value.grade)
-                    current_grade.value = grade
-            });
-            form.value.has_advisor = data.value.has_advisor
-            get_cities(data.value.state.uuid)
+        .then(async (response) => {
+            if (response.data.ok) {
+                data.value = response.data.data;
+                form.value.first_name = data.value.first_name
+                form.value.last_name = data.value.last_name
+                form.value.new_city = data.value.city.uuid
+                current_city.value = data.value.city
+                current_state.value = data.value.state
+                form.value.new_field = data.value.field.uuid
+                current_field.value = data.value.field
+                form.value.gender = data.value.gender
+                genders.forEach(gender => {
+                    if (gender.value === data.value.gender)
+                        current_gender.value = gender
+                });
+                form.value.grade = data.value.grade
+                grades.forEach(grade => {
+                    if (grade.value === data.value.grade)
+                        current_grade.value = grade
+                });
+                form.value.has_advisor = data.value.has_advisor
+                get_cities(data.value.state.uuid)
+            } else {
+                console.log("Something went wrong", response.data.message)
+            }
         })
         .catch((err) => {
             console.log(err);
-        });
+        }).finally(() => loading.value = false);
 }
 
 onMounted(() => {
@@ -272,20 +281,21 @@ onMounted(() => {
 });
 
 onBeforeMount(async () => {
-    await request.get("fields").then((response) => {
-        if (response.ok) {
-            fields.value = response.data;
+    loading.value = true
+    await $axios.get("fields").then((response) => {
+        if (response.data.ok) {
+            fields.value = response.data.data;
         }
     }).catch((response) => {
         console.log(response);
     });
 
-    await request.get("states").then((response) => {
-        if (response.ok) {
-            states.value = response.data;
+    await $axios.get("states").then((response) => {
+        if (response.data.ok) {
+            states.value = response.data.data;
         }
     }).catch((response) => {
         console.log(response);
-    });
+    }).finally(() => loading.value = false);
 })
 </script>
