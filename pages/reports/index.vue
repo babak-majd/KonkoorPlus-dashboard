@@ -22,24 +22,23 @@
                         {{ jalaliMoment(report.created_at).locale("fa").format("YYYY/MM/DD") }}
                     </span>
                 </div>
-                <div
-                    class="h-full w-full bg-base-100 rounded-[3px] justify-center items-center hidden group-hover:flex">
+                <NuxtLink :to="`/reports/${report.uuid === data.today_uuid ? 'edit' : 'single'}?ruid=${report.uuid}`"
+                    class="h-full w-full bg-base-100 rounded-[3px] justify-center items-center hidden group-hover:flex cursor-pointer">
                     <div class="flex w-full h-full p-2 gap-2">
-                        <NuxtLink
-                            class="bg-secondary text-base-content flex justify-center items-center cursor-pointer w-1/2 h-full rounded-[3px] group relative gap-3">
+                        <span
+                            class="bg-secondary text-base-content flex justify-center items-center w-1/2 h-full rounded-[3px] group relative gap-3">
                             <span class="text-base-content">
                                 امتیاز: {{ report.score }}
                             </span>
-                        </NuxtLink>
-                        <NuxtLink
-                            :to="`/reports/${report.uuid === data.today_uuid ? 'edit' : 'single'}?ruid=${report.uuid}`"
-                            class="bg-secondary text-base-content flex justify-center items-center cursor-pointer w-1/2 h-full rounded-[3px] group relative gap-3">
+                        </span>
+                        <span
+                            class="bg-secondary text-base-content flex justify-center items-center w-1/2 h-full rounded-[3px] group relative gap-3">
                             <span class="text-base-content">
                                 {{ report.uuid === data.today_uuid ? 'ویرایش' : 'مشاهده' }}
                             </span>
-                        </NuxtLink>
+                        </span>
                     </div>
-                </div>
+                </NuxtLink>
             </div>
         </div>
     </div>
