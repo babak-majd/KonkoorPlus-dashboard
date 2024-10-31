@@ -50,7 +50,7 @@
 
         <!-- progress bar -->
         <div class="flex flex-col gap-1 lg:max-w-80 2xl:max-w-md">
-          <ToolsProgress :max="first_exam?.diff(startDate, 'days') ?? 365" :value="118" />
+          <ToolsProgress :max="progressBarMax()" :value="progressBarValue()" />
           <div class="flex items-center justify-between text-sm p-2 print:gap-2">
             <!-- progressed days -->
             <div class="flex flex-col gap-1 print:gap-0">
@@ -59,7 +59,7 @@
                 <span class="h-1 w-8 bg-main rounded-full print:hidden"></span>
               </div>
               <div class="flex items-center print:justify-between">
-                <span class="font-semibold">{{ moment().diff(startDate, 'days') ?? 20 }} روز</span>
+                <span class="font-semibold">{{ today?.diff(startDate, 'days') }} روز</span>
                 <span class="h-1 w-8 bg-main rounded-full hidden print:block"></span>
               </div>
             </div>
@@ -68,12 +68,12 @@
             <div class="flex flex-col gap-1 print:gap-0">
               <div class="flex items-center gap-2 print:gap-0">
                 <span class="text-base-500">
-                  روز های باقی مانده تا کنکور {{ first_exam?.format('jMMMM') ?? "اردیبهشت" }}
+                  روز های باقی مانده تا کنکور
                 </span>
                 <span class="h-1 w-8 bg-main-200 rounded-full print:hidden"></span>
               </div>
               <div class="flex items-center print:justify-between">
-                <span class="font-semibold">{{ first_exam?.diff(moment(), 'days') ?? 100 }} روز</span>
+                <span class="font-semibold">{{ first_exam?.diff(moment(), 'days') + 1 }} روز</span>
                 <span class="h-1 w-8 bg-main-200 rounded-full hidden print:block"></span>
               </div>
             </div>
@@ -88,14 +88,14 @@
             </div>
             <div class="flex items-center gap-2 print:gap-0">
               <span class="text-base-500">
-                تاریخ کنکور {{ second_exam?.format('jMMMM') ?? "نیر" }}:
+                تاریخ کنکور {{ second_exam?.format('jMMMM') ?? "تیر" }}:
               </span>
               <span class="font-semibold">{{ second_exam?.format('D') ?? "20" }} {{ second_exam?.format('jMMMM') ??
-                "نیر" }} {{ second_exam?.year() ?? "1404" }}</span>
+                "تیر" }} {{ second_exam?.year() ?? "1404" }}</span>
             </div>
             <div class="flex items-center gap-2 print:gap-0">
               <span class="text-base-500">
-                روز های باقی مانده تا کنکور {{ second_exam?.format('jMMMM') ?? "نیر" }}:
+                روز های باقی مانده تا کنکور {{ second_exam?.format('jMMMM') ?? "تیر" }}:
               </span>
               <span class="font-semibold">{{ second_exam?.diff(moment(), 'days') ?? 100 }} روز</span>
               <span class="h-1 w-8 bg-main-200 rounded-full hidden print:block"></span>
@@ -174,7 +174,6 @@ const data = ref([
 ])
 const topThird = ref([])
 const { $axios } = useNuxtApp()
-const remainDays = ref(-1)
 const query = ref({
   lesson: null
 })
@@ -185,6 +184,7 @@ const token = useToken()
 const startDate = ref()
 const first_exam = ref()
 const second_exam = ref()
+const today = ref(moment())
 
 const topThirdColor = (index) => {
   return index === 0 ? 'bg-main' : (index === 1 ? 'bg-main-400' : 'bg-main-200')
@@ -194,18 +194,13 @@ const round_minute = (minute) => {
   let hour = (minute - holder) / 60
   return holder >= 30 ? hour + 1 : hour
 }
-
-const passedDayOnAcademicYear = () => {
-  if (remainDays.value === -1) {
-    let startOfYear = new Date(`${new Date().getFullYear()}-01-01`)
-    let differenceDays = new Date(startDate).getDate() - startOfYear.getDate()
-    let now = new Date()
-    now.setDate(now.getDate() + differenceDays)
-
-    remainDays.value = now.getDate() - startOfYear.getDate()
-  }
-
-  return remainDays.value
+const progressBarMax = () => {
+  return today.value > first_exam.value ?
+    second_exam.value?.diff(startDate.value, 'days') :
+    first_exam.value?.diff(startDate.value, 'days')
+}
+const progressBarValue = () => {
+  return today.value.diff(startDate.value, 'days')
 }
 
 onMounted(() => {
@@ -248,10 +243,11 @@ async function getTopThird() {
   try {
     let response = await $axios.get('statistics/overview')
     if (response.data.ok) {
-      console.log(response.data)
       startDate.value = moment(response.data.data.start_date, "jYYYY-jMM-jDD")
       first_exam.value = moment(response.data.data.first_exam, "jYYYY-jMM-jDD")
       second_exam.value = moment(response.data.data.second_exam, "jYYYY-jMM-jDD")
+      today.value = moment()
+
       let result = response.data.data.this_month
       topThird.value = result
       if (topThird.value.length === 0) {
