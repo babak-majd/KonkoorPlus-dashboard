@@ -5,25 +5,11 @@
                 <template v-slot:svg-file>
                     <SvgCalender class="w-16" />
                 </template>
-
-                <template v-slot:main>
-                    <ul class="flex flex-col gap-1 list-disc px-5 text-black">
-                        <li>97 روز مطالعه</li>
-                        <li>873 تست در مجموع</li>
-                    </ul>
-                </template>
             </WidgetOverviewCard>
 
             <WidgetOverviewCard title="گزارش" link="/overview/report">
                 <template v-slot:svg-file>
                     <SvgReport class="w-16" />
-                </template>
-
-                <template v-slot:main>
-                    <ul class="flex flex-col gap-1 list-disc px-5 text-black">
-                        <li>97 روز مطالعه</li>
-                        <li>873 تست در مجموع</li>
-                    </ul>
                 </template>
             </WidgetOverviewCard>
         </div>
