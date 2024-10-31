@@ -12,7 +12,7 @@
     <!-- title -->
     <h2 class="text-xl font-semibold print:mx-auto">تقویم درسی</h2>
     <span class="hidden text-md print:block mx-auto">
-      {{ `${userData.getUserData().first_name} ${userData.getUserData().last_name} - ${dateRange.title}` }}
+      {{ `${userData.getUserData().first_name} ${userData.getUserData().last_name} - ${dateRange?.title ?? ''}` }}
     </span>
 
     <!-- content -->
