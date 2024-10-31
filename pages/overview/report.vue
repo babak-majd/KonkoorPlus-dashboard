@@ -21,7 +21,7 @@
       </select>
       <button @click="print()" :class="query.lesson === null ? 'pointer-events-none opacity-35' : ''"
         class="flex items-center justify-center gap-2 border p-2 px-4 rounded-lg border-main text-main hover:bg-main-50 transition-all duration-200">
-        <span>دریافت گزارش</span>
+        <span>ارسال به مشاور</span>
         <SvgDownload class="w-5" />
       </button>
     </div>
@@ -79,6 +79,20 @@
             </div>
           </div>
           <div class="flex flex-col gap-1 print:gap-0">
+            <div class="flex items-center gap-2 print:gap-0">
+              <span class="text-base-500">
+                تاریخ کنکور {{ first_exam?.format('jMMMM') ?? "اردیبهشت" }}:
+              </span>
+              <span class="font-semibold">{{ first_exam?.format('D') ?? "20" }} {{ first_exam?.format('jMMMM') ??
+                "نیر" }} {{ first_exam?.year() ?? "1404" }}</span>
+            </div>
+            <div class="flex items-center gap-2 print:gap-0">
+              <span class="text-base-500">
+                تاریخ کنکور {{ second_exam?.format('jMMMM') ?? "نیر" }}:
+              </span>
+              <span class="font-semibold">{{ second_exam?.format('D') ?? "20" }} {{ second_exam?.format('jMMMM') ??
+                "نیر" }} {{ second_exam?.year() ?? "1404" }}</span>
+            </div>
             <div class="flex items-center gap-2 print:gap-0">
               <span class="text-base-500">
                 روز های باقی مانده تا کنکور {{ second_exam?.format('jMMMM') ?? "نیر" }}:

@@ -11,12 +11,14 @@
     </div>
     <!-- title -->
     <h2 class="text-xl font-semibold print:mx-auto">تقویم درسی</h2>
-    <span class="hidden text-md print:block mx-auto">{{ `${userData.getUserData().first_name} ${userData.getUserData().last_name}` }}</span>
+    <span class="hidden text-md print:block mx-auto">
+      {{ `${userData.getUserData().first_name} ${userData.getUserData().last_name} - ${dateRange.title}` }}
+    </span>
 
     <!-- content -->
     <section class="flex flex-col gap-8">
       <!-- filter -->
-      <div class="flex flex-col gap-4 pt-10 md:flex-row md:justify-between">
+      <div class="flex flex-col gap-4 pt-10 md:flex-row md:justify-between print:hidden">
         <div class="flex flex-col gap-4 md:flex-row">
           <!-- main filter -->
           <fieldset class="flex items-center gap-4">
@@ -47,7 +49,7 @@
 
         <button @click="print()" :class="null ? 'pointer-events-none opacity-35' : ''"
           class="print:hidden flex items-center justify-center gap-2 border p-2 px-4 rounded-lg border-main text-main hover:bg-main-50 transition-all duration-200">
-          <span>دریافت گزارش</span>
+          <span>ارسال به مشاور</span>
           <SvgDownload class="w-5" />
         </button>
       </div>
