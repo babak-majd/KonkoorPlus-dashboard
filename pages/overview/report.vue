@@ -44,13 +44,13 @@
       <div class="flex flex-col md:w-1/2 print:w-full">
         <h4 class="text-lg font-semibold">سال تحصیلی</h4>
         <div class="flex items-center gap-1">
-          <span class="text-lg font-semibold">365</span>
+          <span class="text-lg font-semibold">{{ first_exam?.diff(startDate, 'days') ?? 365 }}</span>
           <span>روز</span>
         </div>
 
         <!-- progress bar -->
         <div class="flex flex-col gap-1 lg:max-w-80 2xl:max-w-md">
-          <ToolsProgress :max="365" :value="passedDayOnAcademicYear()" />
+          <ToolsProgress :max="first_exam?.diff(startDate, 'days') ?? 365" :value="118" />
           <div class="flex items-center justify-between text-sm p-2 print:gap-2">
             <!-- progressed days -->
             <div class="flex flex-col gap-1 print:gap-0">
@@ -59,7 +59,7 @@
                 <span class="h-1 w-8 bg-main rounded-full print:hidden"></span>
               </div>
               <div class="flex items-center print:justify-between">
-                <span class="font-semibold">{{ passedDayOnAcademicYear() }} روز</span>
+                <span class="font-semibold">{{ moment().diff(startDate, 'days') ?? 20 }} روز</span>
                 <span class="h-1 w-8 bg-main rounded-full hidden print:block"></span>
               </div>
             </div>
@@ -67,13 +67,24 @@
             <!-- not progressed days -->
             <div class="flex flex-col gap-1 print:gap-0">
               <div class="flex items-center gap-2 print:gap-0">
-                <span class="text-base-500">روز های باقی مانده</span>
+                <span class="text-base-500">
+                  روز های باقی مانده تا کنکور {{ first_exam?.format('jMMMM') ?? "اردیبهشت" }}
+                </span>
                 <span class="h-1 w-8 bg-main-200 rounded-full print:hidden"></span>
               </div>
               <div class="flex items-center print:justify-between">
-                <span class="font-semibold">{{ 365 - passedDayOnAcademicYear() }} روز</span>
+                <span class="font-semibold">{{ first_exam?.diff(moment(), 'days') ?? 100 }} روز</span>
                 <span class="h-1 w-8 bg-main-200 rounded-full hidden print:block"></span>
               </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-1 print:gap-0">
+            <div class="flex items-center gap-2 print:gap-0">
+              <span class="text-base-500">
+                روز های باقی مانده تا کنکور {{ second_exam?.format('jMMMM') ?? "نیر" }}:
+              </span>
+              <span class="font-semibold">{{ second_exam?.diff(moment(), 'days') ?? 100 }} روز</span>
+              <span class="h-1 w-8 bg-main-200 rounded-full hidden print:block"></span>
             </div>
           </div>
         </div>
@@ -130,6 +141,8 @@
 useHead({ title: 'گزارش کلی' })
 const loading = ref(false)
 const lessons = ref([])
+import moment from 'jalali-moment';
+moment.locale('fa');
 
 const grades = {
   0: 'هیچکدام',
@@ -155,7 +168,9 @@ const windowWith = ref(0)
 
 const userData = useUserData()
 const token = useToken()
-const startDate = useStartDate().getStartDate()
+const startDate = ref()
+const first_exam = ref()
+const second_exam = ref()
 
 const topThirdColor = (index) => {
   return index === 0 ? 'bg-main' : (index === 1 ? 'bg-main-400' : 'bg-main-200')
@@ -219,6 +234,10 @@ async function getTopThird() {
   try {
     let response = await $axios.get('statistics/overview')
     if (response.data.ok) {
+      console.log(response.data)
+      startDate.value = moment(response.data.data.start_date, "jYYYY-jMM-jDD")
+      first_exam.value = moment(response.data.data.first_exam, "jYYYY-jMM-jDD")
+      second_exam.value = moment(response.data.data.second_exam, "jYYYY-jMM-jDD")
       let result = response.data.data.this_month
       topThird.value = result
       if (topThird.value.length === 0) {
