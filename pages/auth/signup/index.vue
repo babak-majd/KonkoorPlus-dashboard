@@ -5,8 +5,7 @@
 
   <div class="flex w-[80vw] lg:w-full items-center">
     <div class="mx-auto">
-      <form @keydown="validateForm()" @submit.prevent="requestToRegister()"
-        class="flex flex-col gap-8 w-full items-center">
+      <form @submit.prevent="requestToRegister()" class="flex flex-col gap-8 w-full items-center">
         <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
           <InputTextMarked dir="rtl" v-model="form.first_name" type="text" required id="input_firstname">
             <label class="cursor-text" for="input_firstname" dir="rtl">
@@ -25,19 +24,12 @@
               شماره همراه
             </label>
           </InputTextMarked>
-          <Dropdown class="z-index-[1100] h-10">
-            <template v-slot:title>
-              <span>
-                {{ current_gender.name ?? "جنسیت" }}
-              </span>
-            </template>
-            <template v-slot:option>
-              <InputRadio v-for="(gender, index) in genders" :value="gender.value" :key="index" v-model="form.gender"
-                @click="form.gender = gender.value; current_gender = gender; validateForm()"
-                :id="`gender_${gender.value}`" name="gender">{{
-                  gender.name }}</InputRadio>
-            </template>
-          </Dropdown>
+          <select v-model="current_gender" class="bg-white border w-full h-10 p-2 text-black rounded-sm">
+            <option disabled :value="{}" v-if="Object.keys(current_gender).length === 0">جنسیت</option>
+            <option v-for="(gender, index) in genders" :key="index" :value="gender">
+              {{ gender.name }}
+            </option>
+          </select>
         </div>
         <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
           <InputTextMarked dir="ltr" v-model="form.password" type="password" required id="input_password">
@@ -52,61 +44,34 @@
           </InputTextMarked>
         </div>
         <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-          <Dropdown class="z-index-[1100] h-10">
-            <template v-slot:title>
-              <span>
-                {{ current_grade.name ?? "پایه تحصیلی" }}
-              </span>
-            </template>
-            <template v-slot:option>
-              <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index" v-model="form.grade"
-                @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()"
-                :id="`grade_${grade.value}`" name="grade">{{
-                  grade.name }}</InputRadio>
-            </template>
-          </Dropdown>
-          <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
-            <template v-slot:title>
-              <span>
-                {{ current_field.text ?? "رشته تحصیلی" }}
-              </span>
-            </template>
-            <template v-slot:option>
-              <InputRadio v-for="(field, index) in fields" :value="field.uuid" :key="index" v-model="form.field"
-                @click="form.field = field.uuid; current_field = field; validateForm()" :id="`field_${field.uuid}`"
-                name="field">{{
-                  field.text }}</InputRadio>
-            </template>
-          </Dropdown>
+          <select v-model="current_grade" class="bg-white border w-full h-10 p-2 text-black rounded-sm">
+            <option disabled :value="{}" v-if="Object.keys(current_grade).length === 0">پایه تحصیلی</option>
+            <option v-for="(grade, index) in grades" :key="index" :value="grade">
+              {{ grade.name }}
+            </option>
+          </select>
+          <select v-if="current_grade.value > 9 && fields.length > 0" v-model="current_field"
+            class="bg-white border w-full h-10 p-2 text-black rounded-sm">
+            <option disabled :value="{}" v-if="Object.keys(current_field).length === 0">رشته تحصیلی</option>
+            <option v-for="(field, index) in fields" :key="index" :value="field" :disabled="field.text === 'ندارد'">
+              {{ field.text }}
+            </option>
+          </select>
         </div>
         <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-          <Dropdown class="z-index-[1100] h-10">
-            <template v-slot:title>
-              <span>
-                {{ current_state.text ?? "استان" }}
-              </span>
-            </template>
-            <template v-slot:option>
-              <InputRadio v-for="(state, index) in states" v-model="current_state.uuid" :value="state.uuid" :key="index"
-                @click.prevent="form.city, current_city = ''; current_state = state; get_cities(state.uuid); validateForm()"
-                :id="`state_${state.uuid}`" name="state">
-                {{ state.text }}
-              </InputRadio>
-            </template>
-          </Dropdown>
-          <Dropdown v-if="current_state.uuid && cities.length > 0" class="z-index-[1100] h-10">
-            <template v-slot:title>
-              <span>
-                {{ current_city.text ?? "شهر" }}
-              </span>
-            </template>
-            <template v-slot:option>
-              <InputRadio v-for="(city, index) in cities" :value="city.uuid" :key="index" v-model="form.city"
-                @click="form.city = city.uuid; current_city = city; validateForm()" :id="`city_${city.uuid}`"
-                name="city">{{
-                  city.text }}</InputRadio>
-            </template>
-          </Dropdown>
+          <select v-model="current_state" class="bg-white border w-full h-10 p-2 text-black rounded-sm">
+            <option disabled :value="{}" v-if="Object.keys(current_state).length === 0">استان</option>
+            <option v-for="(state, index) in states" :key="index" :value="state">
+              {{ state.text }}
+            </option>
+          </select>
+          <select v-if="current_state.uuid && cities.length > 0" v-model="current_city"
+            class="bg-white border w-full h-10 p-2 text-black rounded-sm">
+            <option disabled value="" v-if="Object.keys(current_city).length === 0">شهر</option>
+            <option v-for="(city, index) in cities" :key="index" :value="city">
+              {{ city.text }}
+            </option>
+          </select>
         </div>
         <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem]">
           <InputCheckbox v-model="form.has_advisor" name="has_advisor" id="has_advisor">
@@ -121,6 +86,7 @@
             class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-main">
             <NuxtLink to="/auth/login">
               حساب کاربری دارید؟
+              {{ IsFormValid }}
             </NuxtLink>
           </label>
         </div>
@@ -141,10 +107,7 @@ const cities = ref([])
 const current_grade = ref({})
 const current_gender = ref({})
 const current_field = ref({})
-const current_state = ref({
-  name: "",
-  uuid: ""
-})
+const current_state = ref({})
 const current_city = ref({})
 const confirm_password = ref("")
 const IsFormValid = ref(false)
@@ -232,6 +195,45 @@ async function requestToRegister() {
     loading.value = false
   }
 }
+
+watch(current_state, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.city = '';
+    current_city.value = '';
+    get_cities(current_state.value.uuid);
+  }
+})
+
+watch(current_city, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.city = current_city.value.uuid;
+  }
+})
+
+watch(current_gender, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.gender = current_gender.value.value;
+  }
+})
+
+watch(current_grade, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.grade = current_grade.value.value;
+    gradeOnClick();
+  }
+})
+
+watch(current_field, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.field = current_field.value.uuid;
+  }
+})
+
+watch(form.value, (newValue, oldValue) => {
+  if (!!newValue) {
+    validateForm();
+  }
+})
 
 async function get_cities(state_uuid) {
   loading.value = true
