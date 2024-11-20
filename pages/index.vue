@@ -2,7 +2,7 @@
 	<div class="h-full w-full flex flex-col items-center p-2">
 		<div class="flex flex-col relative items-center h-fit lg:border-2 rounded-lg w-full lg:w-1/2">
 			<div class="flex flex-col lg:flex-row relative items-center w-full">
-				<div class="w-1/4 absolute lg:relative left-0 top-0">
+				<div class="w-1/4 lg:w-1/4 md:w-1/6 absolute lg:relative -left-2 -top-2 lg:left-0 lg:top-0">
 					<img v-if="data.gender === 'M'" src="/public/images/boy.jpg" class="w-full p-2 rounded-3xl" />
 					<img v-else src="/public/images/girl.jpg" class="w-full p-2 rounded-3xl" />
 				</div>
