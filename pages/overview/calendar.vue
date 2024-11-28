@@ -144,31 +144,48 @@ function makeSelectBoxItemForMonth() {
   return data
 }
 function makeSelectBoxItemByWeek() {
-  const start = new Date(startDate.getStartDate())
-  const now = new Date(Date.now())
-  const data = []
-  let end = start
-  let weekIndex = 1
+  const start = new Date(startDate.getStartDate());
+  const now = new Date(Date.now());
+  const data = [];
+  let currentStart = new Date(start);
+  let weekIndex = 1;
 
   do {
-    let startWeek = new Date(end);
-    end.setDate(end.getDate() + 7);
-    let hold = new Date(end);
-    let jstartWeek = startWeek.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" })
-    let jend = hold.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" })
+    let startWeek = new Date(currentStart);
+    let endWeek = new Date(startWeek);
+
+    if (weekIndex === 1) {
+      // Adjust the first week's end date to the upcoming Friday
+      const dayOfWeek = endWeek.getDay(); // Sunday = 0, ..., Friday = 5
+      const daysToFriday = (5 - dayOfWeek + 7) % 7;
+      endWeek.setDate(endWeek.getDate() + daysToFriday);
+    } else {
+      // Subsequent weeks end on Friday
+      endWeek.setDate(startWeek.getDate() + 6);
+    }
+
+    if (endWeek > now) endWeek = now; // Adjust the last week's end date to not exceed today
+
+    let jstartWeek = startWeek.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" });
+    let jendWeek = endWeek.toLocaleDateString('fa-IR', { day: "2-digit", month: "long" });
 
     let item = {
-      title: `هفته ${useConvertToOridinal(weekIndex)} (${jstartWeek} تا ${jend})`,
+      title: `هفته ${useConvertToOridinal(weekIndex)} (${jstartWeek} تا ${jendWeek})`,
       start: startWeek.toISOString().split('T')[0],
-      end: hold.toISOString().split('T')[0]
+      end: endWeek.toISOString().split('T')[0]
     };
 
-    weekIndex++
+    weekIndex++;
+    data.push(item);
 
-    data.push(item)
-  } while (end <= now)
-  return data
+    // Move to the next week (Saturday after the current Friday)
+    currentStart = new Date(endWeek);
+    currentStart.setDate(currentStart.getDate() + 1);
+  } while (currentStart <= now);
+
+  return data;
 }
+
 
 async function getData(from, end) {
   loading.value = true
