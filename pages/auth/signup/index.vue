@@ -104,7 +104,6 @@
             class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-main">
             <NuxtLink to="/auth/login">
               حساب کاربری دارید؟
-              {{ IsFormValid }}
             </NuxtLink>
           </label>
         </div>
