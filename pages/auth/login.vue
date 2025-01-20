@@ -1,37 +1,30 @@
 <template>
-  <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50 bg-base-350/40 flex justify-center items-center">
+  <div v-if="loading" class="top-0 left-0 w-full h-screen fixed z-50  flex justify-center items-center">
     <ToolsLoading class="w-32 h-32" />
   </div>
 
-  <div class="flex w-full items-center">
+  <div class="flex w-full items-center text-base-content max-w-96">
     <div class="mx-auto">
-      <form @submit.prevent="requestToLogin()" class="flex flex-col gap-8 w-full items-center">
-        <div class="custom_input_box text-base-content w-full lg:w-[22.625rem]">
-          <InputTextMarked dir="ltr" v-model="form.phone_number" type="text" required id="input_phone">
-            شماره همراه
-            <span class="text-error text-xs" v-show="error_happened">و گذرواژه همخوانی ندارند.</span>
-          </InputTextMarked>
+      <form @submit.prevent="requestToLogin()" class="flex flex-col gap-5 w-full items-center min-w-80">
+        <div class="textbox">
+          <input type="text" inputmode="numeric" placeholder="" v-model="form.phone_number" maxlength="11"
+            minlength="11" required id="txtMobile" />
+          <label for="txtMobile">شماره همراه</label>
         </div>
-        <div class="custom_input_box text-base-content w-full lg:w-[22.625rem]">
-          <InputTextMarked dir="ltr" v-model="form.password" type="password" required id="input_password">
-            گذرواژه
-            <span class="text-error text-xs" v-show="error_happened">و شماره همراه همخوانی ندارند.</span>
-          </InputTextMarked>
+        <div class="textbox">
+          <input type="password" placeholder="" v-model="form.password" required id="txtPassword" />
+          <label for="txtPassword">گذرواژه</label>
         </div>
-        <div class="flex justify-between w-64 lg:w-full items-center flex-col lg:flex-row gap-4">
-          <button type="submit" class="btn-primary w-full lg:w-1/3">
-            ورود
-          </button>
-          <label dir="rtl"
-            class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-main">
-            <!-- <NuxtLink to="/auth/forget">
-              گذرواژه خود را فراموش کرده‌اید؟
-            </NuxtLink> -->
-            <NuxtLink to="/auth/signup">
-              حساب کاربری ندارید؟
-            </NuxtLink>
-          </label>
-        </div>
+        <span class="text-error text-xs w-full font-semibold" v-show="error_happened">
+          شماره تماس و گذرواژه باهم همخوانی ندارند!
+        </span>
+        <button type="submit" class="btn-primary w-full">
+          ورود
+        </button>
+
+        <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
+          حساب کاربری ندارید؟
+        </NuxtLink>
       </form>
     </div>
   </div>
@@ -42,6 +35,7 @@ import { useStartDate } from '~/store/start_date';
 import { useToken } from '~/store/tokenStore';
 import { useUserData } from '~/store/user_data';
 
+useHead({ title: 'ورود' })
 definePageMeta({
   layout: "auth",
 });
@@ -59,8 +53,8 @@ const userData = useUserData()
 const token = useToken()
 async function requestToLogin() {
   loading.value = true
-  let phone_box = document.getElementById("input_phone");
-  let password_box = document.getElementById("input_password");
+  let phone_box = document.getElementById("txtMobile");
+  let password_box = document.getElementById("txtPassword");
   try {
     let response = await $axios.post("students/auth/login", form.value)
     if (response.data.ok) {
@@ -72,18 +66,12 @@ async function requestToLogin() {
       }
       return await navigateTo('/', { open: { target: "_self" } })
     }
-    else {
-      phone_box.classList.add("border-b-2");
-      phone_box.classList.add("border-b-error");
-      password_box.classList.add("border-b-2");
-      password_box.classList.add("border-b-error");
-      error_happened.value = true;
-    }
-  } catch (exception) {
-    console.log(exception)
+  } catch (ex) {
+    phone_box.classList.add("!border-b-error");
+    password_box.classList.add("!border-b-error");
+    error_happened.value = true;
   } finally {
     loading.value = false
   }
-
 }
 </script>
