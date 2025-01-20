@@ -3,31 +3,27 @@
     <ToolsLoading class="w-32 h-32" />
   </div>
 
-  <div class="flex w-full items-center text-base-content max-w-96">
-    <div class="mx-auto">
-      <form @submit.prevent="requestToLogin()" class="flex flex-col gap-5 w-full items-center min-w-80">
-        <div class="textbox">
-          <input type="text" inputmode="numeric" placeholder="" v-model="form.phone_number" maxlength="11"
-            minlength="11" required id="txtMobile" />
-          <label for="txtMobile">شماره همراه</label>
-        </div>
-        <div class="textbox">
-          <input type="password" placeholder="" v-model="form.password" required id="txtPassword" />
-          <label for="txtPassword">گذرواژه</label>
-        </div>
-        <span class="text-error text-xs w-full font-semibold" v-show="error_happened">
-          شماره تماس و گذرواژه باهم همخوانی ندارند!
-        </span>
-        <button type="submit" class="btn-primary w-full">
-          ورود
-        </button>
-
-        <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
-          حساب کاربری ندارید؟
-        </NuxtLink>
-      </form>
+  <form @submit.prevent="requestToLogin()" class="flex flex-col gap-5 w-full items-center min-w-80 max-w-xl">
+    <div class="textbox">
+      <input type="text" inputmode="numeric" placeholder="" v-model="form.phone_number" maxlength="11" minlength="11"
+        required id="txtMobile" />
+      <label for="txtMobile">شماره همراه</label>
     </div>
-  </div>
+    <div class="textbox">
+      <input type="password" placeholder="" v-model="form.password" required id="txtPassword" />
+      <label for="txtPassword">گذرواژه</label>
+    </div>
+    <span class="text-error text-xs w-full font-semibold" v-show="error_happened">
+      شماره تماس و گذرواژه باهم همخوانی ندارند!
+    </span>
+    <button type="submit" class="btn-primary w-full">
+      ورود
+    </button>
+
+    <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
+      حساب کاربری ندارید؟
+    </NuxtLink>
+  </form>
 </template>
 
 <script setup>
