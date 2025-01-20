@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col w-full h-full items-center p-2">
+	<div class="flex flex-col w-full h-full gap-12 items-center p-2">
 		<!-- profile card mobile -->
 		<div class="md:hidden flex flex-col gap-5 rounded-lg bg-stone-100 py-4 px-2 w-full">
 			<!-- head -->
@@ -52,8 +52,8 @@
 				</div>
 			</div>
 		</div>
-		<!-- profile card desktop -->
 
+		<!-- profile card desktop -->
 		<div
 			class="hidden md:flex items-start gap-5 text-sm xl:text-base rounded-lg bg-stone-100 p-4 w-full xl:justify-between max-w-5xl">
 			<img :src="data.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" alt="profile"
@@ -71,7 +71,7 @@
 			</div>
 
 			<!-- tools -->
-			<div class="flex flex-col gap-2 self-end">
+			<div class="flex flex-col gap-2 self-end text-xs xl:text-base">
 				<NuxtLink to="/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
 					<span>ویرایش اطلاعات</span>
 					<SvgEdit class="w-5" />
@@ -79,6 +79,47 @@
 				<button class="rounded-lg gap-2 p-2 border-main border text-main">
 					خروج از حساب
 				</button>
+			</div>
+		</div>
+
+		<!-- best students -->
+		<div class="flex flex-col items-center gap-8">
+			<h2 class="text-xl font-semibold">برترین های هر پایه</h2>
+
+			<!-- grades and fields -->
+			<div class="flex flex-col items-center gap-4">
+				<!-- grades -->
+				<div class="flex items-center gap-1 p-1 bg-stone-100 rounded-full">
+					<span class="px-2 py-1 rounded-full bg-main text-white">نهم</span>
+					<span class="px-2 py-1 rounded-full">دهم</span>
+					<span class="px-2 py-1 rounded-full">یازدهم</span>
+					<span class="px-2 py-1 rounded-full">دوازدهم</span>
+				</div>
+
+				<!-- fields-->
+				<div class="flex items-center gap-1 p-1 bg-stone-100 rounded-full">
+					<span class="px-2 py-1 rounded-full">تجربی</span>
+					<span class="px-2 py-1 rounded-full">ریاضی</span>
+					<span class="px-2 py-1 rounded-full">انسانی</span>
+				</div>
+			</div>
+
+			<!-- students -->
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-8 xl:gap-24">
+				<div class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
+					<SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
+					<div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
+				</div>
+				<div class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
+					<SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
+					<div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
+				</div>
+
+				<div
+					class="flex flex-col col-span-2 w-fit mx-auto md:col-span-1 md:mx-0 gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
+					<SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
+					<div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
+				</div>
 			</div>
 		</div>
 	</div>
