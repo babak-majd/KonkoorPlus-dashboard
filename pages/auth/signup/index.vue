@@ -104,6 +104,7 @@
             class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-main">
             <NuxtLink to="/auth/login">
               حساب کاربری دارید؟
+              {{ IsFormValid }}
             </NuxtLink>
           </label>
         </div>
@@ -124,10 +125,7 @@ const cities = ref([])
 const current_grade = ref({})
 const current_gender = ref({})
 const current_field = ref({})
-const current_state = ref({
-  name: "",
-  uuid: ""
-})
+const current_state = ref({})
 const current_city = ref({})
 const confirm_password = ref("")
 const IsFormValid = ref(false)
@@ -215,6 +213,45 @@ async function requestToRegister() {
     loading.value = false
   }
 }
+
+watch(current_state, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.city = '';
+    current_city.value = '';
+    get_cities(current_state.value.uuid);
+  }
+})
+
+watch(current_city, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.city = current_city.value.uuid;
+  }
+})
+
+watch(current_gender, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.gender = current_gender.value.value;
+  }
+})
+
+watch(current_grade, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.grade = current_grade.value.value;
+    gradeOnClick();
+  }
+})
+
+watch(current_field, (newValue, oldValue) => {
+  if (!!newValue) {
+    form.value.field = current_field.value.uuid;
+  }
+})
+
+watch(form.value, (newValue, oldValue) => {
+  if (!!newValue) {
+    validateForm();
+  }
+})
 
 async function get_cities(state_uuid) {
   loading.value = true
