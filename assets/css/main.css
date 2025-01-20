@@ -82,7 +82,7 @@ html {
   }
 
   input:focus, input:not(:placeholder-shown) {
-    @apply border-b-primary
+    @apply border-b-main
   }
 }
 
