@@ -15,7 +15,7 @@
 						<span>ویرایش اطلاعات</span>
 						<SvgEdit class="w-3" />
 					</NuxtLink>
-					<button class="rounded-lg gap-2 p-2 border-main border text-main">
+					<button @click="logout()" class="rounded-lg gap-2 p-2 border-main border text-main">
 						خروج از حساب
 					</button>
 				</div>
@@ -76,7 +76,7 @@
 					<span>ویرایش اطلاعات</span>
 					<SvgEdit class="w-5" />
 				</NuxtLink>
-				<button class="rounded-lg gap-2 p-2 border-main border text-main">
+				<button @click="logout()" class="rounded-lg gap-2 p-2 border-main border text-main">
 					خروج از حساب
 				</button>
 			</div>
@@ -162,6 +162,7 @@ const data = ref({
 const userData = useUserData()
 const token = useToken()
 const { $axios } = useNuxtApp()
+
 onMounted(async () => {
 	if (token.tokenIsSet) {
 		data.value = userData.getUserData()
