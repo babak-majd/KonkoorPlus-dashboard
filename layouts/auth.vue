@@ -1,18 +1,11 @@
 <template>
-  <div class="flex w-screen h-screen text-base-100 font-iranyekan bg-white">
-    <div class="w-full h-full">
-      <div
-        class="flex flex-col lg:flex-row h-full w-full justify-center lg:justify-center items-center gap-12 lg:gap-10">
-        <span v-if="isMobile">
-          <SvgLogoDesktop class="w-56" />
-        </span>
-        <div v-else>
-          <SvgLogo class="w-40" />
-        </div>
-        <span>
-          <NuxtPage />
-        </span>
-      </div>
+  <div class="relative flex flex-col items-center justify-center w-screen h-screen font-iranyekan">
+    <!-- form -->
+    <div class="flex flex-col items-center lg:flex-row max-w-xl gap-12 lg:gap-8">
+
+      <SvgLogoDesktop class="w-56" v-if="isMobile" />
+      <NuxtPage />
+      <SvgLogo class="w-56" v-if="!isMobile" />
     </div>
   </div>
 </template>
