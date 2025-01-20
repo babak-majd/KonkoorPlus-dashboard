@@ -6,108 +6,115 @@
         </div>
 
         <!-- page content -->
-        <div class="flex flex-col gap-9 w-full h-full items-center justify-center px-2 py-8 md:p-16">
+        <div class="flex flex-col gap-12 w-full h-full items-center justify-center px-2 py-8 md:p-16">
+            <!-- main info -->
             <form @keydown="validateForm()" @submit.prevent="requestToEdit()"
-                class="flex flex-col gap-8 w-full items-center max-w-lg">
-                <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-                    <InputTextMarked dir="rtl" v-model="form.first_name" type="text" required id="input_firstname">
-                        <label class="cursor-text" for="input_firstname" dir="rtl">
-                            نام
-                        </label>
-                    </InputTextMarked>
-                    <InputTextMarked dir="rtl" v-model="form.last_name" type="text" required id="input_lastname">
-                        <label class="cursor-text" for="input_lastname" dir="rtl">
-                            نام خانوادگی
-                        </label>
-                    </InputTextMarked>
+                class="grid grid-cols-2 gap-x-3 gap-y-4 w-full items-center max-w-lg">
+                <div class="textbox">
+                    <input type="text" placeholder="" v-model="form.first_name" required id="input_firstname" />
+                    <label for="input_firstname">نام</label>
                 </div>
-                <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-                    <Dropdown class="z-index-[1100] h-10">
-                        <template v-slot:title>
-                            <span>
-                                {{ current_gender.name ?? "جنسیت" }}
-                            </span>
-                        </template>
-                        <template v-slot:option>
-                            <InputRadio v-for="(gender, index) in genders" :value="gender.value" :key="index"
-                                v-model="form.gender"
-                                @click="form.gender = gender.value; current_gender = gender; validateForm()"
-                                :id="`gender_${gender.value}`" name="gender">{{
-                                    gender.name }}</InputRadio>
-                        </template>
-                    </Dropdown>
+                <div class="textbox">
+                    <input type="text" placeholder="" v-model="form.last_name" required id="input_lastname" />
+                    <label for="input_lastname">نام خانوادگی</label>
                 </div>
-                <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-                    <Dropdown class="z-index-[1100] h-10">
-                        <template v-slot:title>
-                            <span>
-                                {{ current_grade.name ?? "پایه تحصیلی" }}
-                            </span>
-                        </template>
-                        <template v-slot:option>
-                            <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index"
-                                v-model="form.grade"
-                                @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()"
-                                :id="`grade_${grade.value}`" name="grade">{{
-                                    grade.name }}</InputRadio>
-                        </template>
-                    </Dropdown>
-                    <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
-                        <template v-slot:title>
-                            <span>
-                                {{ current_field.text ?? data.field.name === "ندارد" ? "رشته تحصیلی" :
-                                    current_field.text ?? data.field.name }}
-                            </span>
-                        </template>
-                        <template v-slot:option>
-                            <InputRadio v-for="(field, index) in fields.slice(0, -1)" :value="field.uuid" :key="index"
-                                v-model="form.new_field"
-                                @click="form.new_field = field.uuid; current_field = field; validateForm()"
-                                :id="`field_${field.uuid}`" name="field">{{
-                                    field.text }}</InputRadio>
-                        </template>
-                    </Dropdown>
+                <Dropdown class="col-span-2 z-index-[1100] h-10">
+                    <template v-slot:title>
+                        <span>
+                            {{ current_gender.name ?? "جنسیت" }}
+                        </span>
+                    </template>
+                    <template v-slot:option>
+                        <InputRadio v-for="(gender, index) in genders" :value="gender.value" :key="index"
+                            v-model="form.gender"
+                            @click="form.gender = gender.value; current_gender = gender; validateForm()"
+                            :id="`gender_${gender.value}`" name="gender">{{
+                                gender.name }}</InputRadio>
+                    </template>
+                </Dropdown>
+                <Dropdown class="z-index-[1100] h-10">
+                    <template v-slot:title>
+                        <span>
+                            {{ current_grade.name ?? "پایه تحصیلی" }}
+                        </span>
+                    </template>
+                    <template v-slot:option>
+                        <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index"
+                            v-model="form.grade"
+                            @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()"
+                            :id="`grade_${grade.value}`" name="grade">{{
+                                grade.name }}</InputRadio>
+                    </template>
+                </Dropdown>
+                <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
+                    <template v-slot:title>
+                        <span>
+                            {{ current_field.text ?? data.field.name === "ندارد" ? "رشته تحصیلی" :
+                                current_field.text ?? data.field.name }}
+                        </span>
+                    </template>
+                    <template v-slot:option>
+                        <InputRadio v-for="(field, index) in fields.slice(0, -1)" :value="field.uuid" :key="index"
+                            v-model="form.new_field"
+                            @click="form.new_field = field.uuid; current_field = field; validateForm()"
+                            :id="`field_${field.uuid}`" name="field">{{
+                                field.text }}</InputRadio>
+                    </template>
+                </Dropdown>
+                <Dropdown class="z-index-[1100] h-10">
+                    <template v-slot:title>
+                        <span>
+                            {{ current_state.text ?? data.state?.name ?? "استان" }}
+                        </span>
+                    </template>
+                    <template v-slot:option>
+                        <InputRadio v-for="(state, index) in states" v-model="current_state.uuid" :value="state.uuid"
+                            :key="index" @click.prevent="stateOnClick(state)" :id="`state_${state.uuid}`" name="state">
+                            {{ state.text }}
+                        </InputRadio>
+                    </template>
+                </Dropdown>
+                <Dropdown v-if="current_state.uuid && cities.length > 0" class="z-index-[1100] h-10">
+                    <template v-slot:title>
+                        <span>
+                            {{ current_city.text ?? data.city.name ?? "شهر" }}
+                        </span>
+                    </template>
+                    <template v-slot:option>
+                        <InputRadio v-for="(city, index) in cities" :value="city.uuid" :key="index"
+                            v-model="form.new_city"
+                            @click="form.new_city = city.uuid; current_city = city; validateForm()"
+                            :id="`city_${city.uuid}`" name="city">{{
+                                city.text }}</InputRadio>
+                    </template>
+                </Dropdown>
+                <InputCheckbox class="col-span-2" v-model="form.has_advisor" name="has_advisor" id="has_advisor">
+                    مشاور دارم
+                </InputCheckbox>
+
+                <button type="submit" class="col-span-2 btn-primary w-full" :disabled="!IsFormValid">
+                    ذخیره
+                </button>
+            </form>
+
+            <!-- password -->
+            <form @submit.prevent="changePassword()" class="flex flex-col gap-8 w-full max-w-lg">
+                <h2 class="text-2xl font-semibold">تغییر رمز</h2>
+                <!-- form textboxes -->
+                <div class="flex flex-col gap-4 w-full">
+                    <div class="textbox">
+                        <input type="password" placeholder="" v-model="frmPassword.password" required
+                            id="txtPassword" />
+                        <label for="txtPassword">گذرواژه جدید</label>
+                    </div>
+                    <div class="textbox">
+                        <input type="password" placeholder="" v-model="frmPassword.confirm" required
+                            id="txtPasswordConfirm" />
+                        <label for="txtPasswordConfirm">تایید گذرواژه</label>
+                    </div>
                 </div>
-                <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
-                    <Dropdown class="z-index-[1100] h-10">
-                        <template v-slot:title>
-                            <span>
-                                {{ current_state.text ?? data.state?.name ?? "استان" }}
-                            </span>
-                        </template>
-                        <template v-slot:option>
-                            <InputRadio v-for="(state, index) in states" v-model="current_state.uuid"
-                                :value="state.uuid" :key="index" @click.prevent="stateOnClick(state)"
-                                :id="`state_${state.uuid}`" name="state">
-                                {{ state.text }}
-                            </InputRadio>
-                        </template>
-                    </Dropdown>
-                    <Dropdown v-if="current_state.uuid && cities.length > 0" class="z-index-[1100] h-10">
-                        <template v-slot:title>
-                            <span>
-                                {{ current_city.text ?? data.city.name ?? "شهر" }}
-                            </span>
-                        </template>
-                        <template v-slot:option>
-                            <InputRadio v-for="(city, index) in cities" :value="city.uuid" :key="index"
-                                v-model="form.new_city"
-                                @click="form.new_city = city.uuid; current_city = city; validateForm()"
-                                :id="`city_${city.uuid}`" name="city">{{
-                                    city.text }}</InputRadio>
-                        </template>
-                    </Dropdown>
-                </div>
-                <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem]">
-                    <InputCheckbox v-model="form.has_advisor" name="has_advisor" id="has_advisor">
-                        مشاور دارم
-                    </InputCheckbox>
-                </div>
-                <div class="flex justify-center w-full lg:w-full items-center flex-col lg:flex-row gap-4">
-                    <button type="submit" class="btn-primary w-full lg:w-[22.625rem]" :disabled="!IsFormValid">
-                        ذخیره
-                    </button>
-                </div>
+
+                <button class="btn-primary w-full">تغییر رمز</button>
             </form>
         </div>
     </div>
@@ -180,6 +187,10 @@ const form = ref({
     grade: 0,
     has_advisor: false
 });
+const frmPassword = ref({
+    password: '',
+    confirm: ''
+})
 const data = ref({});
 
 
@@ -212,6 +223,20 @@ async function get_cities(state_uuid) {
     }).catch((response) => {
         console.log(response);
     }).finally(() => loading.value = false);
+}
+
+async function changePassword() {
+    loading.value = true
+    try {
+        // let response = await $axios.post('/auth/change-password', frmPassword.value)
+        if (response.data.ok) {
+            // Say OK
+        }
+    } catch (ex) {
+        console.log(ex)
+    } finally {
+        loading.value = false
+    }
 }
 
 function validateForm() {
