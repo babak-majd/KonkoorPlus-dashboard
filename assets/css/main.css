@@ -10,7 +10,8 @@
 }
 
 html {
-  @apply scroll-smooth font-iranyekan
+  direction: rtl;
+  @apply scroll-smooth font-iranyekan bg-white text-base-content
 }
 
 @layer components {
@@ -63,6 +64,25 @@ html {
 
   .cube {
     @apply w-7 h-7 rounded-sm
+  }
+  .textbox {
+    @apply relative flex flex-col justify-center w-full text-base-content
+  }
+
+  .textbox input {
+    @apply w-full border border-b-2 rounded-sm p-2
+  }
+
+  .textbox label {
+    @apply absolute right-1 px-1 transition-all duration-150
+  }
+
+  .textbox input:focus+label, .textbox input:not(:placeholder-shown)+label {
+    @apply text-xs -translate-y-5 bg-white
+  }
+
+  input:focus, input:not(:placeholder-shown) {
+    @apply border-b-primary
   }
 }
 
