@@ -1,61 +1,84 @@
 <template>
-	<div class="h-full w-full flex flex-col items-center p-2">
-		<div class="flex flex-col relative items-center h-fit lg:border-2 rounded-lg w-full lg:w-1/2">
-			<div class="flex flex-col lg:flex-row relative items-center w-full">
-				<div class="w-1/4 absolute lg:relative left-0 top-0">
-					<img v-if="data.gender === 'M'" src="/public/images/boy.jpg" class="w-full p-2 rounded-3xl" />
-					<img v-else src="/public/images/girl.jpg" class="w-full p-2 rounded-3xl" />
+	<div class="flex flex-col w-full h-full items-center p-2">
+		<!-- profile card mobile -->
+		<div class="md:hidden flex flex-col gap-5 rounded-lg bg-stone-100 py-4 px-2 w-full">
+			<!-- head -->
+			<div class="flex items-center justify-between">
+				<img :src="data.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" class="w-16 h-16 rounded-full"
+					alt="profile-image" />
+				<div class="flex flex-col justify-evenly h-full">
+					<span class="font-bold">{{ `${data.first_name} ${data.last_name}` }}</span>
+					<span class="text-sm">پایه {{ grades[data.grade] }}</span>
 				</div>
-				<div class="w-full lg:w-3/4 flex flex-col justify-around p-2">
-					<div class="flex flex-row justify-start gap-2">
-						<div class="font-bold">نام:</div>
-						<div>{{ data.first_name }}</div>
-						<div>{{ data.last_name }}</div>
-					</div>
-					<div class="flex flex-row justify-start gap-2">
-						<div class="font-bold">شماره تلفن:</div>
-						<div>{{ data.phone_number }}</div>
-					</div>
-					<div class="flex flex-row justify-start gap-6">
-						<div class="flex flex-row justify-start gap-2">
-							<div class="font-bold">جنسیت:</div>
-							<div>{{ data.gender === "M" ? "آقا" : "خانم" }}</div>
-						</div>
-						<div class="flex flex-row justify-start gap-2">
-							<div class="font-bold">مشاور:</div>
-							<div>{{ data.has_advisor ? "دارد" : "ندارد" }}</div>
-						</div>
-					</div>
-					<div class="flex flex-row justify-start gap-6">
-						<div class="flex flex-row justify-start gap-2">
-							<div class="font-bold">استان:</div>
-							<div>{{ data.state.name }}</div>
-						</div>
-						<div class="flex flex-row justify-start gap-2">
-							<div class="font-bold">شهر:</div>
-							<div>{{ data.city.name }}</div>
-						</div>
-					</div>
-					<div class="flex flex-row justify-start gap-6">
-						<div class="flex flex-row justify-start gap-2">
-							<div class="font-bold">پایه تحصیلی:</div>
-							<div>{{ grades[data.grade] }}</div>
-						</div>
-						<div v-if="data.grade > 9" class="flex flex-row justify-start gap-2">
-							<div class="font-bold">رشته تحصیلی:</div>
-							<div>{{ data.field.name }}</div>
-						</div>
-					</div>
+				<div class="flex flex-col gap-2" style="font-size: 10px;">
+					<NuxtLink to="/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+						<span>ویرایش اطلاعات</span>
+						<SvgEdit class="w-3" />
+					</NuxtLink>
+					<button class="rounded-lg gap-2 p-2 border-main border text-main">
+						خروج از حساب
+					</button>
 				</div>
 			</div>
-			<div class="w-full h-full flex flex-row-reverse lg:absolute gap-2">
-				<button @click="logout()" class="w-full lg:w-fit lg:absolute relative lg:left-2 lg:top-2 btn-danger">
+
+			<!-- content -->
+			<div class="grid grid-cols-2 gap-x-1 gap-y-3">
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">استان:</span><span class="text-sm">{{ data.state.name }}</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">شهر:</span><span class="text-sm">{{ data.city.name }}</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">شماره تلفن:</span><span class="text-sm">{{ data.phone_number }}</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">رشته تحصیلی:</span>
+					<span class="text-sm">
+						{{ data.field.name ?? `پایه ${grades[data.grade]}` }}
+					</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">جنسیت:</span>
+					<span class="text-sm">
+						{{ data.gender === 'M' ? 'آقا' : 'خانم' }}
+					</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="font-medium">مشاور:</span>
+					<span class="text-sm">
+						{{ data.has_advisor ? 'دارد' : 'ندارد' }}
+					</span>
+				</div>
+			</div>
+		</div>
+		<!-- profile card desktop -->
+
+		<div
+			class="hidden md:flex items-start gap-5 text-sm xl:text-base rounded-lg bg-stone-100 p-4 w-full xl:justify-between max-w-5xl">
+			<img :src="data.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" alt="profile"
+				class="w-44 h-44 xl:w-60 xl:h-60 rounded-xl" />
+
+			<div class="grid grid-cols-2 gap-y-6 gap-x-2 xl:gap-y-10 self-center">
+				<span><b>نام:</b> {{ `${data.first_name} ${data.last_name}` }}</span>
+				<span><b>شماره تلفن:</b> {{ data.phone_number }}</span>
+				<span><b>استان:</b> {{ data.state.name }}</span>
+				<span><b>شهر:</b> {{ data.city.name }}</span>
+				<span><b>پایه:</b> {{ grades[data.grade] }}</span>
+				<span><b>رشته تحصیلی:</b> {{ data.field.name }}</span>
+				<span><b>جنسیت:</b> {{ data.gender === 'M' ? 'آقا' : 'خانم' }}</span>
+				<span><b>مشاور:</b> {{ data.has_advisor ? 'دارد' : 'ندارد' }}</span>
+			</div>
+
+			<!-- tools -->
+			<div class="flex flex-col gap-2 self-end">
+				<NuxtLink to="/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+					<span>ویرایش اطلاعات</span>
+					<SvgEdit class="w-5" />
+				</NuxtLink>
+				<button class="rounded-lg gap-2 p-2 border-main border text-main">
 					خروج از حساب
 				</button>
-				<NuxtLink to="/edit-profile"
-					class="w-full lg:w-fit lg:absolute relative lg:left-2 lg:top-14 btn-secondary">
-					ویرایش
-				</NuxtLink>
 			</div>
 		</div>
 	</div>
