@@ -112,6 +112,8 @@
                             id="txtPasswordConfirm" />
                         <label for="txtPasswordConfirm">تایید گذرواژه</label>
                     </div>
+                    <span class="text-error text-xs font-semibold -my-2" v-if="confirmError">- گذرواژه و تکرار آن مطابقت
+                        ندارد</span>
                 </div>
 
                 <button class="btn-primary w-full">تغییر رمز</button>
@@ -123,6 +125,7 @@
 <script setup>
 useHead({ title: "ویرایش پروفایل" })
 const error_happened = ref(false);
+const confirmError = ref(false)
 const states = ref([])
 const fields = ref([])
 const cities = ref([])
@@ -227,10 +230,26 @@ async function get_cities(state_uuid) {
 
 async function changePassword() {
     loading.value = true
+    let txtPassword = document.getElementById('txtPassword')
+    let txtConfirm = document.getElementById('txtPasswordConfirm')
     try {
-        // let response = await $axios.post('/auth/change-password', frmPassword.value)
-        if (response.data.ok) {
-            // Say OK
+        if (frmPassword.value.password === frmPassword.value.confirm) {
+            confirmError.value = false
+            let response = await $axios.patch("students/profile/update", { password: frmPassword.value.password })
+
+            if (response.data.ok) {
+                txtPassword.classList.add('!border-lime-500')
+                txtConfirm.classList.add('!border-lime-500')
+                txtPassword.classList.remove('!border-error')
+                txtConfirm.classList.remove('!border-error')
+            }
+        }
+        else {
+            confirmError.value = true
+            txtPassword.classList.remove('!border-lime-500')
+            txtConfirm.classList.remove('!border-lime-500')
+            txtPassword.classList.add('!border-error')
+            txtConfirm.classList.add('!border-error')
         }
     } catch (ex) {
         console.log(ex)
