@@ -95,11 +95,14 @@
 
 <script setup>
 import moment, { min } from 'jalali-moment';
+import Auth from '~/middlewares/Auth';
+import StudentMiddleware from '~/middlewares/StudentMiddleware';
 import { useStartDate } from '~/store/start_date';
 
 useHead({
   title: 'تقویم درسی'
 })
+definePageMeta({ middleware: [Auth, StudentMiddleware] })
 const selectBoxItems = ref([])
 const dateRange = ref(null)
 const lessons = ref([])

@@ -7,7 +7,8 @@ export default interface User {
   phone_number: string,
   city: Uuid,
   field: Uuid,
-  gender: string
+  gender: string,
+  role: string
 }
 
 interface Uuid {

@@ -123,6 +123,10 @@
 </template>
 
 <script setup>
+import Auth from '~/middlewares/Auth';
+import StudentMiddleware from '~/middlewares/StudentMiddleware';
+
+definePageMeta({ middleware: [Auth, StudentMiddleware] })
 useHead({ title: "ویرایش پروفایل" })
 const error_happened = ref(false);
 const confirmError = ref(false)

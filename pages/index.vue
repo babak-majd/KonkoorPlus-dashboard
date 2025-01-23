@@ -129,9 +129,10 @@
 import { useUserData } from "~/store/user_data";
 import Auth from "../middlewares/Auth";
 import { useToken } from "~/store/tokenStore";
+import StudentMiddleware from "~/middlewares/StudentMiddleware";
 
 definePageMeta({
-	middleware: [Auth],
+	middleware: [Auth, StudentMiddleware],
 });
 
 useHead({

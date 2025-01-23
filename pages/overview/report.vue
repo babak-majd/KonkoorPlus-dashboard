@@ -156,7 +156,11 @@ useHead({ title: 'گزارش کلی' })
 const loading = ref(false)
 const lessons = ref([])
 import moment from 'jalali-moment';
+import Auth from '~/middlewares/Auth';
+import StudentMiddleware from '~/middlewares/StudentMiddleware';
 moment.locale('fa');
+
+definePageMeta({middleware: [Auth, StudentMiddleware]})
 
 const grades = {
   0: 'هیچکدام',
