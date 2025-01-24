@@ -3,26 +3,42 @@
     <ToolsLoading class="w-32 h-32" />
   </div>
 
-  <form @submit.prevent="requestToLogin()" class="flex flex-col gap-5 w-full items-center min-w-80 max-w-xl">
+  <form @submit.prevent="receive_code()" v-if="step === 1"
+    class="flex flex-col gap-5 w-full items-center max-w-80 md:max-w-xl">
     <div class="textbox">
       <input type="text" inputmode="numeric" placeholder="" v-model="form.phone_number" maxlength="11" minlength="11"
         required id="txtMobile" />
       <label for="txtMobile">شماره همراه</label>
     </div>
-    <div class="textbox">
-      <input type="password" placeholder="" v-model="form.password" required id="txtPassword" />
-      <label for="txtPassword">گذرواژه</label>
-    </div>
-    <span class="text-error text-xs w-full font-semibold" v-show="error_happened">
-      شماره تماس و گذرواژه باهم همخوانی ندارند!
-    </span>
     <button type="submit" class="btn-primary w-full">
-      ورود
+      دریافت کد
     </button>
 
-    <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
-      حساب کاربری ندارید؟
-    </NuxtLink>
+    <div class="flex items-center justify-between gap-4">
+      <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
+        حساب کاربری ندارید؟
+      </NuxtLink>
+      <NuxtLink to="/auth/login-with-password" class="text-primary text-xs font-medium">ورود با رمز عبور</NuxtLink>
+    </div>
+  </form>
+
+  <form @submit.prevent="login()" v-else class="flex flex-col gap-5 w-full items-center max-w-80 md:max-w-xl">
+    <span class="w-full text-xs px-2 font-medium">کد تایید برای شماره {{ form.phone_number }} ارسال شد!</span>
+    <div class="grid grid-cols-4 gap-2" dir="ltr">
+      <input type="text" inputmode="numeric" @keydown="useNumericKeydown($event)" @keyup="focusNext($event)"
+        class="text-center rounded-lg" maxlength="1" v-model="form.code[0]" />
+      <input type="text" inputmode="numeric" @keydown="useNumericKeydown($event)" @keyup="focusNext($event)"
+        class="text-center rounded-lg" maxlength="1" v-model="form.code[1]" />
+      <input type="text" inputmode="numeric" @keydown="useNumericKeydown($event)" @keyup="focusNext($event)"
+        class="text-center rounded-lg" maxlength="1" v-model="form.code[2]" />
+      <input type="text" inputmode="numeric" @keydown="useNumericKeydown($event)" @keyup="focusNext($event)"
+        class="text-center rounded-lg" maxlength="1" v-model="form.code[3]" />
+    </div>
+    <div class="flex flex-col items-center w-full gap-4">
+      <button class="btn-primary w-full">ورود</button>
+      <button class="btn-secondary">زمان باقی مانده {{ remainig_time_format() }}</button>
+      <button type="button" @click="step = 1">تغییر شماره</button>
+    </div>
   </form>
 </template>
 
@@ -39,14 +55,93 @@ definePageMeta({
 const error_happened = ref(false);
 const form = ref({
   phone_number: "",
-  password: "",
+  code: [],
 });
-
+const step = ref(1)
+const remain_time = ref(120)
 const loading = ref(false)
 const { $axios } = useNuxtApp()
 const startDate = useStartDate()
 const userData = useUserData()
 const token = useToken()
+const intervals = ref([])
+
+const remainig_time_format = () => {
+  if (remain_time.value <= 0) {
+    return '00:00'
+  }
+  let seound = remain_time.value % 60
+  let min = (remain_time.value - seound) / 60
+
+  return `${min.toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${seound.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`
+}
+
+function focusNext(event) {
+  if (/^[0-9]$/.test(event.key)) {
+    let next = event.target.nextElementSibling
+    if (next && next.tagName === "INPUT") {
+      next.focus()
+      if (next.value) {
+        next.select()
+      }
+    }
+  }
+  else {
+    event.preventDefault()
+  }
+}
+
+async function receive_code() {
+  loading.value = true
+
+  try {
+    // let response = await $axios.post('auth/receive_code', { phone_number: form.value.phone_number })
+    if (true) {
+      step.value = 2
+      remain_time.value = 120
+      let id = setInterval(function () {
+        if (remain_time.value > 0) {
+          remain_time.value--
+        }
+        else {
+          clearIntervals()
+        }
+      }, 1000)
+      intervals.value.push(id)
+    }
+  } catch (ex) {
+    console.log(ex)
+  } finally {
+    loading.value = false
+  }
+}
+function clearIntervals() {
+  intervals.value.forEach((item) => {
+    clearInterval(item)
+  })
+}
+async function login() {
+  loading.value = true
+
+  try {
+    let obj = {
+      phone_number: form.value.phone_number,
+      code: form.value.code.join('')
+    }
+    let response = await $axios.post('auth/login', obj)
+
+    if (response.data.ok) {
+      token.setToken(response.data.data.token)
+      userData.setUserData(response.data.data)
+      startDate.setStartDate(response.data.start_date)
+    }
+  } catch (ex) {
+    console.log(ex)
+  } finally {
+    loading.value = false
+  }
+}
+
 async function requestToLogin() {
   loading.value = true
   let phone_box = document.getElementById("txtMobile");
