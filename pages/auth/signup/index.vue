@@ -39,7 +39,7 @@
           <input type="password" v-model="confirm_password" required placeholder="" id="input_confirm_password" />
           <label for="input_confirm_password">تایید گذرواژه</label>
         </div>
-        <Dropdown class="z-index-[1100] h-10">
+        <Dropdown class="z-index-[1100] h-10" v-if="form.role === 'student'">
           <template v-slot:title>
             <span>
               {{ current_grade.name ?? "پایه تحصیلی" }}
@@ -52,7 +52,8 @@
                 grade.name }}</InputRadio>
           </template>
         </Dropdown>
-        <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
+        <Dropdown v-if="form.role === 'student' && current_grade.value > 9 && fields.length > 0"
+          class="z-index-[1100] h-10">
           <template v-slot:title>
             <span>
               {{ current_field.text ?? "رشته تحصیلی" }}
@@ -92,7 +93,15 @@
                 city.text }}</InputRadio>
           </template>
         </Dropdown>
-        <InputCheckbox class="col-span-2" v-model="form.has_advisor" name="has_advisor" id="has_advisor">
+        <div class="textbox">
+          <select id="slcRole" v-model="form.role">
+            <option value="student">دانش آموز</option>
+            <option value="adviser">مشاور</option>
+          </select>
+          <label for="slcRole">نوع حساب</label>
+        </div>
+        <InputCheckbox class="col-span-2" v-model="form.has_advisor" v-if="form.role === 'student'" name="has_advisor"
+          id="has_advisor">
           مشاور دارم
         </InputCheckbox>
 
@@ -177,7 +186,8 @@ const form = ref({
   field: "",
   gender: "",
   grade: 0,
-  has_advisor: false
+  has_advisor: false,
+  role: 'student'
 });
 const userData = useUserData()
 const token = useToken()
@@ -188,7 +198,8 @@ const loading = ref(false)
 async function requestToRegister() {
   loading.value = true
   try {
-    let response = await $axios.post("students/auth/register", form.value)
+    let route = `${form.value.role}s/auth/register`
+    let response = await $axios.post(route, form.value)
     if (response.data.ok) {
       token.setToken(response.data.data.token)
       response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
