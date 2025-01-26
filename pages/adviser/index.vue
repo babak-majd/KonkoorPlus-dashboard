@@ -10,7 +10,7 @@
           <span class="font-bold">{{ `${data.first_name} ${data.last_name}` }}</span>
         </div>
         <div class="flex flex-col gap-2" style="font-size: 10px;">
-          <NuxtLink to="/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+          <NuxtLink to="/adviser/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
             <span>ویرایش اطلاعات</span>
             <SvgEdit class="w-3" />
           </NuxtLink>
@@ -56,7 +56,7 @@
 
       <!-- tools -->
       <div class="flex flex-col gap-2 self-end text-xs xl:text-base">
-        <NuxtLink to="/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+        <NuxtLink to="/adviser/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
           <span>ویرایش اطلاعات</span>
           <SvgEdit class="w-5" />
         </NuxtLink>
