@@ -19,23 +19,23 @@
       <div class="flex flex-col gap-9">
         <!-- header -->
         <div class="flex items-center py-10 px-6">
-          <NuxtLink to="/adviser">
+          <NuxtLink to="/advisor">
             <SvgLogoDesktop class="w-40" />
           </NuxtLink>
         </div>
         <!-- links -->
         <div class="flex flex-col gap-4 m-4">
-          <NuxtLink to="/adviser" class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('adviser') ? 'text-main bg-main-100' : ''">
-            <SvgHome :active="check_page_is_active('adviser')" />
+          <NuxtLink to="/advisor" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('advisor') ? 'text-main bg-main-100' : ''">
+            <SvgHome :active="check_page_is_active('advisor')" />
             <span>خانه</span>
           </NuxtLink>
-          <NuxtLink to="/adviser/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+          <NuxtLink to="/advisor/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
             :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
             <SvgSetting :active="check_page_is_active('tools')" />
             <span>ابزارها</span>
           </NuxtLink>
-          <NuxtLink to="/adviser/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
+          <NuxtLink to="/advisor/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
             :class="check_page_is_active('overview') ? 'text-main bg-main-100' : ''">
             <SvgDiagram :active="check_page_is_active('overview')" />
             <span>نمای کلی</span>
@@ -82,21 +82,21 @@
         <ul class="flex flex-col gap-4 -mt-28">
           <!-- Sidebar content here -->
           <li>
-            <NuxtLink to="/" class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('adviser') ? 'text-main bg-main-100' : ''">
-              <SvgHome :active="check_page_is_active('adviser')" />
+            <NuxtLink to="/advisor" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('advisor') ? 'text-main bg-main-100' : ''">
+              <SvgHome :active="check_page_is_active('advisor')" />
               <span>خانه</span>
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/adviser/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            <NuxtLink to="/advisor/tools" class="rounded-lg py-2 px-4 flex items-center gap-2"
               :class="check_page_is_active('tools') ? 'text-main bg-main-100' : ''">
               <SvgSetting :active="check_page_is_active('tools')" />
               <span>ابزارها</span>
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/adviser/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            <NuxtLink to="/advisor/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
               :class="check_page_is_active('overview') ? 'text-main bg-main-100' : ''">
               <SvgDiagram :active="check_page_is_active('overview')" />
               <span>نمای کلی</span>
