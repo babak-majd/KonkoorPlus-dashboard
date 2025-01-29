@@ -36,7 +36,7 @@
     </div>
     <div class="flex flex-col items-center w-full gap-4">
       <button class="btn-primary w-full">ورود</button>
-      <button class="btn-secondary">زمان باقی مانده {{ remainig_time_format() }}</button>
+      <button type="button" @click="receive_code()" class="btn-secondary">زمان باقی مانده {{ remainig_time_format() }}</button>
       <button type="button" @click="step = 1">تغییر شماره</button>
     </div>
   </form>
@@ -95,8 +95,8 @@ async function receive_code() {
   loading.value = true
 
   try {
-    // let response = await $axios.post('auth/receive_code', { phone_number: form.value.phone_number })
-    if (true) {
+    let response = await $axios.get('/auth/sms/new', { params: { phone: form.value.phone_number } })
+    if (response.data.ok) {
       step.value = 2
       remain_time.value = 120
       let id = setInterval(function () {
@@ -128,7 +128,7 @@ async function login() {
       phone_number: form.value.phone_number,
       code: form.value.code.join('')
     }
-    let response = await $axios.post('auth/login', obj)
+    let response = await $axios.post('auth/sms/login', obj)
 
     if (response.data.ok) {
       token.setToken(response.data.data.token)
