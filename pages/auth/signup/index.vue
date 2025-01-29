@@ -96,7 +96,7 @@
         <div class="textbox">
           <select id="slcRole" v-model="form.role">
             <option value="student">دانش آموز</option>
-            <option value="adviser">مشاور</option>
+            <option value="advisor">مشاور</option>
           </select>
           <label for="slcRole">نوع حساب</label>
         </div>
@@ -201,13 +201,7 @@ async function requestToRegister() {
     let route = `${form.value.role}s/auth/register`
     let response = await $axios.post(route, form.value)
     if (response.data.ok) {
-      token.setToken(response.data.data.token)
-      response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
-      if (response.data.ok) {
-        userData.setUserData(response.data.data)
-        startDate.setStartDate(response.data.start_date)
-      }
-      return navigateTo("/", { open: { target: "_self" } })
+      return navigateTo('/auth/login')
     }
   } catch (exception) {
     if (exception.response.status === 422) {
@@ -282,8 +276,10 @@ async function validateForm() {
   if (form.value.first_name == "") return;
   if (form.value.last_name == "") return;
   if (form.value.password == "" || form.value.password !== confirm_password.value) return;
-  if (form.value.grade < 7 || form.value.grade > 13) return;
-  if (form.value.grade > 9 && form.value.field == "") return;
+  if (form.value.role === "student") {
+    if (form.value.grade < 7 || form.value.grade > 13) return;
+    if (form.value.grade > 9 && form.value.field == "") return;
+  }
   if (form.value.city == "") return;
   if (form.value.gender == "") return;
   IsFormValid.value = true
