@@ -56,15 +56,17 @@ async function requestToLogin() {
   let phone_box = document.getElementById("txtMobile");
   let password_box = document.getElementById("txtPassword");
   try {
-    let response = await $axios.post("students/auth/login", form.value)
+    let response = await $axios.post("/auth/login", form.value)
     if (response.data.ok) {
       token.setToken(response.data.data.token)
-      response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
+      let route = `/${response.data.data.role}s/profile`
+      response = await $axios.get(route, { headers: { Authorization: `Token ${response.data.data.token}` } })
       if (response.data.ok) {
         userData.setUserData(response.data.data)
         startDate.setStartDate(response.data.start_date)
       }
-      return await navigateTo('/', { open: { target: "_self" } })
+      let url = response.data.data.role === "advisor" ? '/advisor' : ''
+      return await navigateTo(url, { open: { target: "_self" } })
     }
   } catch (ex) {
     phone_box.classList.add("!border-b-error");
