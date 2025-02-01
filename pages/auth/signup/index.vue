@@ -100,10 +100,14 @@
           </select>
           <label for="slcRole">نوع حساب</label>
         </div>
-        <InputCheckbox class="col-span-2" v-model="form.has_advisor" v-if="form.role === 'student'" name="has_advisor"
+        <InputCheckbox v-model="form.has_advisor" v-if="form.role === 'student'" name="has_advisor"
           id="has_advisor">
           مشاور دارم
         </InputCheckbox>
+        <div class="textbox" v-if="form.has_advisor">
+          <input type="text" id="txtAdvisor" placeholder="" v-model="form.advisor"  />
+          <label for="txtAdvisor">کد مشاور</label>
+        </div>
 
         <div class="flex justify-between col-span-2 w-full lg:w-full items-center flex-col lg:flex-row gap-4">
           <button type="submit" class="btn-primary w-full lg:w-1/3" :disabled="!IsFormValid">
@@ -187,11 +191,9 @@ const form = ref({
   gender: "",
   grade: 0,
   has_advisor: false,
+  advisor: null,
   role: 'student'
 });
-const userData = useUserData()
-const token = useToken()
-const startDate = useStartDate()
 const { $axios } = useNuxtApp()
 
 const loading = ref(false)
