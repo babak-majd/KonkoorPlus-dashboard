@@ -10,7 +10,7 @@
           <span class="font-bold">{{ `${data.first_name} ${data.last_name}` }}</span>
         </div>
         <div class="flex flex-col gap-2" style="font-size: 10px;">
-          <NuxtLink to="/adviser/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+          <NuxtLink to="/advisor/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
             <span>ویرایش اطلاعات</span>
             <SvgEdit class="w-3" />
           </NuxtLink>
@@ -37,6 +37,10 @@
             {{ data.gender === 'M' ? 'آقا' : 'خانم' }}
           </span>
         </div>
+        <div class="flex flex-col gap-1">
+          <span class="font-medium">کد مشاور:</span>
+          <span class="cursor-pointer" @click="copy(data.uuid)">{{ data.uuid }}</span>
+        </div>
       </div>
     </div>
 
@@ -52,11 +56,12 @@
         <span><b>استان:</b> {{ data.state.name }}</span>
         <span><b>شهر:</b> {{ data.city.name }}</span>
         <span><b>جنسیت:</b> {{ data.gender === 'M' ? 'آقا' : 'خانم' }}</span>
+        <span><b>کد مشاور:</b> <span class="cursor-pointer" @click="copy(data.uuid)">{{ data.uuid }}</span></span>
       </div>
 
       <!-- tools -->
       <div class="flex flex-col gap-2 self-end text-xs xl:text-base">
-        <NuxtLink to="/adviser/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
+        <NuxtLink to="/advisor/edit-profile" class="rounded-lg gap-2 p-2 flex items-center bg-main text-white">
           <span>ویرایش اطلاعات</span>
           <SvgEdit class="w-5" />
         </NuxtLink>
@@ -146,6 +151,9 @@ onMounted(async () => {
     logout()
   }
 })
+function copy(text) {
+  useCopy(text)
+}
 function logout() {
   userData.logout()
   token.logout()
