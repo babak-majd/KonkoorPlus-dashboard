@@ -19,7 +19,7 @@
                 <div
                     class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content group-hover:hidden">
                     <span class="text-base-content">
-                        {{ jalaliMoment(report.created_at).locale("fa").format("YYYY/MM/DD") }}
+                        {{ Tools.DateTimeFormat(report.created_at) }}
                     </span>
                 </div>
                 <NuxtLink :to="`/reports/${report.uuid === data.today_uuid ? 'edit' : 'single'}?ruid=${report.uuid}`"
@@ -46,7 +46,6 @@
 
 <script setup>
 import Request from "~~/Api/Request";
-import jalaliMoment from "jalali-moment";
 
 const request = new Request;
 const data = ref({});

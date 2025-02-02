@@ -23,6 +23,10 @@ export default defineNuxtConfig({
   ],
   modules: ['@pinia/nuxt'],
 
+  pinia: {
+    storesDirs: ["./store/**"],
+  },
+
   runtimeConfig: {
     public: {
       APP_NAME: process.env.APP_NAME,
