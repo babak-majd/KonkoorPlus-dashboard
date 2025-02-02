@@ -1,4 +1,5 @@
 import type User from "~~/interfaces/User";
+import Request from "~~/Api/Request";
 
 export default class ConfigStore {
   static init(data: any): boolean {

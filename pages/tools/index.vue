@@ -1,5 +1,5 @@
 <template>
-    <div class="grid lg:grid-cols-3 p-2 gap-2 w-full">
+    <div class="grid lg:grid-cols-3 p-2 gap-2 w-full lg:w-fit">
         <NuxtLink to="/tools/percentage-calculator"
             class="h-24 bg-gradient-to-r from-green-500 to-green-800 text-white flex flex-row justify-between items-center p-2 rounded-lg">
             <div class="flex flex-col gap-4 w-full h-full justify-center">
@@ -26,10 +26,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import Auth from '~/middlewares/Auth';
-import StudentMiddleware from '~/middlewares/StudentMiddleware';
-
-definePageMeta({ middleware: [Auth, StudentMiddleware] })
-</script>

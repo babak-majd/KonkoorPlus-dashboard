@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
     "./pages/**/*.vue",
     "./plugins/**/*.{js,ts}",
-    "./app.vue",
-    "./error.vue",
+    "./nuxt.config.{js,ts}",
+    "./widget/**/*.{ts, js, vue}",
   ],
   theme: {
     extend: {
@@ -29,7 +29,7 @@ export default {
         base: {
           100: "#FFFFFF",
           200: "#FCFCFB",
-          250: "#F5F5F4",
+          250: "#F2F5F7",
           300: "#D3D5E2",
           350: "#D7D7D7",
           400: "#D9D9D9",
@@ -75,6 +75,8 @@ export default {
       },
     },
   },
-  plugins: [],
-}
-
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: [],
+  },
+};

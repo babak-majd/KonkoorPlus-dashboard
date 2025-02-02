@@ -17,7 +17,7 @@ defineEmits(["update:modelValue"]);
     <label class="w-full h-full relative flex flex-row items-center cursor-pointer"
       :class="dir == 'ltr' ? 'pl-8' : 'pr-6'" :for="id">
       <span class="rounded-md right-0 border-base-300 h-[18px] w-[18px] absolute flex items-center justify-center"
-        :class="modelValue ? 'border-none bg-main' : 'border-2'">
+        :class="modelValue ? 'border-none bg-primary' : 'border-2'">
         <span class="h-[10px] w-[10px]">
           <img class="h-full w-full" src="/images/checked.png" alt="checked" />
         </span>

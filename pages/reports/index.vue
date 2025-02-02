@@ -10,7 +10,7 @@
             <div @click="create_report()" v-if="data.today_uuid === null"
                 class="w-full h-16 rounded-[3px] group relative bg-secondary text-base-content hover:bg-none">
                 <div
-                    class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content hover:cursor-pointer hover:text-white hover:bg-slate-500">
+                    class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content group-hover:hidden">
                     ایجاد گزارش امروز
                 </div>
             </div>
@@ -19,26 +19,27 @@
                 <div
                     class="h-full w-full rounded-[3px] flex justify-center items-center gap-3 [&>svg]:fill-base-content group-hover:hidden">
                     <span class="text-base-content">
-                        {{ Tools.DateTimeFormat(report.created_at) }}
+                        {{ jalaliMoment(report.created_at).locale("fa").format("YYYY/MM/DD") }}
                     </span>
                 </div>
-                <NuxtLink :to="`/reports/${report.uuid === data.today_uuid ? 'edit' : 'single'}?ruid=${report.uuid}`"
-                    class="h-full w-full bg-base-100 rounded-[3px] justify-center items-center hidden group-hover:flex cursor-pointer">
+                <div
+                    class="h-full w-full bg-base-100 rounded-[3px] justify-center items-center hidden group-hover:flex">
                     <div class="flex w-full h-full p-2 gap-2">
-                        <span
-                            class="bg-secondary text-base-content flex justify-center items-center w-1/2 h-full rounded-[3px] group relative gap-3">
+                        <NuxtLink
+                            class="bg-secondary text-base-content flex justify-center items-center cursor-pointer w-1/2 h-full rounded-[3px] group relative gap-3">
                             <span class="text-base-content">
                                 امتیاز: {{ report.score }}
                             </span>
-                        </span>
-                        <span
-                            class="bg-secondary text-base-content flex justify-center items-center w-1/2 h-full rounded-[3px] group relative gap-3">
+                        </NuxtLink>
+                        <NuxtLink
+                            :to="`/reports/${report.uuid === data.today_uuid ? 'edit' : 'single'}?ruid=${report.uuid}`"
+                            class="bg-secondary text-base-content flex justify-center items-center cursor-pointer w-1/2 h-full rounded-[3px] group relative gap-3">
                             <span class="text-base-content">
                                 {{ report.uuid === data.today_uuid ? 'ویرایش' : 'مشاهده' }}
                             </span>
-                        </span>
+                        </NuxtLink>
                     </div>
-                </NuxtLink>
+                </div>
             </div>
         </div>
     </div>
@@ -46,6 +47,7 @@
 
 <script setup>
 import Request from "~~/Api/Request";
+import jalaliMoment from "jalali-moment";
 
 const request = new Request;
 const data = ref({});

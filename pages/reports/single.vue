@@ -7,7 +7,7 @@
         </div>
 
         <div v-if="data?.length ?? 0 > 0" class="grid gap-2 lg:grid-cols-5">
-            <Accordion labelClass="!bg-main-100" v-if="data?.length ?? 0 > 0">
+            <Accordion labelClass="!bg-yellow-200" v-if="data?.length ?? 0 > 0">
                 <template v-slot:label>
                     گزارش کلی
                 </template>
@@ -15,14 +15,14 @@
                     <div class="flex flex-row flex-wrap gap-1">
                         <div class="font-bold">مطالعه امروز:</div>
                         <div class="font-bold">
-                            {{ showDuration(Object.values(overview).reduce((acc, curr) => acc + curr, 0)) }}
+                            {{ Object.values(overview).reduce((acc, curr) => acc + curr, 0) }} دقیقه
                         </div>
                     </div>
                     <hr />
                     <div class="flex flex-col">
                         <div v-for="item in Object.keys(overview)" class="flex flex-row gap-2 pb-2">
                             <div class="font-bold">{{ item }}:</div>
-                            <div>{{ showDuration(overview[item]) }}</div>
+                            <div>{{ overview[item] }} دقیقه</div>
                         </div>
                     </div>
                 </div>
@@ -38,11 +38,7 @@
                     </div>
                     <div class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">مدت‌زمان:</div>
-                        <div>{{ showDuration(item.duration) }}</div>
-                    </div>
-                    <div class="flex flex-row gap-2 pb-2">
-                        <div class="font-bold">تعداد تست / تمرین:</div>
-                        <div>{{ item.test }} </div>
+                        <div>{{ item.duration }} دقیقه</div>
                     </div>
                     <div v-if="item.description" class="flex flex-row gap-2 pb-2">
                         <div class="font-bold">توضیحات:</div>
@@ -83,16 +79,5 @@ async function collect_report_items() {
                 console.log(err);
             });
     }
-}
-
-function showDuration(duration) {
-    let hours = Math.floor(duration / 60)
-    let mins = duration - (hours * 60)
-    let duration_text = ''
-    if (hours > 0) {
-        duration_text = `${hours} ساعت و `
-    }
-    duration_text += `${mins} دقیقه`
-    return duration_text
 }
 </script>

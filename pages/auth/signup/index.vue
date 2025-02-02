@@ -5,116 +5,120 @@
 
   <div class="flex w-[80vw] lg:w-full items-center">
     <div class="mx-auto">
-      <form @keydown="validateForm()" @submit.prevent="requestToRegister()" class="grid grid-cols-2 gap-x-2 gap-y-4">
-        <div class="textbox">
-          <input type="text" v-model="form.first_name" placeholder="" required id="input_firstname" />
-          <label for="input_firstname">نام</label>
+      <form @keydown="validateForm()" @submit.prevent="requestToRegister()"
+        class="flex flex-col gap-8 w-full items-center">
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
+          <InputTextMarked dir="rtl" v-model="form.first_name" type="text" required id="input_firstname">
+            <label class="cursor-text" for="input_firstname" dir="rtl">
+              نام
+            </label>
+          </InputTextMarked>
+          <InputTextMarked dir="rtl" v-model="form.last_name" type="text" required id="input_lastname">
+            <label class="cursor-text" for="input_lastname" dir="rtl">
+              نام خانوادگی
+            </label>
+          </InputTextMarked>
         </div>
-        <div class="textbox">
-          <input type="text" v-model="form.last_name" placeholder="" required id="input_lastname" />
-          <label for="input_lastname">نام خانوادگی</label>
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
+          <InputTextMarked dir="ltr" v-model="form.phone_number" type="text" required id="input_phone">
+            <label class="cursor-text" for="input_phone" dir="rtl">
+              شماره همراه
+            </label>
+          </InputTextMarked>
+          <Dropdown class="z-index-[1100] h-10">
+            <template v-slot:title>
+              <span>
+                {{ current_gender.name ?? "جنسیت" }}
+              </span>
+            </template>
+            <template v-slot:option>
+              <InputRadio v-for="(gender, index) in genders" :value="gender.value" :key="index" v-model="form.gender"
+                @click="form.gender = gender.value; current_gender = gender; validateForm()"
+                :id="`gender_${gender.value}`" name="gender">{{
+                  gender.name }}</InputRadio>
+            </template>
+          </Dropdown>
         </div>
-        <div class="textbox">
-          <input type="text" v-model="form.phone_number" placeholder="" required id="input_phone" />
-          <label for="input_phone">شماره همراه</label>
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
+          <InputTextMarked dir="ltr" v-model="form.password" type="password" required id="input_password">
+            <label class="cursor-text" for="input_password" dir="rtl">
+              گذرواژه
+            </label>
+          </InputTextMarked>
+          <InputTextMarked dir="ltr" v-model="confirm_password" type="password" required id="input_confirm_password">
+            <label class="cursor-text" for="input_confirm_password" dir="rtl">
+              تایید گذرواژه
+            </label>
+          </InputTextMarked>
         </div>
-        <Dropdown class="z-index-[1100] h-10">
-          <template v-slot:title>
-            <span>
-              {{ current_gender.name ?? "جنسیت" }}
-            </span>
-          </template>
-          <template v-slot:option>
-            <InputRadio v-for="(gender, index) in genders" :value="gender.value" :key="index" v-model="form.gender"
-              @click="form.gender = gender.value; current_gender = gender; validateForm()"
-              :id="`gender_${gender.value}`" name="gender">{{
-                gender.name }}</InputRadio>
-          </template>
-        </Dropdown>
-        <div class="textbox">
-          <input type="password" v-model="form.password" required placeholder="" id="input_password" />
-          <label for="input_password">گذرواژه</label>
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
+          <Dropdown class="z-index-[1100] h-10">
+            <template v-slot:title>
+              <span>
+                {{ current_grade.name ?? "پایه تحصیلی" }}
+              </span>
+            </template>
+            <template v-slot:option>
+              <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index" v-model="form.grade"
+                @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()"
+                :id="`grade_${grade.value}`" name="grade">{{
+                  grade.name }}</InputRadio>
+            </template>
+          </Dropdown>
+          <Dropdown v-if="current_grade.value > 9 && fields.length > 0" class="z-index-[1100] h-10">
+            <template v-slot:title>
+              <span>
+                {{ current_field.text ?? "رشته تحصیلی" }}
+              </span>
+            </template>
+            <template v-slot:option>
+              <InputRadio v-for="(field, index) in fields" :value="field.uuid" :key="index" v-model="form.field"
+                @click="form.field = field.uuid; current_field = field; validateForm()" :id="`field_${field.uuid}`"
+                name="field">{{
+                  field.text }}</InputRadio>
+            </template>
+          </Dropdown>
         </div>
-        <div class="textbox">
-          <input type="password" v-model="confirm_password" required placeholder="" id="input_confirm_password" />
-          <label for="input_confirm_password">تایید گذرواژه</label>
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem] grid grid-cols-2 gap-2">
+          <Dropdown class="z-index-[1100] h-10">
+            <template v-slot:title>
+              <span>
+                {{ current_state.text ?? "استان" }}
+              </span>
+            </template>
+            <template v-slot:option>
+              <InputRadio v-for="(state, index) in states" v-model="current_state.uuid" :value="state.uuid" :key="index"
+                @click.prevent="form.city, current_city = ''; current_state = state; get_cities(state.uuid); validateForm()"
+                :id="`state_${state.uuid}`" name="state">
+                {{ state.text }}
+              </InputRadio>
+            </template>
+          </Dropdown>
+          <Dropdown v-if="current_state.uuid && cities.length > 0" class="z-index-[1100] h-10">
+            <template v-slot:title>
+              <span>
+                {{ current_city.text ?? "شهر" }}
+              </span>
+            </template>
+            <template v-slot:option>
+              <InputRadio v-for="(city, index) in cities" :value="city.uuid" :key="index" v-model="form.city"
+                @click="form.city = city.uuid; current_city = city; validateForm()" :id="`city_${city.uuid}`"
+                name="city">{{
+                  city.text }}</InputRadio>
+            </template>
+          </Dropdown>
         </div>
-        <Dropdown class="z-index-[1100] h-10" v-if="form.role === 'student'">
-          <template v-slot:title>
-            <span>
-              {{ current_grade.name ?? "پایه تحصیلی" }}
-            </span>
-          </template>
-          <template v-slot:option>
-            <InputRadio v-for="(grade, index) in grades" :value="grade.value" :key="index" v-model="form.grade"
-              @click="form.grade = grade.value; current_grade = grade; validateForm(), gradeOnClick()"
-              :id="`grade_${grade.value}`" name="grade">{{
-                grade.name }}</InputRadio>
-          </template>
-        </Dropdown>
-        <Dropdown v-if="form.role === 'student' && current_grade.value > 9 && fields.length > 0"
-          class="z-index-[1100] h-10">
-          <template v-slot:title>
-            <span>
-              {{ current_field.text ?? "رشته تحصیلی" }}
-            </span>
-          </template>
-          <template v-slot:option>
-            <InputRadio v-for="(field, index) in fields" :value="field.uuid" :key="index" v-model="form.field"
-              @click="form.field = field.uuid; current_field = field; validateForm()" :id="`field_${field.uuid}`"
-              name="field">{{
-                field.text }}</InputRadio>
-          </template>
-        </Dropdown>
-        <Dropdown class="z-index-[1100] h-10">
-          <template v-slot:title>
-            <span>
-              {{ current_state.text ?? "استان" }}
-            </span>
-          </template>
-          <template v-slot:option>
-            <InputRadio v-for="(state, index) in states" v-model="current_state.uuid" :value="state.uuid" :key="index"
-              @click.prevent="form.city, current_city = ''; current_state = state; get_cities(state.uuid); validateForm()"
-              :id="`state_${state.uuid}`" name="state">
-              {{ state.text }}
-            </InputRadio>
-          </template>
-        </Dropdown>
-        <Dropdown v-if="current_state.uuid && cities.length > 0" class="z-index-[1100] h-10">
-          <template v-slot:title>
-            <span>
-              {{ current_city.text ?? "شهر" }}
-            </span>
-          </template>
-          <template v-slot:option>
-            <InputRadio v-for="(city, index) in cities" :value="city.uuid" :key="index" v-model="form.city"
-              @click="form.city = city.uuid; current_city = city; validateForm()" :id="`city_${city.uuid}`" name="city">
-              {{
-                city.text }}</InputRadio>
-          </template>
-        </Dropdown>
-        <div class="textbox">
-          <select id="slcRole" v-model="form.role">
-            <option value="student">دانش آموز</option>
-            <option value="advisor">مشاور</option>
-          </select>
-          <label for="slcRole">نوع حساب</label>
+        <div dir="rtl" class="text-base-content w-full lg:w-[22.625rem]">
+          <InputCheckbox v-model="form.has_advisor" name="has_advisor" id="has_advisor">
+            مشاور دارم
+          </InputCheckbox>
         </div>
-        <InputCheckbox v-model="form.has_advisor" v-if="form.role === 'student'" name="has_advisor"
-          id="has_advisor">
-          مشاور دارم
-        </InputCheckbox>
-        <div class="textbox" v-if="form.has_advisor">
-          <input type="text" id="txtAdvisor" placeholder="" v-model="form.advisor"  />
-          <label for="txtAdvisor">کد مشاور</label>
-        </div>
-
-        <div class="flex justify-between col-span-2 w-full lg:w-full items-center flex-col lg:flex-row gap-4">
+        <div class="flex justify-between w-full lg:w-full items-center flex-col lg:flex-row gap-4">
           <button type="submit" class="btn-primary w-full lg:w-1/3" :disabled="!IsFormValid">
             عضویت
           </button>
           <label dir="rtl"
-            class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-main">
+            class="text-xs flex flex-col items-center lg:items-start lg:justify-around gap-2 h-10 text-primary">
             <NuxtLink to="/auth/login">
               حساب کاربری دارید؟
             </NuxtLink>
@@ -126,10 +130,13 @@
 </template>
 
 <script setup>
+import Request from "~~/Api/Request";
+
 definePageMeta({
   layout: "auth",
 });
-useHead({ title: 'ثبت نام' })
+
+const request = Request.noauth();
 const error_happened = ref(false);
 const states = ref([])
 const fields = ref([])
@@ -137,7 +144,10 @@ const cities = ref([])
 const current_grade = ref({})
 const current_gender = ref({})
 const current_field = ref({})
-const current_state = ref({})
+const current_state = ref({
+  name: "",
+  uuid: ""
+})
 const current_city = ref({})
 const confirm_password = ref("")
 const IsFormValid = ref(false)
@@ -190,20 +200,19 @@ const form = ref({
   field: "",
   gender: "",
   grade: 0,
-  has_advisor: false,
-  advisor: null,
-  role: 'student'
+  has_advisor: false
 });
-const { $axios } = useNuxtApp()
-
+const { $axios, $token } = useNuxtApp()
 const loading = ref(false)
 async function requestToRegister() {
   loading.value = true
   try {
-    let route = `${form.value.role}s/auth/register`
-    let response = await $axios.post(route, form.value)
+    let response = await $axios.post("students/auth/register", form.value)
+    console.log(response)
     if (response.data.ok) {
-      return navigateTo('/auth/login')
+      $token.setToken(response.data.data.token)
+      console.log('token set', response.data.ok, response.data.data.token)
+      return navigateTo("/")
     }
   } catch (exception) {
     if (exception.response.status === 422) {
@@ -215,49 +224,11 @@ async function requestToRegister() {
       password_box.classList.add("border-b-error");
       error_happened.value = true;
     }
+    console.log(exception)
   } finally {
     loading.value = false
   }
 }
-
-watch(current_state, (newValue, oldValue) => {
-  if (!!newValue) {
-    form.value.city = '';
-    current_city.value = '';
-    get_cities(current_state.value.uuid);
-  }
-})
-
-watch(current_city, (newValue, oldValue) => {
-  if (!!newValue) {
-    form.value.city = current_city.value.uuid;
-  }
-})
-
-watch(current_gender, (newValue, oldValue) => {
-  if (!!newValue) {
-    form.value.gender = current_gender.value.value;
-  }
-})
-
-watch(current_grade, (newValue, oldValue) => {
-  if (!!newValue) {
-    form.value.grade = current_grade.value.value;
-    gradeOnClick();
-  }
-})
-
-watch(current_field, (newValue, oldValue) => {
-  if (!!newValue) {
-    form.value.field = current_field.value.uuid;
-  }
-})
-
-watch(form.value, (newValue, oldValue) => {
-  if (!!newValue) {
-    validateForm();
-  }
-})
 
 async function get_cities(state_uuid) {
   loading.value = true
@@ -278,10 +249,8 @@ async function validateForm() {
   if (form.value.first_name == "") return;
   if (form.value.last_name == "") return;
   if (form.value.password == "" || form.value.password !== confirm_password.value) return;
-  if (form.value.role === "student") {
-    if (form.value.grade < 7 || form.value.grade > 13) return;
-    if (form.value.grade > 9 && form.value.field == "") return;
-  }
+  if (form.value.grade < 7 || form.value.grade > 13) return;
+  if (form.value.grade > 9 && form.value.field == "") return;
   if (form.value.city == "") return;
   if (form.value.gender == "") return;
   IsFormValid.value = true
