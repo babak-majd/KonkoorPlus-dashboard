@@ -24,7 +24,6 @@
 
 <script setup>
 import Request from "~~/Api/Request";
-import jalaliMoment from "jalali-moment";
 
 const request = new Request;
 const data = ref({});

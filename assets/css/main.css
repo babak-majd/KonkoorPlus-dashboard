@@ -10,7 +10,8 @@
 }
 
 html {
-  @apply scroll-smooth font-iranyekan
+  direction: rtl;
+  @apply scroll-smooth font-iranyekan bg-white text-base-content
 }
 
 @layer components {
@@ -19,7 +20,7 @@ html {
   }
 
   input {
-    @apply border-2 border-base-350 rounded-sm py-2 px-4 focus:border-b-primary outline-none;
+    @apply border border-base-350 rounded-sm py-2 px-4 outline-none;
   }
 
   .btn {
@@ -27,26 +28,33 @@ html {
   }
 
   .btn-primary {
-    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-primary text-primary-text [&>svg]:fill-primary-text  hover:bg-primary-hover active:bg-primary-active disabled:bg-primary-disabled disabled:cursor-default;
+    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-main text-primary-text [&>svg]:fill-primary-text hover:bg-main-100 hover:text-main active:bg-main-100 disabled:bg-primary-disabled disabled:cursor-default;
   }
 
   .btn-secondary {
-    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-secondary  text-secondary-text [&>svg]:fill-secondary-text hover:text-white hover:bg-secondary-hover active:text-white active:bg-secondary-active disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
+    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-secondary text-secondary-text [&>svg]:fill-secondary-text hover:text-white hover:bg-secondary-hover active:text-white active:bg-secondary-active disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
   }
 
   .btn-danger {
-    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-[#F3524226]  text-danger [&>svg]:fill-danger hover:text-white hover:bg-danger active:text-white active:bg-danger disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
-  }
-  
-  .btn-danger-icon {
-    @apply flex flex-row items-center justify-center font-bold text-sm text-center leading-[normal] rounded-[3px] transition-all duration-200 bg-[#F3524226]  text-danger [&>svg]:fill-danger hover:text-white hover:bg-danger active:text-white active:bg-danger disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
+    @apply flex flex-row cursor-pointer gap-2 w-fit h-fit justify-around items-center rounded-[9px] py-2 px-3 transition-all duration-200 bg-[#F3524226] text-danger [&>svg]:fill-danger hover:text-white hover:bg-danger active:text-white active:bg-danger disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
   }
 
-  .btn-secondary:hover svg, .btn-secondary:active svg, .btn-secondary:disabled svg, .btn-primary:disabled svg, .btn-danger-icon:disabled svg, .btn-danger-icon:hover svg  {
+  .btn-danger-icon {
+    @apply flex flex-row items-center justify-center font-bold text-sm text-center leading-[normal] rounded-[3px] transition-all duration-200 bg-[#F3524226] text-danger [&>svg]:fill-danger hover:text-white hover:bg-danger active:text-white active:bg-danger disabled:text-white disabled:bg-secondary-disabled disabled:cursor-default;
+  }
+
+  .btn-secondary:hover svg,
+  .btn-secondary:active svg,
+  .btn-secondary:disabled svg,
+  .btn-primary:disabled svg,
+  .btn-danger-icon:disabled svg,
+  .btn-danger-icon:hover svg {
     @apply fill-white;
   }
 
-  .btn-danger:hover svg, .btn-danger:active svg, .btn-danger:disabled svg {
+  .btn-danger:hover svg,
+  .btn-danger:active svg,
+  .btn-danger:disabled svg {
     @apply fill-white;
   }
 
@@ -56,6 +64,28 @@ html {
 
   .cube {
     @apply w-7 h-7 rounded-sm
+  }
+
+  .textbox {
+    @apply relative flex flex-col justify-center w-full text-base-content
+  }
+
+  .textbox input, .textbox select {
+    @apply w-full border border-b-2 rounded-sm p-2
+  }
+
+  .textbox label {
+    @apply absolute right-1 px-1 transition-all duration-150
+  }
+
+  .textbox input:focus+label, .textbox input:not(:placeholder-shown)+label,
+  .textbox select:focus+label, .textbox select:not(:empty)+label {
+    @apply text-xs -translate-y-5 bg-white
+  }
+
+  .textbox input:focus, .textbox input:not(:placeholder-shown),
+  .textbox select:focus {
+    @apply border-b-main
   }
 }
 
