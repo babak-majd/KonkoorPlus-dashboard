@@ -16,7 +16,7 @@ export default class Toastify {
         left: '0',
         right: '0',
         '@media (max-width: 600px)': {
-          fontSize: '16px', 
+          fontSize: '16px',
           padding: '12px',
           borderRadius: '6px',
           right: '14px'
