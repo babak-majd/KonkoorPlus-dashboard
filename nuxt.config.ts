@@ -11,5 +11,6 @@ export default defineNuxtConfig({
   css: [
     "@/assets/Fonts/YekanWebFonts/css/fontiran.css",
     "@/assets/css/main.css",
-  ]
+  ],
+  modules: ['@pinia/nuxt'],
 })
