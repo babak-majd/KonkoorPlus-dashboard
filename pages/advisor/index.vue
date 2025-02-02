@@ -153,6 +153,7 @@ onMounted(async () => {
 })
 function copy(text) {
   useCopy(text)
+  Toastify.success('کد مشاور با موفقیت کپی شد')
 }
 function logout() {
   userData.logout()
