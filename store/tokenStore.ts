@@ -2,21 +2,28 @@ import { defineStore } from 'pinia'
 
 export const useToken = defineStore({
   id: 'token_store',
-  state: () => ({
-    token: useCookie('token', { maxAge: 60 * 60 * 24 * 7, secure: true })
-  }),
+  state: () => ({}),
   actions: {
-    setToken(token: string) {
-      this.token = token
+    setToken(token: string): void {
+      let cookie = useCookie('token', { secure: true, maxAge: 60 * 60 * 24 * 7 })
+      cookie.value = token
     },
-    getToken() {
-      return this.token
+    getToken(): string | null | undefined {
+      let cookie = useCookie('token')
+
+      return cookie.value
     },
     logout() {
-      this.token = null
+      let cookie = useCookie('token')
+
+      cookie.value = null
     }
   },
   getters: {
-    tokenIsSet: (state) => { return !!state.token }
+    tokenIsSet: (state) => {
+      let cookie = useCookie('token')
+
+      return !!cookie.value
+    }
   }
 })
