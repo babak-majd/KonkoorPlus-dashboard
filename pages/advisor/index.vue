@@ -116,7 +116,7 @@
 
 <script setup>
 import { useUserData } from "~/store/user_data";
-import Auth from "../middlewares/Auth";
+import Auth from "~/middlewares/Auth";
 import { useToken } from "~/store/tokenStore";
 import AdviserMiddleware from "~/middlewares/AdviserMiddleware";
 
