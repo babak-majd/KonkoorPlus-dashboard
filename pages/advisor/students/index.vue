@@ -21,12 +21,9 @@
             <td class="text-center py-2">{{ grades[student.grade] }}</td>
             <td class="text-center py-2">{{ student.field }}</td>
             <td class="flex items-center gap-3">
-              <NuxtLink class="pointer-events-none" :to="`/advisor/students/${student.uuid}`" title="مشاهده">
+              <NuxtLink :to="`/advisor/students/${student.uuid}`" title="مشاهده">
                 <SvgEye class="w-5" />
               </NuxtLink>
-              <button @click="remove(student.uuid)" class="text-2xl font-medium text-main pointer-events-none" title="حذف">
-                ×
-              </button>
             </td>
           </tr>
         </tbody>
@@ -53,15 +50,7 @@ definePageMeta({
 useHead({ title: 'دانش آموزان من' })
 
 const loading = ref(false)
-const data = ref([
-  {
-    uuid: 'ldkfwoeifhweofh',
-    first_name: 'محمد مهدی',
-    last_name: 'نورانی',
-    grade: 13,
-    field: 'ریاضی'
-  }
-])
+const data = ref([])
 
 const grades = {
   0: 'ندارد',
@@ -77,8 +66,7 @@ const grades = {
 const { $axios } = useNuxtApp()
 
 onMounted(() => {
-  // TODO : uncommented when the route is available
-  // getData()
+  getData()
 })
 
 function remove(uuid) {
@@ -86,13 +74,12 @@ function remove(uuid) {
     if (confirm) {
       loading.value = true
       try {
-        let response = await $axios.post('/advisor/my-student/remove', { uuid: uuid })
+        let response = await $axios.post('/advisors/students/remove', { uuid: uuid })
 
         Toastify.showByStatus(response.data.message, response.data.ok)
 
         if (response.data.ok) {
-          // TODO : get data from API again
-          // getData()
+          getData()
         }
       } catch (ex) {
         console.log(ex)
@@ -104,14 +91,14 @@ function remove(uuid) {
 async function getData() {
   loading.value = true
   try {
-    let response = await $axios.get('/advisor/my-students')
+    let response = await $axios.get('/advisors/students')
 
     if (response.data.ok) {
       data.value = response.data.data
     }
   } catch (ex) {
     console.log(ex)
-  } finally { Loading.value = false }
+  } finally { loading.value = false }
 }
 </script>
 
