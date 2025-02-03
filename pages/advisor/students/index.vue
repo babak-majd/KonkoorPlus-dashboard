@@ -21,10 +21,10 @@
             <td class="text-center py-2">{{ grades[student.grade] }}</td>
             <td class="text-center py-2">{{ student.field }}</td>
             <td class="flex items-center gap-3">
-              <NuxtLink :to="`/advisor/students/${student.uuid}`" title="مشاهده">
+              <NuxtLink class="pointer-events-none" :to="`/advisor/students/${student.uuid}`" title="مشاهده">
                 <SvgEye class="w-5" />
               </NuxtLink>
-              <button @click="remove(student.uuid)" class="text-2xl font-medium text-main" title="حذف">
+              <button @click="remove(student.uuid)" class="text-2xl font-medium text-main pointer-events-none" title="حذف">
                 ×
               </button>
             </td>
