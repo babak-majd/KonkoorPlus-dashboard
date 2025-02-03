@@ -1,11 +1,12 @@
-import { toast, type ToastOptions } from "vue3-toastify";
+import { toast, type ToastOptions, type ToastType } from "vue3-toastify";
 
 export default class Toastify {
-  protected static display(message: string, option = {} as ToastOptions) {
+  protected static display(message: string, type: ToastType, option = {} as ToastOptions) {
     toast(message, {
       autoClose: 3000,
       position: 'bottom-right',
       transition: 'flip',
+      type: type,
       dangerouslyHTMLString: true,
       style: {
         fontFamily: 'iranyekan',
@@ -27,6 +28,14 @@ export default class Toastify {
 
   }
   public static success(message: string) {
-    this.display(message, { type: 'success' })
+    this.display(message, "success")
+  }
+
+  public static error(message: string) {
+    this.display(message, "error")
+  }
+
+  public static showByStatus(message: string, is_success: boolean) {
+    is_success ? this.success(message) : this.error(message)
   }
 }
