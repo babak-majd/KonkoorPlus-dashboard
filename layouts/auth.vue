@@ -3,27 +3,13 @@
     <!-- form -->
     <div class="flex flex-col items-center lg:flex-row max-w-xl gap-12 lg:gap-8">
 
-      <SvgLogoDesktop class="w-56" v-if="isMobile" />
+      <SvgLogoDesktop class="w-56 lg:hidden" />
       <NuxtPage />
-      <SvgLogo class="w-56" v-if="!isMobile" />
+      <SvgLogo class="w-56 hidden lg:block" />
     </div>
   </div>
 </template>
 
 <script setup>
-const screenWidth = ref(window.innerWidth);
 
-const updateScreenWidth = () => {
-  screenWidth.value = window.innerWidth;
-};
-
-onMounted(() => {
-  window.addEventListener('resize', updateScreenWidth);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateScreenWidth);
-});
-
-const isMobile = computed(() => screenWidth.value < 1024);
 </script>

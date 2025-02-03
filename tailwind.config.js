@@ -75,6 +75,12 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+  ],
+  darkMode: false,
+  daisyui: {
+    themes: [],
+  },
 }
 

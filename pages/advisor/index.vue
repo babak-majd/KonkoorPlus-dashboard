@@ -116,7 +116,7 @@
 
 <script setup>
 import { useUserData } from "~/store/user_data";
-import Auth from "../middlewares/Auth";
+import Auth from "~/middlewares/Auth";
 import { useToken } from "~/store/tokenStore";
 import AdviserMiddleware from "~/middlewares/AdviserMiddleware";
 
@@ -153,6 +153,7 @@ onMounted(async () => {
 })
 function copy(text) {
   useCopy(text)
+  Toastify.success('کد مشاور با موفقیت کپی شد')
 }
 function logout() {
   userData.logout()

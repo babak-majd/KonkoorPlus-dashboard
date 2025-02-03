@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     },
   },
   css: [
+    "vue3-toastify/dist/index.css",
     "@/assets/Fonts/YekanWebFonts/css/fontiran.css",
     "@/assets/css/main.css",
   ],

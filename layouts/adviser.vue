@@ -35,10 +35,10 @@
             <SvgSetting :active="check_page_is_active('tools')" />
             <span>ابزارها</span>
           </NuxtLink>
-          <NuxtLink to="/advisor/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
-            :class="check_page_is_active('overview') ? 'text-main bg-main-100' : ''">
-            <SvgDiagram :active="check_page_is_active('overview')" />
-            <span>نمای کلی</span>
+          <NuxtLink to="/advisor/students" class="rounded-lg py-2 px-4 flex items-center gap-2"
+            :class="check_page_is_active('students') ? 'text-main bg-main-100' : ''">
+            <SvgStudents :active="check_page_is_active('students')" />
+            <span>دانش آموزان من</span>
           </NuxtLink>
         </div>
       </div>
@@ -53,7 +53,7 @@
     </div>
 
     <!-- page content -->
-    <div class="flex flex-col w-full min-h-svh">
+    <div class="flex flex-col w-full h-full">
       <!-- desktop header -->
       <div class="hidden lg:flex items-center h-28 px-7 py-5 bg-white border-b border-stone-300">
         <!-- profile -->
@@ -65,7 +65,7 @@
           </span>
         </div>
       </div>
-      <div class="flex w-full h-full lg:p-8">
+      <div class="flex w-full h-full pb-4 lg:p-8">
         <NuxtPage class="bg-base-100 rounded-md h-full" />
       </div>
     </div>
@@ -96,10 +96,10 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/advisor/overview" class="rounded-lg py-2 px-4 flex items-center gap-2"
-              :class="check_page_is_active('overview') ? 'text-main bg-main-100' : ''">
-              <SvgDiagram :active="check_page_is_active('overview')" />
-              <span>نمای کلی</span>
+            <NuxtLink to="/advisor/students" class="rounded-lg py-2 px-4 flex items-center gap-2"
+              :class="check_page_is_active('students') ? 'text-main bg-main-100' : ''">
+              <SvgStudents :active="check_page_is_active('students')" />
+              <span>دانش آموزان من</span>
             </NuxtLink>
           </li>
         </ul>
@@ -116,11 +116,12 @@
 </template>
 
 <script setup>
+import { SvgStudents } from '#components';
 import { useUserData } from '~/store/user_data';
 
 const current_page = () => {
   const path = useRoute().fullPath.split('/')
-  
+
   return path.length === 2 ? path[1] : path[2]
 }
 const check_page_is_active = (page) => {
