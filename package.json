@@ -16,6 +16,7 @@
     "jalali-moment": "^3.3.11",
     "nuxt": "^3.15.4",
     "pinia": "^2.3.1",
+    "sweetalert2": "^11.15.10",
     "vue": "latest",
     "vue-router": "latest",
     "vue3-apexcharts": "^1.8.0",
