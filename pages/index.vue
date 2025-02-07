@@ -64,7 +64,7 @@
 				<span><b>شماره تلفن:</b> {{ data.phone_number }}</span>
 				<span><b>استان:</b> {{ data.state.name }}</span>
 				<span><b>شهر:</b> {{ data.city.name }}</span>
-				<span><b>پایه:</b> {{ grades[data.grade] }}</span>
+				<span><b>پایه:</b> {{ _grades[data.grade] }}</span>
 				<span><b>رشته تحصیلی:</b> {{ data.field.name }}</span>
 				<span><b>جنسیت:</b> {{ data.gender === 'M' ? 'آقا' : 'خانم' }}</span>
 				<span><b>مشاور:</b> {{ data.has_advisor ? 'دارد' : 'ندارد' }}</span>
