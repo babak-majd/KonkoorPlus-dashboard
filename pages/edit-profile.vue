@@ -88,9 +88,14 @@
                                 city.text }}</InputRadio>
                     </template>
                 </Dropdown>
-                <InputCheckbox class="col-span-2" v-model="form.has_advisor" name="has_advisor" id="has_advisor">
+                <InputCheckbox :class="form.has_advisor ? '' : 'col-span-2'" v-model="form.has_advisor"
+                    name="has_advisor" id="has_advisor">
                     مشاور دارم
                 </InputCheckbox>
+                <div class="textbox" v-if="form.has_advisor">
+                    <input type="text" id="txtAdvisorCode" placeholder="" v-model="form.advisor" />
+                    <label for="txtAdvisorCode">کد مشاور</label>
+                </div>
 
                 <button type="submit" class="col-span-2 btn-primary w-full" :disabled="!IsFormValid">
                     ذخیره
@@ -192,7 +197,8 @@ const form = ref({
     new_field: "",
     gender: "",
     grade: 0,
-    has_advisor: false
+    has_advisor: false,
+    advisor: null
 });
 const frmPassword = ref({
     password: '',
@@ -302,6 +308,7 @@ async function collect_profile() {
                 form.value.new_field = data.value.field.uuid
                 current_field.value = data.value.field
                 form.value.gender = data.value.gender
+                form.value.advisor = data.value.advisor.uuid
                 genders.forEach(gender => {
                     if (gender.value === data.value.gender)
                         current_gender.value = gender
