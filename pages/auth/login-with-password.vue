@@ -67,6 +67,9 @@ async function requestToLogin() {
       }
       let url = response.data.data.role === "advisor" ? '/advisor' : '/'
       return await navigateTo(url, { replace: true })
+    } else {
+      Toastify.error('لطفا جهت فعال سازی شماره اقدام کنید')
+      return navigateTo('/auth/login')
     }
   } catch (ex) {
     phone_box.classList.add("!border-b-error");
