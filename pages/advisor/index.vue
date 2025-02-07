@@ -79,35 +79,32 @@
       <div class="flex flex-col items-center gap-4">
         <!-- grades -->
         <div class="flex items-center gap-1 p-1 bg-stone-100 rounded-full">
-          <span class="px-2 py-1 rounded-full bg-main text-white">نهم</span>
-          <span class="px-2 py-1 rounded-full">دهم</span>
-          <span class="px-2 py-1 rounded-full">یازدهم</span>
-          <span class="px-2 py-1 rounded-full">دوازدهم</span>
+          <span v-for="grade in grades" :key="grade.value" :class="[
+            'px-2 py-1 rounded-full transition-colors duration-300 cursor-pointer',
+            activeGrade === grade.value ? 'bg-main text-white' : ''
+          ]" @click="handleGradeClick(grade.value)">{{ grade.label }}</span>
         </div>
 
-        <!-- fields-->
-        <div class="flex items-center gap-1 p-1 bg-stone-100 rounded-full">
-          <span class="px-2 py-1 rounded-full">تجربی</span>
-          <span class="px-2 py-1 rounded-full">ریاضی</span>
-          <span class="px-2 py-1 rounded-full">انسانی</span>
+        <!-- fields - فقط برای غیر پایه نهم -->
+        <div v-if="activeGrade !== 9" class="flex items-center gap-1 p-1 bg-stone-100 rounded-full">
+          <span v-for="field in fields" :key="field.value" :class="[
+            'px-2 py-1 rounded-full transition-colors duration-300 cursor-pointer',
+            activeField === field.value ? 'bg-main text-white' : ''
+          ]" @click="handleFieldClick(field.value)">{{ field.label }}</span>
         </div>
       </div>
 
       <!-- students -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-8 xl:gap-24">
-        <div class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
-          <SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
-          <div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
-        </div>
-        <div class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
-          <SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
-          <div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
-        </div>
-
-        <div
-          class="flex flex-col col-span-2 w-fit mx-auto md:col-span-1 md:mx-0 gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
-          <SvgBestStudentFrame class="w-32" image="/images/boy.jpg" />
-          <div class="text-white bg-main w-full text-center rounded-md py-1">بابک مجد</div>
+        <div v-for="student in topStudents" :key="student.report.first_name + student.report.last_name" :class="[
+          'flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100',
+          topStudents.length === 3 && topStudents.indexOf(student) === 2 ? 'col-span-2 w-fit mx-auto md:col-span-1 md:mx-0' : ''
+        ]">
+          <SvgBestStudentFrame class="w-32"
+            :image="student.report.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" />
+          <div class="text-white bg-main w-full text-center rounded-md py-1">
+            {{ student.report.first_name }} {{ student.report.last_name }}
+          </div>
         </div>
       </div>
     </div>
@@ -142,15 +139,140 @@ const data = ref({
 });
 const userData = useUserData()
 const token = useToken()
+const { $axios } = useNuxtApp()
 
-onMounted(async () => {
+const grades = [
+  { value: 9, label: 'نهم' },
+  { value: 10, label: 'دهم' },
+  { value: 11, label: 'یازدهم' },
+  { value: 12, label: 'دوازدهم' }
+];
+
+const fields = [
+  { value: 'علوم انسانی', label: 'انسانی' },
+  { value: 'علوم تجربی', label: 'تجربی' },
+  { value: 'ریاضی و فیزیک', label: 'ریاضی' }
+];
+
+const students = ref([/* اینجا دیتای API رو قرار بدید */]);
+const activeGrade = ref(grades[0].value);
+const activeField = ref(fields[0].value);
+let intervalId = ref(null);
+
+// محاسبه برترین دانش‌آموزان بر اساس گرید و رشته فعال
+const topStudents = computed(() => {
+  if (activeGrade.value === 9) {
+    // برای پایه نهم فقط بر اساس نمره مرتب می‌کنیم، بدون در نظر گرفتن رشته
+    return students.value
+      .filter(student => student.grade === 9)
+      .sort((a, b) => b.report.score - a.report.score)
+      .slice(0, 3);
+  }
+
+  return students.value
+    .filter(student =>
+      student.grade === activeGrade.value &&
+      student.field.name === activeField.value
+    )
+    .sort((a, b) => b.report.score - a.report.score)
+    .slice(0, 3);
+});
+
+// بررسی وجود دانش‌آموز در یک پایه و رشته خاص
+const hasStudentsInFieldAndGrade = (grade, field) => {
+  return students.value.some(student =>
+    student.grade === grade &&
+    (!field || student.field.name === field)
+  );
+};
+
+// پیدا کردن اولین رشته معتبر برای یک پایه
+const findFirstValidField = (grade) => {
+  if (grade === 9) return null;
+  return fields.find(field => hasStudentsInFieldAndGrade(grade, field.value))?.value || fields[0].value;
+};
+
+// تنظیم اینتروال جدید
+const startInterval = () => {
+  clearInterval(intervalId.value);
+
+  intervalId.value = setInterval(() => {
+    if (activeGrade.value === 9) {
+      // اگر در پایه نهم هستیم، مستقیم برو پایه بعدی
+      const nextGrade = grades[1].value; // برو به دهم
+      activeGrade.value = nextGrade;
+      activeField.value = findFirstValidField(nextGrade);
+    } else {
+      // پیدا کردن ایندکس رشته فعلی
+      const currentFieldIndex = fields.findIndex(f => f.value === activeField.value);
+      const nextFieldIndex = (currentFieldIndex + 1) % fields.length;
+
+      if (nextFieldIndex === 0) {
+        // اگر رشته‌ها تموم شدن، برو پایه بعدی
+        const currentGradeIndex = grades.findIndex(g => g.value === activeGrade.value);
+        const nextGradeIndex = (currentGradeIndex + 1) % grades.length;
+        activeGrade.value = grades[nextGradeIndex].value;
+
+        if (activeGrade.value === 9) {
+          // اگر رفتیم به نهم، فیلد رو پاک کن
+          activeField.value = null;
+        } else {
+          // پیدا کردن اولین رشته معتبر برای پایه جدید
+          activeField.value = findFirstValidField(activeGrade.value);
+        }
+      } else {
+        // برو به رشته بعدی در همین پایه
+        activeField.value = fields[nextFieldIndex].value;
+      }
+    }
+  }, 5000);
+};
+
+// کلیک روی گرید
+const handleGradeClick = (grade) => {
+  activeGrade.value = grade;
+  activeField.value = findFirstValidField(grade);
+  startInterval();
+};
+
+// کلیک روی فیلد
+const handleFieldClick = (field) => {
+  activeField.value = field;
+  startInterval();
+};
+
+
+// راه‌اندازی اولیه
+onMounted(() => {
   if (token.tokenIsSet) {
     data.value = userData.getUserData()
+    getBestStudnets().then(() => {
+      activeField.value = findFirstValidField(activeGrade.value);
+      startInterval();
+    })
   }
   else {
     logout()
   }
-})
+});
+
+// پاکسازی
+onUnmounted(() => {
+  clearInterval(intervalId.value);
+});
+
+async function getBestStudnets() {
+  try {
+    let response = await $axios.get('league/daily')
+    if (response.data.ok) {
+      students.value = response.data.data
+    }
+  } catch (ex) {
+    console.log(ex)
+  }
+}
+
+
 function copy(text) {
   useCopy(text)
   Toastify.success('کد مشاور با موفقیت کپی شد')
