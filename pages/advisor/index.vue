@@ -73,7 +73,11 @@
 
     <!-- best students -->
     <div class="flex flex-col items-center gap-8">
-      <h2 class="text-xl font-semibold">برترین های هر پایه</h2>
+      <h2 class="text-xl font-semibold">برترین های مطالعه و تمرین {{
+        Tools.DateTimeFormat(topStudents[0]?.created_at, 'fa-IR', {
+          month: "long",
+          day: '2-digit'
+        }) }}</h2>
 
       <!-- grades and fields -->
       <div class="flex flex-col items-center gap-4">
@@ -95,11 +99,9 @@
       </div>
 
       <!-- students -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-8 xl:gap-24">
-        <div v-for="student in topStudents" :key="student.report.first_name + student.report.last_name" :class="[
-          'flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100',
-          topStudents.length === 3 && topStudents.indexOf(student) === 2 ? 'col-span-2 w-fit mx-auto md:col-span-1 md:mx-0' : ''
-        ]">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-24">
+        <div v-for="student in topStudents" :key="student.report.first_name + student.report.last_name"
+          class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
           <SvgBestStudentFrame class="w-32"
             :image="student.report.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" />
           <div class="text-white bg-main w-full text-center rounded-md py-1">
@@ -280,6 +282,6 @@ function copy(text) {
 function logout() {
   userData.logout()
   token.logout()
-  return navigateTo('/auth/login')
+  return navigateTo('/auth/login-with-password')
 }
 </script>
