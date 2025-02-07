@@ -25,7 +25,7 @@
       <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
         حساب کاربری ندارید؟
       </NuxtLink>
-      <NuxtLink to="/auth/login" class="text-primary text-xs font-medium">ورود از طریق SMS</NuxtLink>
+      <NuxtLink to="/auth/login" class="text-primary text-xs font-medium">ورود با رمز یکبار مصرف</NuxtLink>
     </div>
   </form>
 </template>

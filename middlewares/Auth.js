@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const token = useToken()
 
     if (!token.tokenIsSet) {
-        return navigateTo('/auth/login')
+        return navigateTo('/auth/login-with-password')
     }
     return true
 });

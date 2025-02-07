@@ -142,7 +142,7 @@ function failedToLoadImage() {
 
 function logout() {
   userData.logout()
-  return navigateTo('/auth/login')
+  return navigateTo('/auth/login-with-password')
 }
 
 function defaultProfileImageByGender(gender) {
