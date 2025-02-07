@@ -36,7 +36,8 @@
     </div>
     <div class="flex flex-col items-center w-full gap-4">
       <button class="btn-primary w-full">ورود</button>
-      <button type="button" @click="receive_code()" class="btn-secondary">زمان باقی مانده {{ remainig_time_format() }}</button>
+      <button type="button" @click="receive_code()" class="btn-secondary">زمان باقی مانده {{ remainig_time_format()
+        }}</button>
       <button type="button" @click="step = 1">تغییر شماره</button>
     </div>
   </form>
@@ -125,15 +126,21 @@ async function login() {
 
   try {
     let obj = {
-      phone_number: form.value.phone_number,
+      phone: form.value.phone_number,
       code: form.value.code.join('')
     }
     let response = await $axios.post('auth/sms/login', obj)
 
     if (response.data.ok) {
       token.setToken(response.data.data.token)
-      userData.setUserData(response.data.data)
-      startDate.setStartDate(response.data.start_date)
+      let route = `/${response.data.data.role}s/profile`
+      response = await $axios.get(route, { headers: { Authorization: `Token ${response.data.data.token}` } })
+      if (response.data.ok) {
+        userData.setUserData(response.data.data)
+        startDate.setStartDate(response.data.start_date)
+      }
+      let url = response.data.data.role === "advisor" ? '/advisor' : '/'
+      return await navigateTo(url, { replace: true })
     }
   } catch (ex) {
     console.log(ex)
@@ -142,27 +149,4 @@ async function login() {
   }
 }
 
-async function requestToLogin() {
-  loading.value = true
-  let phone_box = document.getElementById("txtMobile");
-  let password_box = document.getElementById("txtPassword");
-  try {
-    let response = await $axios.post("students/auth/login", form.value)
-    if (response.data.ok) {
-      token.setToken(response.data.data.token)
-      response = await $axios.get('students/profile', { headers: { Authorization: `Token ${response.data.data.token}` } })
-      if (response.data.ok) {
-        userData.setUserData(response.data.data)
-        startDate.setStartDate(response.data.start_date)
-      }
-      return await navigateTo('/', { open: { target: "_self" } })
-    }
-  } catch (ex) {
-    phone_box.classList.add("!border-b-error");
-    password_box.classList.add("!border-b-error");
-    error_happened.value = true;
-  } finally {
-    loading.value = false
-  }
-}
 </script>

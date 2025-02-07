@@ -58,7 +58,6 @@ async function requestToLogin() {
   try {
     let response = await $axios.post("/auth/login", form.value)
     if (response.data.ok) {
-      console.log(response.data.data)
       token.setToken(response.data.data.token)
       let route = `/${response.data.data.role}s/profile`
       response = await $axios.get(route, { headers: { Authorization: `Token ${response.data.data.token}` } })
