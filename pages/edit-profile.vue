@@ -93,7 +93,7 @@
                     مشاور دارم
                 </InputCheckbox>
                 <div class="textbox" v-if="form.has_advisor">
-                    <input type="text" id="txtAdvisorCode" placeholder="" v-model="form.advisor" />
+                    <input type="text" id="txtAdvisorCode" placeholder="" v-model="form.new_advisor" />
                     <label for="txtAdvisorCode">کد مشاور</label>
                 </div>
 
@@ -198,7 +198,7 @@ const form = ref({
     gender: "",
     grade: 0,
     has_advisor: false,
-    advisor: null
+    new_advisor: null
 });
 const frmPassword = ref({
     password: '',
@@ -308,7 +308,7 @@ async function collect_profile() {
                 form.value.new_field = data.value.field.uuid
                 current_field.value = data.value.field
                 form.value.gender = data.value.gender
-                form.value.advisor = data.value.advisor.uuid
+                form.value.new_advisor = data.value.advisor.uuid
                 genders.forEach(gender => {
                     if (gender.value === data.value.gender)
                         current_gender.value = gender
