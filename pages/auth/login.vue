@@ -140,7 +140,7 @@ async function login() {
         startDate.setStartDate(response.data.start_date)
       }
       let url = response.data.data.role === "advisor" ? '/advisor' : '/'
-      return await navigateTo(url, { replace: true })
+      return await navigateTo(url, { open: { target: "_self" } })
     }
   } catch (ex) {
     console.log(ex)

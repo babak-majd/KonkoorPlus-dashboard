@@ -66,7 +66,7 @@ async function requestToLogin() {
         startDate.setStartDate(response.data.start_date)
       }
       let url = response.data.data.role === "advisor" ? '/advisor' : '/'
-      return await navigateTo(url, { replace: true })
+      return await navigateTo(url, { open: { target: "_self" } })
     } else {
       Toastify.error('لطفا جهت فعال سازی شماره اقدام کنید')
       return navigateTo('/auth/login')
