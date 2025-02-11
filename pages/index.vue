@@ -47,7 +47,7 @@
 				<div class="flex flex-col gap-1">
 					<span class="font-medium">مشاور:</span>
 					<span class="text-sm">
-						{{ data.has_advisor ? 'دارد' : 'ندارد' }}
+						{{ data.has_advisor ? `${data.advisor.first_name} ${data.advisor.last_name}` : 'ندارد' }}
 					</span>
 				</div>
 			</div>
@@ -67,7 +67,9 @@
 				<span><b>پایه:</b> {{ _grades[data.grade] }}</span>
 				<span><b>رشته تحصیلی:</b> {{ data.field.name }}</span>
 				<span><b>جنسیت:</b> {{ data.gender === 'M' ? 'آقا' : 'خانم' }}</span>
-				<span><b>مشاور:</b> {{ data.has_advisor ? 'دارد' : 'ندارد' }}</span>
+				<span><b>مشاور:</b> {{ data.has_advisor ?
+					`${data.advisor.first_name} ${data.advisor.last_name}` :
+					'ندارد' }}</span>
 			</div>
 
 			<!-- tools -->
