@@ -95,7 +95,7 @@
                 </Accordion>
                 <Accordion v-if="data?.length ?? 0 > 0" v-for="(item, index) in data">
                     <template v-slot:label>
-                        {{ item.title }}
+                        {{ item.lesson_title }} - {{ item.title }}
                     </template>
                     <div class="relative">
                         <div class="flex flex-row gap-2 pb-2">
@@ -211,9 +211,13 @@ async function add_report_item() {
                 form.value.test = ""
                 duration.value.hours = ""
                 duration.value.mins = ""
+
+                if (!response.ok)
+                    Toastify.error('تایم ویرایش گزارش برای این روز به اتمام رسیده است')
             }
         })
         .catch((err) => {
+            Toastify.error('تایم ویرایش گزارش برای این روز به اتمام رسیده است')
             console.log(err);
         });
 }
