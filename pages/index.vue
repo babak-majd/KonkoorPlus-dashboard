@@ -131,7 +131,6 @@ import { useUserData } from "~/store/user_data";
 import Auth from "../middlewares/Auth";
 import { useToken } from "~/store/tokenStore";
 import StudentMiddleware from "~/middlewares/StudentMiddleware";
-import moment from "jalali-moment";
 
 definePageMeta({
 	middleware: [Auth, StudentMiddleware],
