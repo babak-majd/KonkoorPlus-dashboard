@@ -150,6 +150,7 @@ const check_page_is_active = (page) => {
   return current_page() === page
 }
 const userData = useUserData()
+const token = useToken()
 const name = ref('')
 const profileSrc = ref('/images/default-profile.png')
 
@@ -164,6 +165,7 @@ function failedToLoadImage() {
 
 function logout() {
   userData.logout()
+  token.logout()
   return navigateTo('/auth/login-with-password')
 }
 
