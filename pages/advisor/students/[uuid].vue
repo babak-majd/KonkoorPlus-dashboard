@@ -7,7 +7,7 @@
 
     <!-- breadcrumbs -->
     <div class="flex items-center print:hidden">
-      <ToolsBreadcrumb class="text-xs" :items="[{ text: 'دانش آموزان من', url: '/advisor/students' }, 'اسم کاربر']" />
+      <ToolsBreadcrumb class="text-xs" :items="[{ text: 'دانش آموزان من', url: '/advisor/students' }, studentName]" />
     </div>
     <!-- title -->
     <span class="hidden text-md print:block mx-auto">
@@ -107,10 +107,13 @@ const { $axios } = useNuxtApp()
 const startDate = useStartDate()
 const type = ref(0)
 const userData = useUserData()
-
+const studentName = ref('')
+const uuid = ref('')
 onMounted(() => {
+  uuid.value = useRoute().params.uuid
   selectBoxItems.value = makeSelectBoxItemForMonth()
   dateRange.value = selectBoxItems.value[0]
+  studentName.value = useCookie('advisor_student_name').value
 })
 
 watch(dateRange, (newValue, oldValue) => {
@@ -184,38 +187,22 @@ function makeSelectBoxItemByWeek() {
 
   return data;
 }
-
+onUnmounted(() => {
+  useCookie('advisor_student_name').value = null
+})
 
 async function getData(from, end) {
   loading.value = true
   try {
-    let response = await $axios.get('statistics/lesson-calendar', { params: { 'start-date': from, 'end-date': end } })
+    let response = await $axios.get('statistics/lesson-calendar', { params: { 'start-date': from, 'end-date': end, 'student-uuid': uuid.value } })
     if (response.data.ok) {
-      lessons.value = [{
-        "lesson_name": "شیمی",
-        "duration": Math.floor(Math.random() * 300),
-        "test": Math.floor(Math.random() * 50)
-      },
-      {
-        "lesson_name": "فیزیک",
-        "duration": Math.floor(Math.random() * 300),
-        "test": Math.floor(Math.random() * 50)
-      },
-      {
-        "lesson_name": "ریاضی",
-        "duration": Math.floor(Math.random() * 300),
-        "test": Math.floor(Math.random() * 50)
-      }]
+      lessons.value = response.data.data
     }
   } catch (exception) {
     console.log(exception)
   } finally {
     loading.value = false
   }
-}
-
-function print() {
-  window.print()
 }
 </script>
 
