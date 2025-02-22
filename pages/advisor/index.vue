@@ -74,7 +74,7 @@
     <!-- best students -->
     <div class="flex flex-col items-center gap-8">
       <h2 class="text-xl font-semibold">برترین های مطالعه و تمرین {{
-        Tools.DateTimeFormat(topStudents[0]?.created_at, 'fa-IR', {
+        Tools.DateTimeFormat(league_date, 'fa-IR', {
           month: "long",
           day: '2-digit'
         }) }}</h2>
@@ -106,6 +106,17 @@
             :image="student.report.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" />
           <div class="text-white bg-main w-full text-center rounded-md py-1">
             {{ student.report.first_name }} {{ student.report.last_name }}
+          </div>
+          <!-- scores -->
+          <div class="flex flex-col items-center gap-2 w-full text-xs">
+            <div class="flex flex-col items-center gap-1">
+              <b>تعداد تست</b>
+              <span>{{ student.total_tests }}</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <b>میزان مطالعه</b>
+              <span>{{ Tools.showDuration(student.total_duration) }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -142,6 +153,8 @@ const data = ref({
 const userData = useUserData()
 const token = useToken()
 const { $axios } = useNuxtApp()
+
+const league_date = ref(null)
 
 const grades = [
   { value: 9, label: 'نهم' },
@@ -246,6 +259,8 @@ const handleFieldClick = (field) => {
 
 // راه‌اندازی اولیه
 onMounted(() => {
+  league_date.value = new Date()
+  league_date.value.setDate(league_date.value.getDate() - 1)
   if (token.tokenIsSet) {
     data.value = userData.getUserData()
     getBestStudnets().then(() => {
