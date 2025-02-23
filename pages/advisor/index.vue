@@ -100,7 +100,7 @@
 
       <!-- students -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-24">
-        <div v-for="student in topStudents" :key="student.report.first_name + student.report.last_name"
+        <div v-for="(student, index) in topStudents" :key="student.report.first_name + student.report.last_name"
           class="flex flex-col gap-4 items-center p-3 rounded-lg border shadow-sm shadow-blue-100">
           <SvgBestStudentFrame class="w-32"
             :image="student.report.gender === 'M' ? '/images/boy.jpg' : '/images/girl.jpg'" />
@@ -109,8 +109,12 @@
           </div>
           <!-- scores -->
           <div class="flex flex-col items-center gap-2 w-full text-xs">
-            <div class="flex flex-col items-center gap-1">
-              <b>تعداد تست</b>
+            <div class="flex flex-row items-center gap-1">
+              <b>رتبه:</b>
+              <span>{{ index + 1 }}</span>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <b>تعداد تست:</b>
               <span>{{ student.total_tests }}</span>
             </div>
             <div class="flex flex-col items-center gap-1">
