@@ -21,7 +21,8 @@
             <td class="text-center py-2">{{ grades[student.grade] }}</td>
             <td class="text-center py-2">{{ student.field }}</td>
             <td class="flex items-center gap-3">
-              <NuxtLink :to="`/advisor/students/${student.uuid}`" title="مشاهده">
+              <NuxtLink :to="`/advisor/students/${student.uuid}`"
+                @click="setStudentName(`${student.first_name} ${student.last_name}`)" title="مشاهده">
                 <SvgEye class="w-5" />
               </NuxtLink>
             </td>
@@ -68,6 +69,10 @@ const { $axios } = useNuxtApp()
 onMounted(() => {
   getData()
 })
+
+const setStudentName = (name) => {
+  useCookie('advisor_student_name').value = name
+}
 
 function remove(uuid) {
   SweetAlert.confirm('آیا از حذف دانش آموز اطمینان دارید؟').then(async (confirm) => {

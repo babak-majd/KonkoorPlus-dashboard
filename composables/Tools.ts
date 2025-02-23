@@ -5,4 +5,19 @@ export default class Tools {
     }
     return Intl.DateTimeFormat(locale, option).format(time)
   }
+
+  public static showDuration(duration: number) {
+    let hours = Math.floor(duration / 60)
+    let mins = duration - (hours * 60)
+    let duration_text = ''
+    let result = []
+    if (hours > 0) {
+      result.push(`${hours} ساعت`)
+    }
+    if (mins > 0) {
+      result.push(`${mins} دقیقه`)
+    }
+
+    return result.length === 2 ? result.join(' و ') : result.join('')
+  }
 }
