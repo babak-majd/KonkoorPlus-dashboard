@@ -84,6 +84,30 @@
 			</div>
 		</div>
 
+		<!-- وضعیت کنکور -->
+		<div class="flex flex-col gap-1 bg-stone-100 w-full max-w-5xl px-8 py-4 rounded-lg">
+			<div class="flex items-center gap-2">
+				<span class="text-base-500">
+					تاریخ کنکور {{ first_exam?.format('jMMMM') ?? "اردیبهشت" }}:
+				</span>
+				<span class="font-semibold">{{ first_exam?.format('D') ?? "20" }} {{ first_exam?.format('jMMMM') ??
+					"تیر" }} {{ first_exam?.year() ?? "1404" }}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="text-base-500">
+					تاریخ کنکور {{ second_exam?.format('jMMMM') ?? "تیر" }}:
+				</span>
+				<span class="font-semibold">{{ second_exam?.format('D') ?? "20" }} {{ second_exam?.format('jMMMM') ??
+					"تیر" }} {{ second_exam?.year() ?? "1404" }}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="text-base-500">
+					روز های باقی مانده تا کنکور {{ second_exam?.format('jMMMM') ?? "تیر" }}:
+				</span>
+				<span class="font-semibold">{{ second_exam?.diff(moment(), 'days') ?? 100 }} روز</span>
+			</div>
+		</div>
+
 		<!-- best students -->
 		<div class="flex flex-col items-center gap-8">
 			<h2 class="text-xl font-semibold">برترین های مطالعه و تمرین {{
@@ -141,8 +165,10 @@
 <script setup>
 import { useUserData } from "~/store/user_data";
 import Auth from "../middlewares/Auth";
+import moment from 'jalali-moment';
 import { useToken } from "~/store/tokenStore";
 import StudentMiddleware from "~/middlewares/StudentMiddleware";
+moment.locale('fa');
 
 definePageMeta({
 	middleware: [Auth, StudentMiddleware],
@@ -170,6 +196,11 @@ const students = ref([/* اینجا دیتای API رو قرار بدید */]);
 const activeGrade = ref(grades[0].value);
 const activeField = ref(fields[0].value);
 let intervalId = ref(null);
+
+const startDate = ref()
+const first_exam = ref()
+const second_exam = ref()
+const today = ref(moment())
 
 // محاسبه برترین دانش‌آموزان بر اساس گرید و رشته فعال
 const topStudents = computed(() => {
@@ -256,6 +287,7 @@ const handleFieldClick = (field) => {
 
 // راه‌اندازی اولیه
 onMounted(() => {
+	overview()
 	league_date.value = new Date()
 	league_date.value.setDate(league_date.value.getDate() - 1)
 	if (token.tokenIsSet) {
@@ -312,7 +344,15 @@ async function getBestStudnets() {
 		console.log(ex)
 	}
 }
-
+async function overview() {
+	let response = await $axios.get('statistics/overview')
+	if (response.data.ok) {
+		startDate.value = moment(response.data.data.start_date, "jYYYY-jMM-jDD")
+		first_exam.value = moment(response.data.data.first_exam, "jYYYY-jMM-jDD")
+		second_exam.value = moment(response.data.data.second_exam, "jYYYY-jMM-jDD")
+		today.value = moment()
+	}
+}
 function logout() {
 	userData.logout()
 	token.logout()
