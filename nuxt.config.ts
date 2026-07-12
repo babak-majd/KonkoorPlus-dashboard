@@ -11,9 +11,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "konkourplus-dashboard",
+      title: "Konkour Platform",
       htmlAttrs: {
-        lang: "en",
+        lang: "fa",
       },
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
