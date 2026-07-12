@@ -14,7 +14,7 @@
                         <div class="bg-yellow-400 rounded-badge px-2">بزودی...</div>
                     </div>
                     <div class="flex flex-row gap-2 text-sm justify-center">
-                        جدید ترین اخبار لیگ رو از اینستاگرام کنکورپلاس دنبال کن.
+                        جدید ترین اخبار لیگ رو از اینستاگرام اسطوره‌شو دنبال کن.
                     </div>
                 </div>
             </div>
