@@ -1,0 +1,17 @@
+# Self-contained production stack for this repo alone — meant to run on its
+# own host/domain, independent of the core (backend) repo. Use scripts/up.sh
+# and scripts/down.sh rather than calling `docker compose` directly: they
+# handle the one-time backend-domain question (see scripts/up.sh) that this
+# file reads from API_URL.
+services:
+  dashboard:
+    build: .
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_APP_NAME: "Konkour Platform"
+      NUXT_PUBLIC_API_URL: ${API_URL}
+      NUXT_PUBLIC_DEV_ENV: "false"
+      NUXT_PUBLIC_APP_LOCALE: fa-IR
+      NUXT_PUBLIC_APP_FALLBACK_LOCALE: en-US
+    ports:
+      - "3000:3000"
