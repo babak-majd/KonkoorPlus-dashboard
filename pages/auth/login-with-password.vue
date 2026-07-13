@@ -21,10 +21,7 @@
     </button>
 
 
-    <div class="flex items-center justify-between gap-4">
-      <NuxtLink to="/auth/signup" class="text-primary text-xs font-medium">
-        حساب کاربری ندارید؟
-      </NuxtLink>
+    <div class="flex items-center justify-end gap-4">
       <NuxtLink to="/auth/login" class="text-primary text-xs font-medium">ورود با رمز یکبار مصرف</NuxtLink>
     </div>
   </form>

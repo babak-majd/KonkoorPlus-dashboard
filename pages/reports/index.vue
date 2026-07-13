@@ -45,6 +45,10 @@
 </template>
 
 <script setup>
+import Auth from "~/middlewares/Auth";
+import StudentMiddleware from "~/middlewares/StudentMiddleware";
+
+definePageMeta({ middleware: [Auth, StudentMiddleware] });
 import Request from "~~/Api/Request";
 
 const request = new Request;

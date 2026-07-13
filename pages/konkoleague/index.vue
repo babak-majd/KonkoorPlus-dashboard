@@ -14,7 +14,7 @@
                         <div class="bg-yellow-400 rounded-badge px-2">بزودی...</div>
                     </div>
                     <div class="flex flex-row gap-2 text-sm justify-center">
-                        جدید ترین اخبار لیگ رو از اینستاگرام اسطوره‌شو دنبال کن.
+                        جدید ترین اخبار لیگ رو از اینستاگرام Konkour Platform دنبال کن.
                     </div>
                 </div>
             </div>
@@ -23,6 +23,10 @@
 </template>
 
 <script setup>
+import Auth from "~/middlewares/Auth";
+import StudentMiddleware from "~/middlewares/StudentMiddleware";
+
+definePageMeta({ middleware: [Auth, StudentMiddleware] });
 import Request from "~~/Api/Request";
 
 const request = new Request;

@@ -136,7 +136,7 @@ const data = ref({});
 async function requestToEdit() {
   loading.value = true
 
-  await $axios.patch("adviser/profile/update", form.value).then((response) => {
+  await $axios.patch("advisors/profile/update", form.value).then((response) => {
     if (response.data.ok) {
       userData.logout()
       userData.setUserData(response.data.data)
@@ -171,7 +171,7 @@ async function changePassword() {
   try {
     if (frmPassword.value.password === frmPassword.value.confirm) {
       confirmError.value = false
-      let response = await $axios.patch("advisers/profile/update", { password: frmPassword.value.password })
+      let response = await $axios.patch("advisors/profile/update", { password: frmPassword.value.password })
 
       if (response.data.ok) {
         txtPassword.classList.add('!border-lime-500')
