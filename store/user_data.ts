@@ -17,8 +17,8 @@ export const useUserData = defineStore({
     },
     getUserData(): User {
       let user_data = useCookie("user_data");
-      if (user_data.value === "string") {
-        user_data.value = JSON.parse(user_data.value);
+      if (typeof user_data.value === "string") {
+        return JSON.parse(user_data.value);
       }
       return user_data.value;
     },

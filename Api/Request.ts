@@ -1,10 +1,9 @@
 import axios from "axios";
 import ResponseModel from "./ResponseModel";
-import ConfigStore from "../store/ConfigStore";
+import { useToken } from "../store/tokenStore";
 import { ref } from 'vue';
 
 export default class Request {
-  private request = useNuxtApp().$axios;
   private url = useRuntimeConfig().public.API_URL;
   private doauth: Boolean = true;
   public readonly pending = ref(false);
@@ -46,55 +45,62 @@ export default class Request {
     body: Record<string, any> | null = null,
     params: Record<string, any> | null = null
   ): Promise<ResponseModel> => {
-    let result: any;
+    let result: ResponseModel;
     this.pending.value = true;
-    let token = ConfigStore.token() ?? "";
 
     let headers: Record<string, string> = {
       accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     };
     if (this.doauth) {
-      headers.Authorization = `Token ${token}`;
+      const token = useToken().getToken();
+      if (token) headers.Authorization = `Token ${token}`;
     }
-    await axios
-      .request({
+
+    try {
+      const res = await axios.request({
         baseURL: `${this.url}/`,
         headers: headers,
         method: method,
         url: path,
         params: params,
         data: body,
-      })
-      .then((res) => {
-        let response = res.data;
+      });
+      const response = res.data;
+      result = new ResponseModel(
+        response.message ?? "",
+        response.ok,
+        response.errors,
+        response.data,
+        res.status
+      );
+    } catch (error: any) {
+      // No response at all: network failure / server down.
+      if (!error.response) {
         result = new ResponseModel(
-          response.message ?? "",
-          response.ok,
-          response.errors,
-          response.data,
-          res.status
+          error.message ?? "خطا در برقراری ارتباط با سرور",
+          false,
+          [],
+          [],
+          0
         );
-      })
-      .catch((res) => {
-        let response = res.response.data;
+      } else {
+        const response = error.response.data ?? {};
         result = new ResponseModel(
-          response.message ?? res.message,
+          response.message ?? error.message,
           false,
           response.errors ?? [],
           [],
-          res.response.status
+          error.response.status
         );
-        if (res.response.status === 401) {
-          ConfigStore.logout();
+        if (error.response.status === 401) {
+          useToken().logout();
           navigateTo("/auth/login");
-          return false;
         }
-        return false;
-      })
-      .finally(() => {
-        this.pending.value = false;
-      });
+      }
+    } finally {
+      this.pending.value = false;
+    }
 
     return result;
   };

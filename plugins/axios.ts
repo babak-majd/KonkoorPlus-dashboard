@@ -1,20 +1,22 @@
 import axios from "axios"
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const token = useToken()
-    let bearerToken = null
-
-    if (token.tokenIsSet) {
-        bearerToken = `Token ${token.getToken()}`
-    }
-
     const instance = axios.create({
         baseURL: useRuntimeConfig().public.API_URL,
         headers: {
-            Authorization: bearerToken,
             Accept: 'application/json',
             "Content-Type": "application/json"
         }
+    })
+
+    // Read the token cookie on every request so a login/logout in the same
+    // session is picked up immediately (the old code froze it at app start).
+    instance.interceptors.request.use((config) => {
+        const token = useCookie('token').value
+        if (token && !config.headers.Authorization) {
+            config.headers.Authorization = `Token ${token}`
+        }
+        return config
     })
 
     return {
